@@ -29,3 +29,10 @@ Presets (`src/lib/presets.ts`) reference group ids; a test checks they exist.
 ## Engine (src/lib/engine.ts)
 
 Per seat and dimension: seed = population share × turnout × national party share, raked (IPF, 20 iterations) so party totals match the real seat result and group totals stay ∝ share × turnout. Scenarios exclude / keep only chosen groups, then FPTP.
+
+## Deploying
+
+The site is a static export, so any static host works.
+
+- **GitHub Pages:** push to a GitHub repo, then in Settings → Pages set Source to "GitHub Actions". `.github/workflows/pages.yml` tests, builds and publishes on every push to `main`, at `https://<user>.github.io/<repo>/`.
+- **Vercel or Netlify:** import the repo. Build command `npm run build`, output directory `out`. No base path needed.
