@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildModel } from "./engine";
 import { getEvent, modelInputFor } from "./data";
-import { allocateSeats, formGovernment, gallagher, willingness } from "./systems";
+import { allocateSeats, formGovernment, gallagher, hasTacticalData, undoTactical, willingness } from "./systems";
 
 describe("voting systems", () => {
   const base = buildModel(modelInputFor(getEvent("ge2024"))).baseline;
@@ -43,5 +43,27 @@ describe("forming a government", () => {
   it("willingness is symmetric and era-aware", () => {
     expect(willingness("ge2017", "dup", "con")).toBe(willingness("ge2017", "con", "dup"));
     expect(willingness("ge2015", "lab", "snp")).toBeLessThan(willingness("ge2019", "lab", "snp"));
+  });
+});
+
+describe("undo tactical voting", () => {
+  const base = buildModel(modelInputFor(getEvent("ge2024"))).baseline;
+  it("moves 2024 Labour and Lib Dem votes to first choices, keeping the total", () => {
+    const adj = undoTactical("ge2024", base);
+    const sum = (v: Record<string, number>) => Object.values(v).reduce((a, b) => a + b, 0);
+    expect(sum(adj.votes)).toBeCloseTo(sum(base.votes), 0);
+    expect(adj.voteShares.lab).toBeCloseTo(base.voteShares.lab * (29 / 37), 6);
+    expect(adj.voteShares.ld).toBeCloseTo(base.voteShares.ld * (12 / 14), 6);
+    expect(adj.voteShares.green).toBeGreaterThan(base.voteShares.green + 0.04);
+    expect(adj.voteShares.reform).toBeGreaterThan(base.voteShares.reform);
+    // FPTP is untouched
+    expect(adj.seats).toEqual(base.seats);
+    expect(allocateSeats("pr", adj).green).toBeGreaterThan(allocateSeats("pr", base).green + 25);
+    expect(Object.values(allocateSeats("regional", adj)).reduce((a, b) => a + b, 0)).toBe(650);
+  });
+  it("leaves elections without evidence alone", () => {
+    const b19 = buildModel(modelInputFor(getEvent("ge2019"))).baseline;
+    expect(hasTacticalData("ge2019")).toBe(false);
+    expect(undoTactical("ge2019", b19)).toBe(b19);
   });
 });

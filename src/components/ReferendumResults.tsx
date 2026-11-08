@@ -28,12 +28,15 @@ export function ReferendumResults({
   event,
   description,
   isBaseline,
+  howSure,
 }: {
   result: ScenarioResult;
   baseline: ScenarioResult;
   event: ElectionEvent;
   description: string;
   isBaseline: boolean;
+  /** "How sure are we?" line under the headline. */
+  howSure?: React.ReactNode;
 }) {
   const [a, b] = event.parties;
   const byId = new Map(event.parties.map((p) => [p.id, p]));
@@ -50,6 +53,7 @@ export function ReferendumResults({
             ? `Here's what actually happened in ${event.year}.`
             : referendumHeadline(result, baseline, event)}
         </h2>
+        {howSure}
         <span aria-hidden className="pointer-events-none absolute -right-3 -top-4 rotate-12 text-7xl opacity-20 sm:text-8xl">
           ✉️
         </span>

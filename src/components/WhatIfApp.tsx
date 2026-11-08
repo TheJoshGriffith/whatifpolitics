@@ -6,8 +6,11 @@ import {
   allocateSeats,
   formGovernment,
   governmentHeadline,
+  hasTacticalData,
+  undoTactical,
   type VotingSystem,
 } from "@/lib/systems";
+import { HowSure, SeatRanges, TacticalToggle, useUncertainty } from "./Uncertainty";
 import { buildModel, runScenario } from "@/lib/engine";
 import { defaultEvent, events, getEvent, modelInputFor } from "@/lib/data";
 import { presets, presetsFor } from "@/lib/presets";
@@ -53,7 +56,33 @@ export function WhatIfApp() {
   );
   const result = useMemo(() => runScenario(model, scenario), [model, scenario]);
   const [system, setSystem] = useState<VotingSystem>("fptp");
-  const seats = useMemo(() => allocateSeats(system, result), [system, result]);
+  // Under PR, tactical votes go back to first choices (where we have evidence).
+  const [tactical, setTactical] = useState(true);
+  const tacticalOn = tactical && system !== "fptp" && hasTacticalData(eventId);
+  const prResult = useMemo(
+    () => (tacticalOn ? undoTactical(eventId, result) : result),
+    [tacticalOn, eventId, result],
+  );
+  // Seats stay FPTP on the map; only votes change for the PR count.
+  const shown = useMemo(
+    () =>
+      prResult === result
+        ? result
+        : { ...result, votes: prResult.votes, voteShares: prResult.voteShares },
+    [prResult, result],
+  );
+  const seats = useMemo(
+    () => allocateSeats(system, prResult),
+    [system, prResult],
+  );
+  const modelInput = useMemo(() => modelInputFor(event), [event]);
+  const { u: uncertainty, busy: uBusy } = useUncertainty(
+    eventId,
+    modelInput,
+    scenario,
+    event.kind === "referendum" ? "fptp" : system,
+    tacticalOn,
+  );
   const formation = useMemo(
     () => formGovernment(eventId, seats),
     [eventId, seats],
@@ -61,7 +90,7 @@ export function WhatIfApp() {
   const govHeadline = governmentHeadline(
     formation,
     seats,
-    result.voteShares,
+    shown.voteShares,
     parties,
     system,
   );
@@ -237,10 +266,18 @@ export function WhatIfApp() {
             event={event}
             description={describe()}
             isBaseline={!scenario}
+            howSure={
+              <HowSure
+                u={uncertainty}
+                busy={uBusy}
+                event={event}
+                scenario={scenario}
+              />
+            }
           />
         ) : (
           <Results
-            result={result}
+            result={shown}
             baseline={model.baseline}
             parties={parties}
             event={event}
@@ -251,6 +288,33 @@ export function WhatIfApp() {
             seats={seats}
             formation={formation}
             headline={govHeadline}
+            howSure={
+              <HowSure
+                u={uncertainty}
+                busy={uBusy}
+                event={event}
+                scenario={scenario}
+                seats={seats}
+                majorityParty={formation.majorityParty}
+              />
+            }
+            ranges={
+              <SeatRanges
+                u={uncertainty}
+                busy={uBusy}
+                parties={parties}
+                seats={seats}
+              />
+            }
+            rulesExtra={
+              system !== "fptp" && (
+                <TacticalToggle
+                  eventId={eventId}
+                  on={tactical}
+                  onChange={setTactical}
+                />
+              )
+            }
           />
         )}
       </div>

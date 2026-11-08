@@ -54,6 +54,10 @@ export interface GroupVote {
   turnout: number | null;
   /** Vote share per party among those who voted. Should sum to ~1. */
   shares: Record<PartyId, number>;
+  /** Poll sample size behind `shares` (people in this group), where known. Drives the error bars. */
+  n?: number;
+  /** true when `n` is our estimate (poll total × the group's share of voters), not a printed base. */
+  nEstimated?: boolean;
 }
 
 export interface DimensionVoting {

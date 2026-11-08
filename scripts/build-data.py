@@ -66,12 +66,12 @@ YG_ORDER = ["con","lab","ld","snp","pc","reform","green","other"]
 def yg(n, *vals, turnout=None, tsrc=None):
   shares = {p: v/100 for p, v in zip(YG_ORDER, vals)}
   shares["ind"] = shares["other"]  # independents seeded like "other"
-  g = {"voterWeight": n, "shares": shares, "turnout": turnout}
+  g = {"voterWeight": n, "shares": shares, "turnout": turnout, "n": round(n)}
   return g
 def ipsos(n, con, lab, ld, ref, grn, nat, oth, turnout=None):
   shares = {"con": con/100, "lab": lab/100, "ld": ld/100, "reform": ref/100, "green": grn/100,
             "snp": nat/100, "pc": nat/100, "other": oth/100, "ind": oth/100}
-  return {"voterWeight": n, "shares": shares, "turnout": turnout}
+  return {"voterWeight": n, "shares": shares, "turnout": turnout, "n": None}
 groupVoting = {
  "age": {"source": "yougov-2024", "turnoutSource": "ipsos-2024", "groups": {
    "18-24": yg(4390, 8,41,16,3,1,9,18,4, turnout=0.37),
@@ -122,8 +122,9 @@ groupVoting = {
  }},
  "brexit": {"source": "yougov-2024", "groups": {
    # Voter mix approximated from the 2016 referendum result (Remain 48.1%, Leave 51.9%).
-   "remain": yg(48.1, 16,47,17,4,1,3,8,3),
-   "leave":  yg(51.9, 37,19,7,1,0,28,3,4),
+   # YouGov prints no base for these columns, so n is estimated from the 42,119 sample (see SAMPLE_VOTERS).
+   "remain": {**yg(48.1, 16,47,17,4,1,3,8,3), "n": None},
+   "leave":  {**yg(51.9, 37,19,7,1,0,28,3,4), "n": None},
  }},
  "income": {"source": "yougov-2024", "groups": {
    "u20": yg(6547, 24,33,11,3,1,17,8,4), "20to30": yg(5665, 26,32,11,3,1,17,6,4),
@@ -136,10 +137,29 @@ groupVoting = {
    "degree": yg(14261, 18,42,15,3,1,8,9,4, turnout=0.61),
  }},
 }
+# Roughly how many people who voted each poll interviewed. Used to estimate a group's sample size
+# (n = this x the group's share of voters) when the source prints no base for it. Flagged nEstimated.
+SAMPLE_VOTERS = {
+  "yougov-2024": 42119,          # weighted bases of the age columns sum to the full sample
+  "ipsos-2024": round(17394 * 0.60),  # 17,394 adults x ~60% turnout
+  "ipsos-2010": 6538,            # sum of Ipsos's published voter counts by age
+  "ipsos-2015": round(9149 * 0.66),   # x the 'All' row turnout
+  "ipsos-2017": round(7505 * 0.63),
+  "ipsos-2019": round(27951 * 0.61),
+}
+def fill_n(d):
+  for g in d["groups"].values():
+    if g.get("n") is None:
+      g.pop("n", None)
+      if d["source"] in SAMPLE_VOTERS:
+        g["n"] = max(1, round(SAMPLE_VOTERS[d["source"]] * g["voterShare"]))
+        g["nEstimated"] = True
+
 for d in groupVoting.values():
   tot = sum(g["voterWeight"] for g in d["groups"].values())
   for g in d["groups"].values():
     g["voterShare"] = round(g.pop("voterWeight") / tot, 5)
+  fill_n(d)
 
 dimensions = [
  {"id":"age","label":"Age","groups":[
@@ -203,6 +223,15 @@ sources = [
  {"id":"ec-eu-ref-2016","name":"EU referendum results","publisher":"Electoral Commission",
   "url":"https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/eu-referendum/results-and-turnout-eu-referendum","year":2016,
   "note":"Remain 48.1%, Leave 51.9%. Used as a rough guide to how many 2024 voters were Remainers vs Leavers (people who didn't vote in 2016 are folded in)."},
+ {"id":"yougov-tactical-2024","name":"One in five voters say they are voting tactically at the 2024 general election","publisher":"YouGov",
+  "url":"https://yougov.com/en-gb/articles/49886-one-in-five-voters-say-they-are-voting-tactically-at-the-2024-general-election","year":2024,
+  "note":"Matthew Smith, 1 July 2024. 22% of voters said they were voting tactically (39% of Lib Dem voters, 29% of Labour voters, 8-12% for Con, Reform and Green). If nobody voted tactically, YouGov's implied shares were Labour 29% (8 points lower), Lib Dems about 12% (2 lower) and Greens 13% (6 higher), with little change for the Conservatives and Reform. We use these net changes for the 'Undo tactical voting' switch under PR."},
+ {"id":"bes-ld-tactical-2024","name":"The Liberal Democrats in 2024: vote efficiency and tactical voting","publisher":"British Election Study",
+  "url":"https://britishelectionstudy.com/bes-impact/the-liberal-democrats-in-2024-vote-efficiency-and-tactical-voting","year":2024,
+  "note":"Griffiths, Green and Fieldhouse, 5 September 2024. Shows 44% of 2019 Labour voters switched to the Lib Dems where the Lib Dems were the main challenger to the Conservatives. Background on where tactical voting happened; not used in the numbers."},
+ {"id":"yougov-tactical-2019","name":"Who's tactically voting, and why?","publisher":"YouGov",
+  "url":"https://yougov.com/en-gb/articles/26824-whos-tactically-voting-and-why","year":2019,
+  "note":"Connor Ibbetson, 10 December 2019. 19% of voters said they were voting tactically (36% of Lib Dem first-choice voters, 19% of Labour, 12% of Conservative). It doesn't say where those votes would otherwise go, so we leave the tactical switch off for 2019."},
  {"id":"ippr-half-of-us","name":"Half of us: turnout patterns at the 2024 general election","publisher":"IPPR",
   "url":"https://www.ippr.org/articles/half-of-us","year":2024,
   "note":"Background on who didn't vote: just 52.8% of the voting-age population turned out."},

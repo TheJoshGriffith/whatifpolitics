@@ -99,6 +99,83 @@ function allocate(system: VotingSystem, result: ScenarioResult): Record<PartyId,
   return out;
 }
 
+// ---------------------------------------------------------------------------------------------
+// Undo tactical voting (PR systems only)
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * Under first past the post some people vote for a party that isn't their favourite, to stop
+ * someone else winning their seat. Under PR there'd be no point, so they'd vote for their real
+ * first choice. Each entry says what share of a party's votes we take to be tactical (net), and
+ * where those votes go. Only elections where a poll gives us the numbers are listed.
+ */
+export interface TacticalAdjustment {
+  /** Source id in sources.json. */
+  source: string;
+  /** Share of each party's votes that leaves it (0..1). */
+  leave: Record<PartyId, number>;
+  /** Where the freed votes go: share per party. Whatever's left over is spread over every other
+   *  party in proportion to the votes it already has. */
+  to: Record<PartyId, number>;
+  /** One-line, plain-English summary for the UI. */
+  summary: string;
+}
+
+export const TACTICAL: Record<string, TacticalAdjustment> = {
+  // YouGov, 1 July 2024: without tactical voting Labour 37% -> 29%, Lib Dems 14% -> 12%,
+  // Greens 7% -> 13%, Con and Reform little changed. So Labour loses 8/37 of its vote and the
+  // Lib Dems 2/14; of the 10 points freed, 6 go to the Greens and 4 to everyone else.
+  ge2024: {
+    source: "yougov-tactical-2024",
+    leave: { lab: 8 / 37, ld: 2 / 14 },
+    to: { green: 0.6 },
+    summary:
+      "About 22% of Labour's votes and 14% of the Lib Dems' go back to voters' first choices: 6 in 10 of them to the Greens, the rest spread over the other parties.",
+  },
+};
+
+export const hasTacticalData = (eventId: string) => eventId in TACTICAL;
+
+function moveVotes(adj: TacticalAdjustment, votes: Record<PartyId, number>): Record<PartyId, number> {
+  const out: Record<PartyId, number> = { ...votes };
+  let freed = 0;
+  for (const [p, f] of Object.entries(adj.leave)) {
+    const v = (votes[p] ?? 0) * f;
+    out[p] = (votes[p] ?? 0) - v;
+    freed += v;
+  }
+  if (freed <= 0) return out;
+  let given = 0;
+  for (const [p, f] of Object.entries(adj.to)) {
+    out[p] = (out[p] ?? 0) + freed * f;
+    given += f;
+  }
+  const rest = freed * Math.max(0, 1 - given);
+  const others = Object.keys(votes).filter((p) => !(p in adj.leave) && !(p in adj.to) && votes[p] > 0);
+  const base = others.reduce((a, p) => a + votes[p], 0);
+  if (base > 0) for (const p of others) out[p] += (rest * votes[p]) / base;
+  else for (const p of Object.keys(adj.to)) out[p] += rest / Object.keys(adj.to).length;
+  return out;
+}
+
+/**
+ * The same scenario with tactical votes sent back to voters' first choices, seat by seat
+ * (the same share in every seat, since the evidence is national). Only `votes`, `voteShares` and
+ * each seat's `votes` change; FPTP seats, winners and flips are left as they were.
+ * Returns the result unchanged when we have no evidence for this election.
+ */
+export function undoTactical(eventId: string, result: ScenarioResult): ScenarioResult {
+  const adj = TACTICAL[eventId];
+  if (!adj) return result;
+  const seatResults = result.seatResults.map((s) => ({ ...s, votes: moveVotes(adj, s.votes) }));
+  const votes: Record<PartyId, number> = {};
+  for (const p of Object.keys(result.votes)) votes[p] = 0;
+  for (const s of seatResults) for (const [p, n] of Object.entries(s.votes)) votes[p] = (votes[p] ?? 0) + n;
+  const voteShares: Record<PartyId, number> = {};
+  for (const p of Object.keys(votes)) voteShares[p] = result.totalVotes > 0 ? votes[p] / result.totalVotes : 0;
+  return { ...result, votes, voteShares, seatResults };
+}
+
 /** Gallagher index: 0 = perfectly proportional. Typical FPTP UK result is 15–25. */
 export function gallagher(seats: Record<PartyId, number>, voteShares: Record<PartyId, number>): number {
   const total = Object.values(seats).reduce((a, b) => a + b, 0) || 1;

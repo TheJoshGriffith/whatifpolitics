@@ -1,5 +1,6 @@
 import type { Dimension, DimensionId, GroupId, GroupVoting, ScenarioMode } from "@/lib/types";
 import { sources } from "@/lib/data";
+import { SmallSampleFlag } from "./Uncertainty";
 
 const dimEmoji: Record<string, string> = {
   age: "🎂",
@@ -115,6 +116,7 @@ export function ScenarioPicker({
               >
                 <span aria-hidden className="no-underline">{g.emoji}</span>
                 {g.label}
+                <SmallSampleFlag n={groupVoting[dim.id]?.groups[g.id]?.n} />
               </button>
             );
           })}

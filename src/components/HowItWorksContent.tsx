@@ -92,10 +92,36 @@ export function HowItWorksContent() {
         </ul>
         <p>
           Votes for independents and &ldquo;other&rdquo; candidates don&apos;t count under PR, because there&apos;s
-          no party list for them. We also assume everyone votes the same way under every system, which
-          they wouldn&apos;t: under PR, lots of tactical voters would switch to their real first choice.
+          no party list for them. Under PR some people would also vote differently, because there&apos;s no
+          reason to vote tactically: see <b>Undo tactical voting</b> below.
           The &ldquo;wonkiness score&rdquo; is the Gallagher index, the standard measure of how far seats
           are from votes (0 is perfect; UK general elections usually land between 15 and 25).
+        </p>
+
+        <h3>Undo tactical voting</h3>
+        <p>
+          Under first past the post some people vote for a party that isn&apos;t their favourite, to stop
+          another party winning their seat. Under PR that wouldn&apos;t make sense, so when you pick a PR
+          system we can send those votes back to people&apos;s first choices. It&apos;s on by default for PR
+          and there&apos;s a switch to turn it off.
+        </p>
+        <p>
+          The numbers come from a YouGov poll a few days before the 2024 election. 22% of voters said they
+          were voting tactically, including 29% of Labour voters and 39% of Lib Dem voters. Asked what
+          they&apos;d do if they didn&apos;t need to, Labour&apos;s implied share fell from 37% to 29%, the
+          Lib Dems&apos; from 14% to about 12%, and the Greens&apos; rose from 7% to 13%, with little
+          change for the Conservatives and Reform. So we take 8/37 (about 22%) of Labour&apos;s votes
+          and 2/14 (about 14%) of the Lib Dems&apos; in every seat, give 6 in 10 of those votes to the
+          Greens and spread the rest over the other parties in proportion to the votes they already have.
+        </p>
+        <p>
+          The limits: these are net changes from one national poll, so we apply the same share in every
+          seat, when in reality tactical voting was concentrated where Labour or the Lib Dems were the
+          main challenger. It only works for 2024. For 2019 YouGov and the Electoral Reform Society
+          found lots of tactical voting (19% to 32% of voters, depending on the question), but neither
+          says where those votes would have gone instead, and for 2010 to 2017 we found nothing usable.
+          So for those elections, and for the referendums, votes are counted as cast. The seats on the
+          map are always first past the post, so they don&apos;t change.
         </p>
 
         <h2>6. Who gets the keys to No 10?</h2>
@@ -128,6 +154,30 @@ export function HowItWorksContent() {
           <li><b>2019:</b> Jo Swinson ruled out putting either Johnson or Corbyn in No 10, and the Brexit Party stood down in Tory-held seats.</li>
           <li><b>2024:</b> Labour ruled out deals with the SNP.</li>
         </ul>
+
+        <h2>7. How sure are we?</h2>
+        <p>
+          Each group&apos;s vote comes from a poll, and polls only ask so many people. YouGov asked over
+          4,000 18–24s in 2024, but Lord Ashcroft&apos;s indyref poll had just 14 16- and 17-year-olds. So
+          for each scenario we re-run the whole thing 60 times. Each time, every group in the slice gets
+          a fresh, plausible set of party shares, drawn at random around its poll figures with a spread
+          that depends on its sample size (a Dirichlet draw, so a share p from n people wobbles by about
+          the square root of p(1−p)/n). Then we re-rake every seat and recount.
+        </p>
+        <p>
+          The &ldquo;likely range&rdquo; is where the middle 8 out of 10 re-runs land (the 10th to 90th
+          percentile), and &ldquo;How sure are we?&rdquo; says how often each outcome came up. Groups with
+          fewer than 100 people in the poll get a ⚠️ warning. The sample sizes are the bases printed in
+          each poll&apos;s tables. Where a poll doesn&apos;t print one (Ipsos&apos;s tables, and
+          YouGov&apos;s 2024 Remain and Leave columns), we estimate it from the poll&apos;s total sample
+          and the group&apos;s share of voters.
+        </p>
+        <p>
+          This only covers polling noise. It doesn&apos;t cover the bigger guesses: that groups vote the
+          same way everywhere, the Census-based local mix, weighting (which makes real polls a bit less
+          precise than their sample size suggests), or the turnout figures. So the true uncertainty is
+          wider than the ranges shown.
+        </p>
 
         <h2>The big fat caveats 🧂</h2>
         <ul>
@@ -167,8 +217,8 @@ export function HowItWorksContent() {
           </li>
           <li>
             <b>Nobody changes their mind.</b> If half the country stayed home, the other half might
-            vote differently: no tactical voting shifts, no different campaigns, no different
-            candidates. Everyone left votes exactly as before.
+            vote differently: no tactical voting shifts (apart from the PR switch above), no different
+            campaigns, no different candidates. Everyone left votes exactly as before.
           </li>
           <li>
             <b>Polls are polls.</b> Group-level vote shares come from post-election surveys, which

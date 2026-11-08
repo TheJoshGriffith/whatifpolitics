@@ -30,6 +30,9 @@ export function Results({
   seats,
   formation,
   headline,
+  howSure,
+  ranges,
+  rulesExtra,
 }: {
   result: ScenarioResult;
   baseline: ScenarioResult;
@@ -42,6 +45,12 @@ export function Results({
   seats: Record<PartyId, number>;
   formation: Formation;
   headline: string;
+  /** "How sure are we?" line under the headline. */
+  howSure?: React.ReactNode;
+  /** Likely seat ranges, shown after the scoreboard. */
+  ranges?: React.ReactNode;
+  /** Extra controls under the voting-system picker (tactical voting switch). */
+  rulesExtra?: React.ReactNode;
 }) {
   const byId = new Map(parties.map((p) => [p.id, p]));
   const g = result.government;
@@ -66,6 +75,7 @@ export function Results({
             ? `What actually happened in ${event.year}: ${headline}`
             : headline}
         </h2>
+        {howSure}
         <span
           aria-hidden
           className="pointer-events-none absolute -right-3 -top-4 rotate-12 text-7xl opacity-20 sm:text-8xl"
@@ -100,6 +110,7 @@ export function Results({
           ))}
         </div>
         <p className="text-sm text-ink/80">{sys.blurb}</p>
+        {rulesExtra}
       </div>
 
       <div className="grid gap-5 md:grid-cols-5 [&>*]:min-w-0">
@@ -186,6 +197,7 @@ export function Results({
           <SeatsVsVotes seats={seats} result={result} parties={parties} />
         )}
       </div>
+      {ranges}
     </section>
   );
 }
