@@ -145,15 +145,68 @@ export function buildModel(
   return { ...partial, baseline };
 }
 
-/** Which groups' votes survive a scenario? */
+/** Which groups' votes survive a scenario? (Ignores any second slice.) */
 export function keptGroups(
   scenario: Scenario,
   allGroups: GroupId[],
 ): GroupId[] {
+  const f = scenarioFactors(scenario, allGroups);
+  return allGroups.filter((g) => f[g][0] > 0);
+}
+
+/** Turnout dials run from "stayed home" (0) to double the real turnout (2). */
+export const MAX_TURNOUT_FACTOR = 2;
+
+/**
+ * Highest sensible dial for a group: 200%, or less if that would push its real
+ * turnout (when a poll gives one) past 100%.
+ */
+export function maxTurnoutFactor(realTurnout: number | null | undefined): number {
+  return typeof realTurnout === "number" && realTurnout > 0
+    ? Math.min(MAX_TURNOUT_FACTOR, 1 / realTurnout)
+    : MAX_TURNOUT_FACTOR;
+}
+
+/**
+ * Per group of the scenario's main slice: [multiplier for its voters inside the
+ * second slice (`and`), multiplier for its voters outside it]. Without a second
+ * slice only the first number matters.
+ */
+export function scenarioFactors(
+  scenario: Scenario,
+  allGroups: GroupId[],
+): Record<GroupId, [number, number]> {
   const chosen = new Set(scenario.groups);
-  return scenario.mode === "exclude"
-    ? allGroups.filter((g) => !chosen.has(g))
-    : allGroups.filter((g) => chosen.has(g));
+  const out: Record<GroupId, [number, number]> = {};
+  for (const g of allGroups) {
+    if (scenario.mode === "turnout") {
+      const d = scenario.turnout?.[g];
+      const f = typeof d === "number" && Number.isFinite(d) ? d : 1;
+      out[g] = [Math.min(Math.max(f, 0), MAX_TURNOUT_FACTOR), 1];
+    } else if (scenario.mode === "only") out[g] = [chosen.has(g) ? 1 : 0, 0];
+    else out[g] = [chosen.has(g) ? 0 : 1, 1];
+  }
+  return out;
+}
+
+/** The scenario's second slice, if it's usable (a different dimension with groups ticked). */
+export function activeFilter(
+  scenario: Scenario,
+  dimensions: Dimension[],
+): { dimension: Dimension; groups: GroupId[] } | null {
+  const f = scenario.and;
+  if (!f || f.dimension === scenario.dimension) return null;
+  const dim = dimensions.find((d) => d.id === f.dimension);
+  if (!dim) return null;
+  const groups = f.groups.filter((g) => dim.groups.some((x) => x.id === g));
+  return groups.length ? { dimension: dim, groups } : null;
+}
+
+/** true when a scenario changes nothing (no groups ticked, or every dial at 100%). */
+export function isNoOp(scenario: Scenario): boolean {
+  if (scenario.mode === "turnout")
+    return Object.values(scenario.turnout ?? {}).every((f) => f === 1);
+  return scenario.groups.length === 0;
 }
 
 export function seatResult(
@@ -199,7 +252,13 @@ export function butlerSwing(
   return (sh(after, b) - sh(before, b) - (sh(after, a) - sh(before, a))) / 2;
 }
 
-/** Apply a scenario to a prebuilt model. */
+/**
+ * Apply a scenario to a prebuilt model.
+ *
+ * With a second slice B, the votes of a cell (group g of A, group h of B) for party
+ * p are estimated as estA[g][p] × estB[h][p] / votes[p]: within each party's voters,
+ * we assume A and B are independent. That keeps both slices' totals exact.
+ */
 export function runScenario(
   model: Model,
   scenario: Scenario | null,
@@ -207,17 +266,32 @@ export function runScenario(
   if (!scenario) return model.baseline;
   const dim = model.input.dimensions.find((d) => d.id === scenario.dimension);
   if (!dim) throw new Error(`Unknown dimension: ${scenario.dimension}`);
-  const kept = keptGroups(
-    scenario,
-    dim.groups.map((g) => g.id),
-  );
+  const groupIds = dim.groups.map((g) => g.id);
+  const factors = scenarioFactors(scenario, groupIds);
+  const filter = activeFilter(scenario, model.input.dimensions);
   const { partyIds } = model;
   const seats = model.input.constituencies.map((c) => {
     const est = model.estimates[c.id][dim.id] ?? {};
+    const estB = filter ? (model.estimates[c.id][filter.dimension.id] ?? {}) : null;
     const votes: Record<PartyId, number> = {};
     for (const p of partyIds) {
+      // Share of this party's voters who are in the second slice (1 without one).
+      let inside = 1;
+      if (estB && filter) {
+        let all = 0;
+        let sel = 0;
+        for (const h of filter.dimension.groups) {
+          const v = estB[h.id]?.[p] ?? 0;
+          all += v;
+          if (filter.groups.includes(h.id)) sel += v;
+        }
+        inside = all > 0 ? sel / all : 0;
+      }
       let v = 0;
-      for (const g of kept) v += est[g]?.[p] ?? 0;
+      for (const g of groupIds) {
+        const [fin, fout] = factors[g];
+        v += (est[g]?.[p] ?? 0) * (fin * inside + fout * (1 - inside));
+      }
       votes[p] = v;
     }
     return seatResult(c, votes, partyIds);

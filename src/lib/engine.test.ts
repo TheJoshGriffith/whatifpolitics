@@ -3,7 +3,10 @@ import {
   buildModel,
   estimateSeatGroupVotes,
   governmentOutcome,
+  isNoOp,
   keptGroups,
+  MAX_TURNOUT_FACTOR,
+  scenarioFactors,
   majorityNeeded,
   rake,
   runScenario,
@@ -210,5 +213,157 @@ describe("referendums", () => {
     const indy = buildModel(modelInputFor(getEvent("indyref2014"))).baseline;
     expect(indy.votes.no).toBe(2001926);
     expect(indy.seats.yes).toBe(4);
+  });
+});
+
+// ---- two slices at once, and turnout dials ----
+describe("combined slices", () => {
+  const tenure: Dimension = {
+    id: "tenure",
+    label: "Housing",
+    groups: [
+      { id: "own", label: "Own", emoji: "🏡" },
+      { id: "rent", label: "Rent", emoji: "🔑" },
+    ],
+  };
+  const gv2 = {
+    ...groupVoting,
+    tenure: {
+      source: "test",
+      groups: {
+        own: { voterShare: 0.65, turnout: 0.7, shares: { a: 0.35, b: 0.65 } },
+        rent: { voterShare: 0.35, turnout: 0.5, shares: { a: 0.75, b: 0.25 } },
+      },
+    },
+  } as unknown as GroupVoting;
+  const w2: ModelInput = {
+    ...world,
+    dimensions: [dim, tenure],
+    groupVoting: gv2,
+    constituencies: world.constituencies.map((c) => ({ ...c, groupShares: undefined })),
+  };
+  const m = buildModel(w2);
+  const run = (s: Parameters<typeof runScenario>[1]) => runScenario(m, s);
+  const and = { dimension: "tenure", groups: ["rent"] };
+
+  it("'only A and B' plus 'exclude A and B' adds back up to everyone", () => {
+    const only = run({ dimension: "age", mode: "only", groups: ["young"], and });
+    const ex = run({ dimension: "age", mode: "exclude", groups: ["young"], and });
+    for (const p of ["a", "b"]) expect(only.votes[p] + ex.votes[p]).toBeCloseTo(m.baseline.votes[p], 6);
+  });
+
+  it("the four cells of a 2×2 combo add up to the real party votes in each seat", () => {
+    const cells = ["young", "old"].flatMap((g) =>
+      ["own", "rent"].map((h) => run({ dimension: "age", mode: "only", groups: [g], and: { dimension: "tenure", groups: [h] } })),
+    );
+    m.baseline.seatResults.forEach((s, i) => {
+      for (const p of ["a", "b"]) expect(sum(cells.map((c) => c.seatResults[i].votes[p]))).toBeCloseTo(s.votes[p], 6);
+    });
+  });
+
+  it("keeps both margins: summing the A cells over every B group gives the single-slice result", () => {
+    const one = run({ dimension: "age", mode: "only", groups: ["young"] });
+    const both = run({ dimension: "age", mode: "only", groups: ["young"], and: { dimension: "tenure", groups: ["own", "rent"] } });
+    for (const p of ["a", "b"]) expect(both.votes[p]).toBeCloseTo(one.votes[p], 6);
+  });
+
+  it("matches estA × estB / votes by hand in one seat", () => {
+    const c = w2.constituencies[0];
+    const ea = m.estimates[c.id].age!;
+    const eb = m.estimates[c.id].tenure!;
+    const r = run({ dimension: "age", mode: "only", groups: ["young"], and });
+    for (const p of ["a", "b"]) expect(r.seatResults[0].votes[p]).toBeCloseTo((ea.young[p] * eb.rent[p]) / c.votes[p], 6);
+  });
+
+  it("a combo is narrower than either slice alone", () => {
+    const young = run({ dimension: "age", mode: "only", groups: ["young"] });
+    const combo = run({ dimension: "age", mode: "only", groups: ["young"], and });
+    expect(combo.totalVotes).toBeLessThan(young.totalVotes);
+    expect(combo.totalVotes).toBeGreaterThan(0);
+  });
+
+  it("ignores a second slice on the same dimension or with nothing ticked", () => {
+    const plain = run({ dimension: "age", mode: "only", groups: ["young"] });
+    expect(run({ dimension: "age", mode: "only", groups: ["young"], and: { dimension: "age", groups: ["old"] } }).votes).toEqual(plain.votes);
+    expect(run({ dimension: "age", mode: "only", groups: ["young"], and: { dimension: "tenure", groups: [] } }).votes).toEqual(plain.votes);
+  });
+
+  it("works on every real event without breaking seat counts", () => {
+    for (const e of events) {
+      const [d1, d2] = e.dimensions;
+      const mm = buildModel(modelInputFor(e));
+      const r = runScenario(mm, { dimension: d1.id, mode: "only", groups: [d1.groups[0].id], and: { dimension: d2.id, groups: [d2.groups[0].id] } });
+      expect(sum(Object.values(r.seats))).toBe(e.constituencies.length);
+      expect(r.totalVotes).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("turnout dials", () => {
+  const model = buildModel(world);
+
+  it("all dials at 1 reproduce the real result", () => {
+    const r = runScenario(model, { dimension: "age", mode: "turnout", groups: [], turnout: { young: 1, old: 1 } });
+    expect(r.votes.a).toBeCloseTo(model.baseline.votes.a, 6);
+    expect(r.seats).toEqual(model.baseline.seats);
+  });
+
+  it("0 and 1 dials match the exclude and only presets", () => {
+    const dial = runScenario(model, { dimension: "age", mode: "turnout", groups: [], turnout: { old: 0 } });
+    const ex = runScenario(model, { dimension: "age", mode: "exclude", groups: ["old"] });
+    expect(dial.votes).toEqual(ex.votes);
+    const dial2 = runScenario(model, { dimension: "age", mode: "turnout", groups: [], turnout: { old: 0, young: 1 } });
+    const only = runScenario(model, { dimension: "age", mode: "only", groups: ["young"] });
+    expect(dial2.votes).toEqual(only.votes);
+  });
+
+  it("doubling a group's turnout doubles its votes", () => {
+    const young = runScenario(model, { dimension: "age", mode: "only", groups: ["young"] });
+    const r = runScenario(model, { dimension: "age", mode: "turnout", groups: [], turnout: { young: 2 } });
+    expect(r.totalVotes).toBeCloseTo(model.baseline.totalVotes + young.totalVotes, 4);
+  });
+
+  it("clamps dials to 0–200%", () => {
+    const f = scenarioFactors({ dimension: "age", mode: "turnout", groups: [], turnout: { young: 9, old: -1 } }, ["young", "old"]);
+    expect(f.young[0]).toBe(MAX_TURNOUT_FACTOR);
+    expect(f.old[0]).toBe(0);
+  });
+
+  it("with a second slice, only dials that slice's voters", () => {
+    const tenureWorld: ModelInput = {
+      ...world,
+      dimensions: [dim, { id: "sex", label: "Sex", groups: [{ id: "f", label: "F", emoji: "" }, { id: "m", label: "M", emoji: "" }] }],
+      groupVoting: {
+        ...groupVoting,
+        sex: { source: "t", groups: { f: { voterShare: 0.5, turnout: null, shares: { a: 0.5, b: 0.5 } }, m: { voterShare: 0.5, turnout: null, shares: { a: 0.5, b: 0.5 } } } },
+      } as unknown as GroupVoting,
+    };
+    const mm = buildModel(tenureWorld);
+    const r = runScenario(mm, { dimension: "age", mode: "turnout", groups: [], turnout: { young: 0 }, and: { dimension: "sex", groups: ["f"] } });
+    const onlyYoungF = runScenario(mm, { dimension: "age", mode: "only", groups: ["young"], and: { dimension: "sex", groups: ["f"] } });
+    expect(r.totalVotes).toBeCloseTo(mm.baseline.totalVotes - onlyYoungF.totalVotes, 4);
+  });
+
+  it("isNoOp spots scenarios that change nothing", () => {
+    expect(isNoOp({ dimension: "age", mode: "only", groups: [] })).toBe(true);
+    expect(isNoOp({ dimension: "age", mode: "turnout", groups: [], turnout: { young: 1 } })).toBe(true);
+    expect(isNoOp({ dimension: "age", mode: "turnout", groups: [], turnout: { young: 1.5 } })).toBe(false);
+  });
+});
+
+describe("turnout and combo presets", () => {
+  it("'young people vote like pensioners' only shows up where age turnout is known, and copies the oldest group's rate", () => {
+    const withIt = events.filter((e) => presetsFor(e).some((p) => p.label === "Young people vote like pensioners")).map((e) => e.id);
+    expect(withIt).toEqual(expect.arrayContaining(["ge2010", "ge2015", "ge2017"]));
+    expect(withIt).not.toContain("ge2019");
+    expect(withIt).not.toContain("ge2024");
+    const e = events.find((x) => x.id === "ge2017")!;
+    const p = presetsFor(e).find((x) => x.label === "Young people vote like pensioners")!;
+    const gv = e.groupVoting.age.groups;
+    expect(p.scenario.turnout!["18-19"] * gv["18-19"].turnout!).toBeCloseTo(gv["70+"].turnout!, 2);
+  });
+  it("combo presets resolve where both slices exist", () => {
+    const e = events.find((x) => x.id === "ge2019")!;
+    expect(presetsFor(e).some((p) => p.id === "only-young-renters")).toBe(true);
   });
 });

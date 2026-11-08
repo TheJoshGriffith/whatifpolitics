@@ -6,12 +6,20 @@ import {
   allocateSeats,
   formGovernment,
   governmentHeadline,
+  systems,
   type VotingSystem,
 } from "@/lib/systems";
-import { buildModel, runScenario } from "@/lib/engine";
+import { buildModel, isNoOp, maxTurnoutFactor, runScenario } from "@/lib/engine";
 import { defaultEvent, events, getEvent, modelInputFor } from "@/lib/data";
 import { presets, presetsFor } from "@/lib/presets";
-import type { DimensionId, GroupId, Scenario, ScenarioMode } from "@/lib/types";
+import { decodeShare, encodeShare } from "@/lib/share";
+import type {
+  DimensionId,
+  ElectionEvent,
+  GroupId,
+  Scenario,
+  ScenarioMode,
+} from "@/lib/types";
 import { ScenarioPicker } from "./ScenarioPicker";
 import { Results } from "./Results";
 import { ReferendumResults } from "./ReferendumResults";
@@ -32,6 +40,15 @@ export function WhatIfApp() {
   );
   const [mode, setMode] = useState<ScenarioMode>(initial.scenario.mode);
   const [groups, setGroups] = useState<GroupId[]>(initial.scenario.groups);
+  const [turnout, setTurnout] = useState<Record<GroupId, number>>(
+    initial.scenario.turnout ?? {},
+  );
+  const [andDim, setAndDim] = useState<DimensionId | null>(
+    initial.scenario.and?.dimension ?? null,
+  );
+  const [andGroups, setAndGroups] = useState<GroupId[]>(
+    initial.scenario.and?.groups ?? [],
+  );
   const [presetId, setPresetId] = useState<string | null>(initial.id);
   const [building, setBuilding] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -47,12 +64,103 @@ export function WhatIfApp() {
     return () => io.disconnect();
   }, []);
 
-  const scenario = useMemo<Scenario | null>(
-    () => (groups.length ? { dimension, mode, groups } : null),
-    [dimension, mode, groups],
-  );
+  const scenario = useMemo<Scenario | null>(() => {
+    const s: Scenario = { dimension, mode, groups };
+    if (mode === "turnout") s.turnout = turnout;
+    if (andDim && andDim !== dimension && andGroups.length)
+      s.and = { dimension: andDim, groups: andGroups };
+    return isNoOp(s) ? null : s;
+  }, [dimension, mode, groups, turnout, andDim, andGroups]);
   const result = useMemo(() => runScenario(model, scenario), [model, scenario]);
   const [system, setSystem] = useState<VotingSystem>("fptp");
+
+  /** Load a whole scenario (from a preset or a shared link) into the builder. */
+  const applyScenario = (s: Scenario) => {
+    setDimension(s.dimension);
+    setMode(s.mode);
+    setGroups(s.mode === "turnout" ? [] : s.groups);
+    setTurnout(s.turnout ?? {});
+    setAndDim(s.and?.dimension ?? null);
+    setAndGroups(s.and?.groups ?? []);
+  };
+
+  // ---- shareable links ----
+  // Normal build: ?e=ge2019&d=age&...  Preview build (pages live on #hashes): #play?e=...
+  const restored = useRef(false);
+  useEffect(() => {
+    // Read the link once on load (the static HTML can't know it), like HashViews does.
+    const read = () => {
+      const fromHash = window.location.hash.match(/^#(?:play)?\?(.*)$/)?.[1];
+      const st =
+        (fromHash && decodeShare(fromHash, events, systemIds)) ||
+        decodeShare(window.location.search, events, systemIds);
+      if (st) {
+        const e = getEvent(st.eventId);
+        const dimRow = e.groupVoting[st.dimension]?.groups ?? {};
+        const dials: Record<GroupId, number> = {};
+        for (const [g, f] of Object.entries(st.turnout))
+          dials[g] = Math.min(f, maxTurnoutFactor(dimRow[g]?.turnout));
+        const s: Scenario = {
+          dimension: st.dimension,
+          mode: st.mode,
+          groups: st.groups,
+          turnout: dials,
+          ...(st.and ? { and: st.and } : {}),
+        };
+        setEventId(e.id);
+        applyScenario(s);
+        setSystem(st.system as VotingSystem);
+        setPresetId(matchPreset(e, s));
+        if (st.mode === "turnout" || st.and) setBuilding(true);
+      }
+    };
+    read();
+    restored.current = true;
+    // A pasted #play?... link in the preview build changes only the hash, so listen for it.
+    const onHash = () => {
+      if (/^#(?:play)?\?/.test(window.location.hash)) read();
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+  const shareQuery = encodeShare({
+    eventId,
+    dimension,
+    mode,
+    groups: mode === "turnout" ? [] : groups,
+    turnout: mode === "turnout" ? turnout : {},
+    and: andDim && andDim !== dimension && andGroups.length ? { dimension: andDim, groups: andGroups } : null,
+    system,
+  });
+  useEffect(() => {
+    if (!restored.current) return;
+    const { pathname, search, hash } = window.location;
+    let url: string;
+    if (process.env.NEXT_PUBLIC_ARTIFACT) {
+      // Only touch the hash while the play view is showing.
+      if (hash && !/^#(?:play)?(?:\?|$)/.test(hash)) return;
+      url = `${pathname}${search}#play?${shareQuery}`;
+    } else {
+      url = `${pathname}?${shareQuery}${hash}`;
+    }
+    if (url !== `${pathname}${search}${hash}`)
+      window.history.replaceState(window.history.state, "", url);
+  }, [shareQuery]);
+  const [copied, setCopied] = useState<"idle" | "copied" | "failed">("idle");
+  useEffect(() => {
+    if (copied === "idle") return;
+    const t = setTimeout(() => setCopied("idle"), 2000);
+    return () => clearTimeout(t);
+  }, [copied]);
+  const copyLink = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied("copied");
+    } catch {
+      setCopied(legacyCopy(url) ? "copied" : "failed");
+    }
+  };
   const seats = useMemo(() => allocateSeats(system, result), [system, result]);
   const formation = useMemo(
     () => formGovernment(eventId, seats),
@@ -76,27 +184,69 @@ export function WhatIfApp() {
     if (!same) {
       const first = presetsFor(e)[0];
       if (first) {
-        setDimension(first.scenario.dimension);
-        setMode(first.scenario.mode);
-        setGroups(first.scenario.groups);
+        applyScenario(first.scenario);
         setPresetId(first.id);
       } else {
-        setDimension(e.dimensions[0].id);
-        setGroups([]);
+        applyScenario({ dimension: e.dimensions[0].id, mode, groups: [] });
         setPresetId(null);
       }
     } else {
-      const ok = groups.filter((g) => same.groups.some((x) => x.id === g));
-      setGroups(ok);
-      if (ok.length !== groups.length) setPresetId(null);
+      const has = (gs: { id: string }[], g: string) => gs.some((x) => x.id === g);
+      const ok = groups.filter((g) => has(same.groups, g));
+      const realRow = e.groupVoting[same.id]?.groups ?? {};
+      const dials: Record<GroupId, number> = {};
+      for (const [g, f] of Object.entries(turnout))
+        if (has(same.groups, g))
+          dials[g] = Math.min(f, maxTurnoutFactor(realRow[g]?.turnout));
+      const sameAnd = e.dimensions.find((d) => d.id === andDim);
+      const okAnd = sameAnd ? andGroups.filter((g) => has(sameAnd.groups, g)) : [];
+      const next: Scenario = { dimension, mode, groups: ok, turnout: dials };
+      if (sameAnd && okAnd.length) next.and = { dimension: sameAnd.id, groups: okAnd };
+      applyScenario(next);
+      if (!sameAnd) setAndDim(null);
+      // Turnout presets differ by event (they copy that year's real turnout).
+      setPresetId(matchPreset(e, next));
     }
   };
   const describe = () => {
     if (!scenario)
       return `Nobody's been left out yet, so this is just the real ${event.label}.`;
+    const second = scenario.and
+      ? dimensions.find((d) => d.id === scenario.and!.dimension)
+      : undefined;
+    const secondList = second
+      ? joinNice(
+          second.groups
+            .filter((g) => scenario.and!.groups.includes(g.id))
+            .map((g) => g.label),
+          "or",
+        )
+      : "";
+    if (mode === "turnout") {
+      const real = event.groupVoting[dim.id]?.groups ?? {};
+      const bits = dim.groups
+        .filter((g) => (turnout[g.id] ?? 1) !== 1)
+        .map((g) => {
+          const f = turnout[g.id];
+          const t = real[g.id]?.turnout;
+          const pct = Math.round(f * 100);
+          if (pct === 0) return `${g.label} stay home`;
+          return typeof t === "number"
+            ? `${g.label} at ${pct}% (${Math.round(f * t * 100)}% turnout)`
+            : `${g.label} at ${pct}%`;
+        });
+      return `${dim.label} · 🎚️ Turnout dials: ${joinNice(bits)}${second ? `, only for ${second.label.toLowerCase()}: ${secondList}` : ""}.`;
+    }
     const labels = dim.groups
       .filter((g) => groups.includes(g.id))
       .map((g) => g.label);
+    if (second) {
+      const a = `${dim.label.toLowerCase()} ${joinNice(labels, "or")}`;
+      const b = `${second.label.toLowerCase()} ${secondList}`;
+      return mode === "exclude"
+        ? `${dim.label} + ${second.label} · 🙅 Anyone with ${a} and ${b} stays at home…`
+        : `${dim.label} + ${second.label} · ☝️ Only people with ${a} and ${b} turn up…`;
+    }
     const list = joinNice(labels);
     return mode === "exclude"
       ? `${dim.label} · 🙅 ${list} stay at home…`
@@ -169,9 +319,7 @@ export function WhatIfApp() {
                 title={p.blurb}
                 aria-pressed={on}
                 onClick={() => {
-                  setDimension(p.scenario.dimension);
-                  setMode(p.scenario.mode);
-                  setGroups(p.scenario.groups);
+                  applyScenario(p.scenario);
                   setPresetId(p.id);
                 }}
                 className={`chip px-3 py-1.5 text-sm font-bold ${on ? "bg-pink text-white" : "bg-card hover:bg-sun"}`}
@@ -209,6 +357,11 @@ export function WhatIfApp() {
             onDimension={(d) => {
               setDimension(d);
               setGroups([]);
+              setTurnout({});
+              if (andDim === d) {
+                setAndDim(null);
+                setAndGroups([]);
+              }
               setPresetId(null);
             }}
             onMode={(m) => {
@@ -225,11 +378,51 @@ export function WhatIfApp() {
               setGroups([]);
               setPresetId(null);
             }}
+            turnout={turnout}
+            onDial={(g, f) => {
+              setTurnout((t) => ({ ...t, [g]: f }));
+              setPresetId(null);
+            }}
+            onResetDials={() => {
+              setTurnout({});
+              setPresetId(null);
+            }}
+            andDimension={andDim}
+            andGroups={andGroups}
+            onAndDimension={(d) => {
+              setAndDim(d);
+              setAndGroups([]);
+              setPresetId(null);
+            }}
+            onToggleAndGroup={(g) => {
+              setAndGroups((gs) =>
+                gs.includes(g) ? gs.filter((x) => x !== g) : [...gs, g],
+              );
+              setPresetId(null);
+            }}
           />
         </div>
       )}
 
-      <div ref={resultsRef} className="scroll-mt-4" id="results">
+      <div ref={resultsRef} className="scroll-mt-4 flex flex-col gap-2" id="results">
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <span className="text-sm font-bold text-muted">
+            Send this what-if to the group chat:
+          </span>
+          <button
+            type="button"
+            onClick={copyLink}
+            aria-live="polite"
+            className={`chip px-3 py-1.5 text-sm font-extrabold ${copied === "copied" ? "bg-mint" : "bg-card hover:bg-sun"}`}
+          >
+            <span aria-hidden>🔗</span>{" "}
+            {copied === "copied"
+              ? "Copied!"
+              : copied === "failed"
+                ? "Couldn't copy. Copy the address bar instead."
+                : "Copy link"}
+          </button>
+        </div>
         {event.kind === "referendum" ? (
           <ReferendumResults
             result={result}
@@ -280,7 +473,43 @@ export function WhatIfApp() {
   );
 }
 
-function joinNice(xs: string[]): string {
+const systemIds = systems.map((s) => s.id as string);
+
+function joinNice(xs: string[], word = "and"): string {
   if (xs.length <= 1) return xs[0] ?? "";
-  return `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+  return `${xs.slice(0, -1).join(", ")} ${word} ${xs[xs.length - 1]}`;
+}
+
+/** The id of the preset (if any) that is exactly this scenario in this event. */
+function matchPreset(e: ElectionEvent, s: Scenario): string | null {
+  const key = (x: Scenario) =>
+    encodeShare({
+      eventId: e.id,
+      dimension: x.dimension,
+      mode: x.mode,
+      groups: x.mode === "turnout" ? [] : [...x.groups].sort(),
+      turnout: x.mode === "turnout" ? (x.turnout ?? {}) : {},
+      and: x.and ? { dimension: x.and.dimension, groups: [...x.and.groups].sort() } : null,
+      system: "fptp",
+    });
+  const k = key(s);
+  return presetsFor(e).find((p) => key(p.scenario) === k)?.id ?? null;
+}
+
+/** Clipboard fallback for browsers (or sandboxed previews) without the async API. */
+function legacyCopy(text: string): boolean {
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    ta.remove();
+    return ok;
+  } catch {
+    return false;
+  }
 }
