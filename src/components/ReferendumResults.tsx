@@ -1,5 +1,7 @@
 import type { ElectionEvent, ScenarioResult } from "@/lib/types";
+import { useState } from "react";
 import { HexMap } from "./HexMap";
+import { SeatSearch } from "./SeatSearch";
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 
@@ -40,6 +42,9 @@ export function ReferendumResults({
   const areaWord = event.id === "indyref2014" ? "council" : "counting area";
   const keptShare = baseline.totalVotes > 0 ? result.totalVotes / baseline.totalVotes : 0;
   const flips = result.flipped.slice(0, 8);
+  const [pick, setPick] = useState<{ ev: string; id: string | null }>({ ev: "", id: null });
+  const selected = pick.ev === event.id ? pick.id : null;
+  const select = (id: string | null) => setPick({ ev: event.id, id });
 
   return (
     <section aria-labelledby="results-h" className="flex flex-col gap-5" aria-live="polite">
@@ -77,6 +82,8 @@ export function ReferendumResults({
             parties={event.parties}
             areaWord={event.id === "indyref2014" ? "council" : "area"}
             isBaseline={isBaseline}
+            highlight={selected}
+            onPick={select}
           />
           {event.id === "eu2016" && (
             <p className="text-xs text-muted">
@@ -87,6 +94,17 @@ export function ReferendumResults({
           )}
         </div>
       )}
+
+      <SeatSearch
+        event={event}
+        result={result}
+        baseline={baseline}
+        parties={event.parties}
+        selected={selected}
+        onSelect={select}
+        areaWord={areaWord}
+        isBaseline={isBaseline}
+      />
 
       <div className="card flex flex-col gap-3 p-4 sm:p-5">
         <h3 className="font-display text-lg font-extrabold">

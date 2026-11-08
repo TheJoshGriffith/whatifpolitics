@@ -4,15 +4,22 @@ import type {
   PartyId,
   ScenarioResult,
 } from "@/lib/types";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Hemicycle } from "./Hemicycle";
 import { HexMap } from "./HexMap";
+import { SeatSearch } from "./SeatSearch";
+import { CoalitionTweaks } from "./CoalitionTweaks";
 import {
+  formGovernment,
   gallagher,
+  governmentHeadline,
+  regionalAllocation,
   systems,
   type Formation,
   type VotingSystem,
+  type WillingnessOverrides,
 } from "@/lib/systems";
+import { assignRegionalSeats } from "@/lib/mapModes";
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 const pct0 = (x: number) =>
@@ -28,8 +35,8 @@ export function Results({
   system,
   onSystem,
   seats,
-  formation,
-  headline,
+  formation: formationIn,
+  headline: headlineIn,
 }: {
   result: ScenarioResult;
   baseline: ScenarioResult;
@@ -48,7 +55,32 @@ export function Results({
   const shown = { ...result, seats };
   const sys = systems.find((x) => x.id === system)!;
   const [picked, setView] = useState<"map" | "commons" | null>(null);
-  const view = picked ?? (system === "fptp" ? "map" : "commons");
+  const view =
+    picked ?? (system === "fptp" || system === "regional" ? "map" : "commons");
+
+  // Seat search selection and coalition tweaks belong to one election; reset when it changes.
+  const [seatPick, setSeatPick] = useState<{ ev: string; id: string | null }>({ ev: "", id: null });
+  const selectedSeat = seatPick.ev === event.id ? seatPick.id : null;
+  const selectSeat = (id: string | null) => setSeatPick({ ev: event.id, id });
+  const [tweaks, setTweaks] = useState<{ ev: string; o: WillingnessOverrides }>({ ev: "", o: {} });
+  const overrides = useMemo(
+    () => (tweaks.ev === event.id ? tweaks.o : {}),
+    [tweaks, event.id],
+  );
+  const tweaked = Object.keys(overrides).length > 0;
+  const formation = useMemo(
+    () => (tweaked ? formGovernment(event.id, seats, overrides) : formationIn),
+    [tweaked, event.id, seats, overrides, formationIn],
+  );
+  const headline = tweaked
+    ? governmentHeadline(formation, seats, result.voteShares, parties, system)
+    : headlineIn;
+
+  const regional = useMemo(() => {
+    if (system !== "regional") return undefined;
+    const regions = regionalAllocation(result);
+    return { regions, seatParty: assignRegionalSeats(result.seatResults, regions) };
+  }, [system, result]);
 
   return (
     <section
@@ -133,7 +165,7 @@ export function Results({
           </div>
           {view === "map" && event.map ? (
             <>
-              {system !== "fptp" && (
+              {(system === "pr" || system === "pr5") && (
                 <p className="rounded-2xl bg-sky/20 px-3 py-2 text-xs font-bold">
                   Heads up: the map shows who&apos;d win each constituency under
                   first past the post. Under {sys.label.toLowerCase()} there are
@@ -147,6 +179,9 @@ export function Results({
                 baselineResults={baseline.seatResults}
                 parties={parties}
                 isBaseline={isBaseline}
+                highlight={selectedSeat}
+                onPick={selectSeat}
+                regional={regional}
               />
             </>
           ) : (
@@ -171,6 +206,31 @@ export function Results({
               : 0
           }
         />
+      </div>
+
+      <div className="grid items-start gap-5 md:grid-cols-5 [&>*]:min-w-0">
+        <div className={formation.majorityParty ? "md:col-span-5" : "md:col-span-3"}>
+          <SeatSearch
+            event={event}
+            result={result}
+            baseline={baseline}
+            parties={parties}
+            selected={selectedSeat}
+            onSelect={selectSeat}
+            isBaseline={isBaseline}
+          />
+        </div>
+        {!formation.majorityParty && (
+          <div className="md:col-span-2">
+            <CoalitionTweaks
+              eventId={event.id}
+              seats={seats}
+              parties={parties}
+              overrides={overrides}
+              onChange={(o) => setTweaks({ ev: event.id, o })}
+            />
+          </div>
+        )}
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 [&>*]:min-w-0">

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildModel } from "./engine";
 import { getEvent, modelInputFor } from "./data";
-import { allocateSeats, formGovernment, gallagher, willingness } from "./systems";
+import { allocateSeats, coalitionPairs, formGovernment, gallagher, willingness } from "./systems";
 
 describe("voting systems", () => {
   const base = buildModel(modelInputFor(getEvent("ge2024"))).baseline;
@@ -43,5 +43,25 @@ describe("forming a government", () => {
   it("willingness is symmetric and era-aware", () => {
     expect(willingness("ge2017", "dup", "con")).toBe(willingness("ge2017", "con", "dup"));
     expect(willingness("ge2015", "lab", "snp")).toBeLessThan(willingness("ge2019", "lab", "snp"));
+  });
+});
+
+describe("willingness overrides", () => {
+  const hung = { con: 306, lab: 258, ld: 57, snp: 6, dup: 8, sf: 5, green: 1, pc: 3 };
+  it("override either way round wins over the defaults", () => {
+    expect(willingness("ge2010", "con", "ld", { "ld-con": 0.2 })).toBe(0.2);
+    expect(willingness("ge2010", "con", "ld")).toBe(0.65);
+  });
+  it("ruling a deal out changes the odds", () => {
+    const f0 = formGovernment("ge2010", hung);
+    const f1 = formGovernment("ge2010", hung, { "con-ld": 0, "con-dup": 0 });
+    expect(f1.deals.some((d) => d.parties.join("+") === "con+ld")).toBe(false);
+    expect(f1.pmChance.con ?? 0).toBeLessThan(f0.pmChance.con);
+  });
+  it("lists pairs among the biggest parties with seats, skipping Sinn Féin", () => {
+    const pairs = coalitionPairs("ge2010", hung);
+    expect(pairs).toHaveLength(15);
+    expect(pairs[0]).toMatchObject({ a: "con", b: "lab" });
+    expect(pairs.some((p) => p.a === "sf" || p.b === "sf")).toBe(false);
   });
 });

@@ -99,6 +99,29 @@ function allocate(system: VotingSystem, result: ScenarioResult): Record<PartyId,
   return out;
 }
 
+export interface RegionAllocation {
+  region: string;
+  /** Seats the region elects (its number of constituencies). */
+  total: number;
+  seats: Record<PartyId, number>;
+}
+
+/** Seats per party in each region under regional lists (D'Hondt per region). */
+export function regionalAllocation(result: ScenarioResult): RegionAllocation[] {
+  const regions = new Map<string, { seats: number; votes: Record<PartyId, number> }>();
+  for (const s of result.seatResults) {
+    const r = regions.get(s.region) ?? { seats: 0, votes: {} };
+    r.seats += 1;
+    for (const [p, n] of Object.entries(s.votes)) r.votes[p] = (r.votes[p] ?? 0) + n;
+    regions.set(s.region, r);
+  }
+  return [...regions].map(([region, r]) => ({
+    region,
+    total: r.seats,
+    seats: highestAverages(listVotes(r.votes), r.seats, dHondt),
+  }));
+}
+
 /** Gallagher index: 0 = perfectly proportional. Typical FPTP UK result is 15–25. */
 export function gallagher(seats: Record<PartyId, number>, voteShares: Record<PartyId, number>): number {
   const total = Object.values(seats).reduce((a, b) => a + b, 0) || 1;
@@ -152,13 +175,38 @@ const NON_VOTING = new Set(["sf", "spk"]);
 /** Too small and too varied to be a coalition partner as a bloc. */
 const NOT_A_PARTNER = new Set(["other", "ind", "bnp"]);
 
-export function willingness(eventId: string, a: PartyId, b: PartyId): number {
+/** User tweaks to the willingness matrix, keyed "a-b" (either order). */
+export type WillingnessOverrides = Record<string, number>;
+
+export function willingness(eventId: string, a: PartyId, b: PartyId, overrides?: WillingnessOverrides): number {
   if (a === b) return 1;
-  if (a === "bnp" || b === "bnp") return 0;
   const k1 = `${a}-${b}`;
   const k2 = `${b}-${a}`;
+  const o = overrides?.[k1] ?? overrides?.[k2];
+  if (o !== undefined) return Math.min(1, Math.max(0, o));
+  if (a === "bnp" || b === "bnp") return 0;
   const era = ERA[eventId] ?? {};
   return era[k1] ?? era[k2] ?? BASE[k1] ?? BASE[k2] ?? 0.1;
+}
+
+/** Pairs of parties (biggest first) whose willingness matters for these seats, for the tweak panel. */
+export function coalitionPairs(
+  eventId: string,
+  seats: Record<PartyId, number>,
+  maxParties = 6,
+): { key: string; a: PartyId; b: PartyId; base: number }[] {
+  const players = Object.entries(seats)
+    .filter(([p, n]) => n > 0 && !NON_VOTING.has(p) && !NOT_A_PARTNER.has(p))
+    .sort((x, y) => y[1] - x[1])
+    .slice(0, maxParties)
+    .map(([p]) => p);
+  const out: { key: string; a: PartyId; b: PartyId; base: number }[] = [];
+  for (let i = 0; i < players.length; i++)
+    for (let j = i + 1; j < players.length; j++) {
+      const [a, b] = [players[i], players[j]];
+      out.push({ key: `${a}-${b}`, a, b, base: willingness(eventId, a, b) });
+    }
+  return out;
 }
 
 export interface Deal {
@@ -186,7 +234,11 @@ export interface Formation {
  * to the line. Score each by how willing the members are and how many of them there are,
  * then turn scores into chances.
  */
-export function formGovernment(eventId: string, seats: Record<PartyId, number>): Formation {
+export function formGovernment(
+  eventId: string,
+  seats: Record<PartyId, number>,
+  overrides?: WillingnessOverrides,
+): Formation {
   const voting = Object.entries(seats).filter(([p, n]) => n > 0 && !NON_VOTING.has(p));
   const votingSeats = voting.reduce((a, [, n]) => a + n, 0);
   const need = Math.floor(votingSeats / 2) + 1;
@@ -214,8 +266,8 @@ export function formGovernment(eventId: string, seats: Record<PartyId, number>):
     const leader = members[0][0];
     let w = 1;
     for (let i = 1; i < members.length; i++) {
-      w *= willingness(eventId, leader, members[i][0]);
-      for (let j = 1; j < i; j++) w *= Math.sqrt(willingness(eventId, members[i][0], members[j][0]));
+      w *= willingness(eventId, leader, members[i][0], overrides);
+      for (let j = 1; j < i; j++) w *= Math.sqrt(willingness(eventId, members[i][0], members[j][0], overrides));
     }
     // Squared so that "barely willing" deals stay fringe rather than eating a few % each.
     const score = w * w * Math.pow(0.6, members.length - 1);
