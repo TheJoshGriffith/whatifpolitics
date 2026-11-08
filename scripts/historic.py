@@ -67,6 +67,16 @@ def yougov_columns(md):
   return out
 
 
+# In 2010 the Ulster Unionists stood jointly with the Conservatives as "Ulster Conservatives and Unionists –
+# New Force" (UCUNF). The results file lists those 17 candidates without a party; we count them as UUP.
+UCUNF_2010 = {(seat, name): "uup" for seat, name in [
+  ("Belfast East", "Ringland"), ("Belfast North", "Cobain"), ("Belfast South", "Bradshaw"), ("Belfast West", "Manwaring"),
+  ("East Antrim", "McCune"), ("East Londonderry", "Macaulay"), ("Foyle", "Harding"), ("Lagan Valley", "Trimble"),
+  ("Mid Ulster", "Overend"), ("Newry and Armagh", "Kennedy"), ("North Antrim", "Armstrong"), ("North Down", "Parsley"),
+  ("South Antrim", "Empey"), ("South Down", "McCallister"), ("Strangford", "Nesbitt"), ("Upper Bann", "Hamilton"),
+  ("West Tyrone", "Hussey")]}
+
+
 # --- party lists --------------------------------------------------------------------------
 BASE = [
   ("green","Green Party","Green","#02A95B"), ("lab","Labour","Lab","#E4003B"),
@@ -196,7 +206,7 @@ def build(G):
   sources += [
     {"id":"ge-results-db","name":"UK general election results 2010–2019","publisher":"House of Commons Library / UK Parliament",
      "url":"https://electionresults.parliament.uk/","year":2024,
-     "note":"Every candidate's votes in every seat at the 2010, 2015, 2017 and 2019 general elections."},
+     "note":"Every candidate's votes in every seat at the 2010, 2015, 2017 and 2019 general elections. In 2010 the Ulster Unionists stood jointly with the Conservatives in Northern Ireland (as UCUNF); we count those votes as UUP."},
     {"id":"ipsos-2010","name":"How Britain voted in 2010","publisher":"Ipsos","url":"https://www.ipsos.com/en-uk/how-britain-voted-2010","year":2010,
      "note":"10,211 adults over the campaign. Con/Lab/LD/Other shares and turnout by sex, age, class, housing and ethnicity, plus group sizes."},
     {"id":"ipsos-2015","name":"How Britain voted in 2015","publisher":"Ipsos","url":"https://www.ipsos.com/en-uk/how-britain-voted-2015","year":2015,
@@ -218,8 +228,8 @@ def build(G):
      "note":"86% of people identified as White in 2011. Used with Ipsos turnout to size ethnic groups among voters, 2010–2019."},
   ]
 
-  def results_event(year, gid, colmap, parties, blurb, dims, gv):
-    seats = load_ge(f"ge{year}_candidacies_full.csv", colmap)
+  def results_event(year, gid, colmap, parties, blurb, dims, gv, cand_party=None):
+    seats = load_ge(f"ge{year}_candidacies_full.csv", colmap, cand_party)
     add_event({"id": gid, "label": f"{year} general election", "short": f"GE {year}", "year": year, "kind": "general",
       "date": "", "blurb": blurb, "resultsSource": "ge-results-db", "parties": party_list(parties),
       "constituencies": seats, "dimensions": [DIM[d] if isinstance(d, str) else d for d in dims], "groupVoting": finish(gv)})
@@ -233,7 +243,7 @@ def build(G):
   results_event(2010, "ge2010", {**COLMAP_BASE, "UKIP":"ukip", "BNP":"bnp"},
     BASE + [BNP, UKIP],
     "Hung parliament! Cameron and Clegg form the coalition in the Downing Street rose garden.",
-    ["age","sex","agesex","class","tenure","ethnicity"], gv10)
+    ["age","sex","agesex","class","tenure","ethnicity"], gv10, cand_party=UCUNF_2010)
 
   # ---- 2015: Ipsos (Con/Lab/LD/UKIP/Green/Other) -----------------------------------------
   c15 = {"con":"Con %","lab":"Lab %","ld":"LD %","ukip":"UKIP %","green":"Green","other":"Oth","ind":"Oth","snp":"Oth","pc":"Oth"}
@@ -579,6 +589,9 @@ def referendums(G):
     {"id":"census-2011-wpc","name":"parlitools: Census 2011 by constituency","publisher":"Evan Odell (from ONS and Scotland's Census, Census 2011)",
      "url":"https://cran.r-project.org/package=parlitools","year":2011,
      "note":"Census 2011 for all 632 GB seats on the 2010–2019 boundaries. Gives each 2010–2019 seat its own local mix."},
+    {"id":"census-2011-la","name":"Census 2011 by local authority (age, sex, social grade, qualifications, housing, ethnicity)","publisher":"ONS, Nomis and National Records of Scotland, via GitHub mirrors (dxe4/demographics, 0emerald/GB-Hyperlinks_N-S-Divide, anetobradley/energy_flex)",
+     "url":"https://github.com/dxe4/demographics/tree/master/data","year":2011,
+     "note":"Census 2011 for every council in Great Britain. Gives each referendum counting area its own mix of ages, sexes, social grades and ethnic groups, plus qualifications and (England and Wales only) housing. Northern Ireland's count uses NISRA's Census 2011 ages and sexes for Northern Ireland as a whole."},
     {"id":"hexmaps","name":"UK hex maps (constituencies 2010–2023 and local authorities 2021)","publisher":"Open Innovations (formerly ODI Leeds)",
      "url":"https://github.com/odileeds/hexmaps","year":2023,
      "note":"Hex layouts for the maps: one hexagon per seat or council, so every area is the same size."},

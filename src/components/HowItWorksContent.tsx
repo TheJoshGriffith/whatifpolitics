@@ -42,6 +42,12 @@ export function HowItWorksContent() {
           18–24s, against about 10% nationally, while a retirement hotspot on the coast is stacked with
           over-70s. This covers age, sex, social grade, education, housing, work and ethnicity.
         </p>
+        <p>
+          Northern Ireland gets its own treatment. The GB polls don&apos;t cover it, so for its 18
+          seats we take how each age group and each sex split between the Northern Irish parties
+          from the Northern Ireland Life and Times Survey, and each seat&apos;s ages and sexes from
+          NISRA&apos;s Census figures.
+        </p>
         <ul>
           <li>each party&apos;s votes add up to exactly what it really got in that seat, and</li>
           <li>each group still makes up the same slice of that seat&apos;s voters.</li>
@@ -109,6 +115,9 @@ export function HowItWorksContent() {
           votes, because a referendum is won on the national count. We still show which areas would
           change sides, for fun. The group splits come from YouGov and Lord Ashcroft&apos;s polls on
           the day, so the same caveats apply (the Scottish poll only had 14 16–17-year-olds in it).
+          Each counting area gets its own local mix from the 2011 Census for its council, the same
+          way seats do, and Northern Ireland&apos;s count uses the Life and Times Survey&apos;s
+          Remain and Leave split by age and sex.
         </p>
 
         <h2>5. Change the rules</h2>
@@ -234,10 +243,14 @@ export function HowItWorksContent() {
             voted there. We assume each group&apos;s national turnout gap holds everywhere (if young
             people vote less nationally, they vote less in Sheffield too). Census bands don&apos;t
             always line up with the polls&apos; bands, so some are split evenly by year of age, and
-            social grade is approximated from the Census&apos;s occupation classes (NS-SeC). Northern
-            Ireland has no Census figures here, and Scotland&apos;s 2021 figures only cover age, sex and
-            ethnicity, so those seats use the national mix for the rest. Income, Brexit vote and
-            newspaper readership aren&apos;t in the Census, so they always use the national mix.
+            social grade is approximated from the Census&apos;s occupation classes (NS-SeC).
+            Scotland&apos;s 2021 figures only cover age, sex and ethnicity, and Northern Ireland&apos;s
+            only age and sex, so those seats use the national mix for the rest. In the referendums,
+            Scottish councils have no housing figures, Northern Ireland has only age and sex, and
+            Gibraltar has none. Income, Brexit vote, past vote and newspaper readership aren&apos;t
+            in the Census, so they always use the national mix. Where the Census doesn&apos;t cross
+            two things (age by sex in the referendums, say), we size the joint groups by multiplying
+            the two shares.
           </li>
           <li>
             <b>Older elections have thinner polling.</b> For 2005, 2010 and 2015 the only big post-election
@@ -274,8 +287,15 @@ export function HowItWorksContent() {
           </li>
           <li>
             <b>Small parties get fuzzy.</b> &ldquo;Other&rdquo; and independents lump together lots
-            of very different candidates. The polls are Great Britain only, so in Northern Ireland we
-            assume every group voted the same way, which means NI seats basically never change.
+            of very different candidates.
+          </li>
+          <li>
+            <b>Northern Ireland is thinner still.</b> The Life and Times Survey talks to about 1,200
+            people a year, and apart from 2019 it asks which party people support rather than how
+            they voted, so we only lean on it for how age groups and the sexes differ from each
+            other; each seat still adds up to its real result. It covers age and sex only, so for
+            every other slice Northern Ireland&apos;s groups all split the same way and its seats
+            don&apos;t move. Age by sex is pieced together from the two separate tables. For 2005 we have no Northern Ireland survey at all, so its seats don&apos;t move in any slice.
           </li>
           <li>
             <b>Rounding.</b> Raking runs a fixed number of rounds, so tiny numbers can wobble by a

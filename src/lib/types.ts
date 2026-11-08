@@ -32,6 +32,12 @@ export interface Constituency {
    * voter mix). When absent, the national voter mix is used.
    */
   groupShares?: Partial<Record<DimensionId, Record<GroupId, number>>>;
+  /**
+   * Optional seat-specific party shares per group (group -> party -> share), used in place of
+   * groupVoting[dimension].groups[group].shares. Northern Ireland seats get these from
+   * Northern Ireland surveys, because the GB polls don't cover Northern Ireland's parties.
+   */
+  groupVotingOverride?: Partial<Record<DimensionId, Record<GroupId, Record<PartyId, number>>>>;
 }
 
 export interface DimensionGroup {

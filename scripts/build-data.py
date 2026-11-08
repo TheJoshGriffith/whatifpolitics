@@ -27,7 +27,8 @@ COLMAP = {"Lab":"lab","Con":"con","RUK":"reform","LD":"ld","Green":"green","SNP"
           "SF":"sf","DUP":"dup","APNI":"apni","SDLP":"sdlp","UUP":"uup","TUV":"tuv","WPB":"other",
           }
 
-def load_ge(fname, colmap):
+def load_ge(fname, colmap, cand_party=None):
+  """cand_party: optional {(constituency_name, candidate_family_name): party id} for candidates the CSV lists without a party."""
   seats_by = {}
   with open(os.path.join(HERE, fname)) as f:
     for r in csv.DictReader(f):
@@ -42,6 +43,7 @@ def load_ge(fname, colmap):
     for r in s["cands"]:
       v = int(r["vote_count"])
       if r["is_standing_as_commons_speaker"] == "1": pid = "spk"
+      elif cand_party and (r["constituency_name"], r["candidate_family_name"]) in cand_party: pid = cand_party[(r["constituency_name"], r["candidate_family_name"])]
       elif r["party_abbreviation"] == "": inds.append(v); continue
       else: pid = colmap.get(r["party_abbreviation"], "other")
       votes[pid] = votes.get(pid, 0) + v
@@ -280,13 +282,19 @@ def attach_map(ev):
   assert len(missing) <= 1, (ev["id"], missing)  # Gibraltar has no hex
   ev["map"] = {"layout": "odd-r", "hexes": out}
 
-import census
+import census, ni
 
 def add_event(ev):
   attach_map(ev)
   if ev["kind"] == "general":
     matched, used = census.attach(ev)
     print("  census:", ev["id"], matched, "seats", used)
+  else:
+    matched, used = census.attach_referendum(ev)
+    print("  census:", ev["id"], matched, "areas", used)
+  n, dims = ni.attach(ev)
+  if n:
+    print("  Northern Ireland behaviour:", ev["id"], n, "areas", dims)
   EVENTS.append(ev)
   with open(os.path.join(OUT, "events", ev["id"] + ".json"), "w") as f:
     json.dump(ev, f, ensure_ascii=False, separators=(",", ":"))
@@ -313,7 +321,7 @@ with open(os.path.join(OUT, "events", "index.ts"), "w") as f:
   for e in order: f.write(f'import {e["id"]} from "./{e["id"]}.json";\n')
   f.write("\nexport const events = [" + ", ".join(e["id"] for e in order) + "] as unknown as ElectionEvent[];\n")
 with open(os.path.join(OUT, "sources.json"), "w") as f:
-  json.dump({"placeholder": False, "sources": sources}, f, ensure_ascii=False, indent=1)
+  json.dump({"placeholder": False, "sources": sources + ni.SOURCES}, f, ensure_ascii=False, indent=1)
 from collections import Counter
 for e in order:
   print(e["id"], len(e["constituencies"]), Counter(max(s["votes"], key=s["votes"].get) for s in e["constituencies"]).most_common(6))
