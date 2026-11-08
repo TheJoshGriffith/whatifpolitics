@@ -1,8 +1,15 @@
-import { sources, groupVoting, dimensions, isPlaceholder } from "@/lib/data";
+import { sources, events, isPlaceholder } from "@/lib/data";
 
 export function SourcesContent() {
-  const usedFor = (id: string) =>
-    dimensions.filter((d) => groupVoting[d.id]?.source === id).map((d) => d.label);
+  const usedFor = (id: string) => {
+    const out: string[] = [];
+    for (const e of events) {
+      if (e.resultsSource === id) out.push(`${e.short} results`);
+      const dims = e.dimensions.filter((d) => e.groupVoting[d.id]?.source === id || e.groupVoting[d.id]?.turnoutSource === id);
+      if (dims.length) out.push(`${e.short}: ${dims.map((d) => d.label).join(", ")}`);
+    }
+    return out;
+  };
   return (
     <article className="flex flex-col gap-6 pt-4 sm:pt-10">
       <h1 className="font-display text-4xl font-black tracking-tight sm:text-5xl">
@@ -37,7 +44,7 @@ export function SourcesContent() {
                 </a>
               )}
               {dims.length > 0 && (
-                <p className="text-xs font-bold text-muted">Used for: {dims.join(", ")}</p>
+                <p className="text-xs font-bold text-muted">Used for: {dims.join(" · ")}</p>
               )}
             </li>
           );

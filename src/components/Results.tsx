@@ -1,4 +1,4 @@
-import type { Party, PartyId, ScenarioResult } from "@/lib/types";
+import type { ElectionEvent, Party, PartyId, ScenarioResult } from "@/lib/types";
 import { Hemicycle } from "./Hemicycle";
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
@@ -7,12 +7,14 @@ export function Results({
   result,
   baseline,
   parties,
+  event,
   description,
   isBaseline,
 }: {
   result: ScenarioResult;
   baseline: ScenarioResult;
   parties: Party[];
+  event: ElectionEvent;
   description: string;
   isBaseline: boolean;
 }) {
@@ -24,7 +26,7 @@ export function Results({
       <div className="card relative overflow-hidden bg-sun p-5 sm:p-7">
         <p className="text-sm font-bold text-ink/70">{description}</p>
         <h2 id="results-h" className="mt-1 font-display text-2xl font-black leading-tight sm:text-3xl">
-          {isBaseline ? "Here's what actually happened in 2024." : result.headline}
+          {isBaseline ? `Here's what actually happened in ${event.year}.` : result.headline}
         </h2>
         <span aria-hidden className="pointer-events-none absolute -right-3 -top-4 rotate-12 text-7xl opacity-20 sm:text-8xl">
           🗳️
@@ -50,7 +52,7 @@ export function Results({
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 [&>*]:min-w-0">
-        <SeatTable result={result} baseline={baseline} parties={parties} />
+        <SeatTable result={result} baseline={baseline} parties={parties} year={event.year} />
         <Flips result={result} byId={byId} />
       </div>
     </section>
@@ -182,10 +184,12 @@ function SeatTable({
   result,
   baseline,
   parties,
+  year,
 }: {
   result: ScenarioResult;
   baseline: ScenarioResult;
   parties: Party[];
+  year: number;
 }) {
   const rows = [...parties]
     .filter((p) => result.seats[p.id] > 0 || baseline.seats[p.id] > 0 || result.voteShares[p.id] > 0.005)
@@ -197,13 +201,13 @@ function SeatTable({
     );
   return (
     <div className="card overflow-hidden p-0">
-      <h3 className="px-4 pt-4 font-display text-lg font-extrabold sm:px-5">Scoreboard vs actual 2024</h3>
+      <h3 className="px-4 pt-4 font-display text-lg font-extrabold sm:px-5">Scoreboard vs actual {year}</h3>
       <table className="mt-2 w-full text-sm">
         <thead>
           <tr className="text-left text-xs uppercase tracking-wider text-muted">
             <th className="py-2 pl-4 font-extrabold sm:pl-5">Party</th>
             <th className="py-2 text-right font-extrabold">Seats</th>
-            <th className="py-2 text-right font-extrabold">2024</th>
+            <th className="py-2 text-right font-extrabold">{year}</th>
             <th className="py-2 text-center font-extrabold">±</th>
             <th className="py-2 pr-4 text-right font-extrabold sm:pr-5">Votes</th>
           </tr>

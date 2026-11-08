@@ -1,40 +1,31 @@
 /**
  * Single place where the JSON in src/data/ is loaded and typed.
- * Swap the JSON files for real data; nothing else needs to change.
+ * Regenerate it with `python3 scripts/build-data.py`.
  */
-import partiesJson from "../data/parties.json";
-import dimensionsJson from "../data/dimensions.json";
-import constituenciesJson from "../data/constituencies.json";
-import groupVotingJson from "../data/groupVoting.json";
 import sourcesJson from "../data/sources.json";
-import type {
-  ConstituenciesFile,
-  DimensionsFile,
-  GroupVotingFile,
-  PartiesFile,
-  SourcesFile,
-} from "./types";
+import { events } from "../data/events";
+import type { ElectionEvent, SourcesFile } from "./types";
 import type { ModelInput } from "./engine";
 
-const partiesFile = partiesJson as unknown as PartiesFile;
-const dimensionsFile = dimensionsJson as unknown as DimensionsFile;
-const constituenciesFile = constituenciesJson as unknown as ConstituenciesFile;
-const groupVotingFile = groupVotingJson as unknown as GroupVotingFile;
 const sourcesFile = sourcesJson as unknown as SourcesFile;
 
-export const parties = partiesFile.parties;
-export const dimensions = dimensionsFile.dimensions;
-export const constituencies = constituenciesFile.constituencies;
-export const groupVoting = groupVotingFile.groupVoting;
+export { events };
 export const sources = sourcesFile.sources;
+export const isPlaceholder = false;
+export const defaultEvent = events[0];
 
-/** true if ANY data file is still placeholder — the UI shows a banner. */
-export const isPlaceholder = [
-  partiesFile,
-  dimensionsFile,
-  constituenciesFile,
-  groupVotingFile,
-  sourcesFile,
-].some((f) => f.placeholder);
+export function getEvent(id: string): ElectionEvent {
+  return events.find((e) => e.id === id) ?? defaultEvent;
+}
 
-export const modelInput: ModelInput = { parties, dimensions, constituencies, groupVoting };
+export function modelInputFor(e: ElectionEvent): ModelInput {
+  return { parties: e.parties, dimensions: e.dimensions, constituencies: e.constituencies, groupVoting: e.groupVoting };
+}
+
+/** The 2024 general election, kept for tests and older code. */
+const ge2024 = getEvent("ge2024");
+export const parties = ge2024.parties;
+export const dimensions = ge2024.dimensions;
+export const constituencies = ge2024.constituencies;
+export const groupVoting = ge2024.groupVoting;
+export const modelInput: ModelInput = modelInputFor(ge2024);

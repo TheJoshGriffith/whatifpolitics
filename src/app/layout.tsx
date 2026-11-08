@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 export const metadata: Metadata = {
   title: { default: "What If Britain…?", template: "%s · What If Britain…?" },
   description:
-    "Re-run the 2024 UK general election with a twist: what if only some of us had voted? A toy, not a prediction.",
+    "Re-run UK general elections with a twist: what if only some of us had voted? A toy, not a prediction.",
 };
 
 export const viewport: Viewport = {

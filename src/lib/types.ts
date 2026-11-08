@@ -6,7 +6,8 @@
  */
 
 export type PartyId = string;
-export type DimensionId = "age" | "sex" | "class" | "education" | "tenure" | "work" | "ethnicity" | "agesex" | "brexit" | "income";
+/** e.g. "age", "class", "ethnicity". Each event lists the dimensions it has data for. */
+export type DimensionId = string;
 export type GroupId = string;
 
 export interface Party {
@@ -162,4 +163,24 @@ export interface ScenarioResult {
   flipped: FlippedSeat[];
   government: GovernmentOutcome;
   headline: string;
+}
+
+/** One election or referendum the site can replay. */
+export interface ElectionEvent {
+  id: string;
+  /** e.g. "2019 general election" */
+  label: string;
+  /** e.g. "GE 2019" */
+  short: string;
+  year: number;
+  kind: "general" | "referendum";
+  date: string;
+  blurb: string;
+  /** Source id for the real results. */
+  resultsSource: string;
+  parties: Party[];
+  /** Seats for a general election, counting areas for a referendum. */
+  constituencies: Constituency[];
+  dimensions: Dimension[];
+  groupVoting: GroupVoting;
 }

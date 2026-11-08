@@ -1,4 +1,4 @@
-import type { Scenario } from "./types";
+import type { ElectionEvent, Scenario } from "./types";
 
 export interface Preset {
   id: string;
@@ -32,3 +32,11 @@ export const presets: Preset[] = [
   { id: "only-remain", label: "Only Remainers", emoji: "🇪🇺", blurb: "2016 Remain voters only. Still have the beret.", scenario: { dimension: "brexit", mode: "only", groups: ["remain"] } },
   { id: "only-70k", label: "Only £70k+ households", emoji: "🛥️", blurb: "Comfortably off and allowed to vote. Nobody else.", scenario: { dimension: "income", mode: "only", groups: ["70plus"] } },
 ];
+
+/** Presets whose slice and groups exist in this event's data. */
+export function presetsFor(event: ElectionEvent): Preset[] {
+  return presets.filter((p) => {
+    const dim = event.dimensions.find((d) => d.id === p.scenario.dimension);
+    return !!dim && p.scenario.groups.every((g) => dim.groups.some((x) => x.id === g));
+  });
+}

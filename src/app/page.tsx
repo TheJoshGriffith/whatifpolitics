@@ -1,5 +1,4 @@
 import { WhatIfApp } from "@/components/WhatIfApp";
-import { PlaceholderBanner } from "@/components/PlaceholderBanner";
 import { SiteLink as Link } from "@/components/SiteLink";
 import { HashViews } from "@/components/HashViews";
 import { HowItWorksContent } from "@/components/HowItWorksContent";
@@ -10,15 +9,15 @@ function Play() {
     <div className="flex flex-col gap-8">
       <section className="relative pt-4 sm:pt-10">
         <p className="inline-block -rotate-2 rounded-full bg-mint px-3 py-1 text-xs font-extrabold uppercase tracking-wider ring-2 ring-ink">
-          General Election 2024 · the remix
+          UK elections · the remix
         </p>
         <h1 className="mt-4 max-w-3xl font-display text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl">
           What if only <span className="text-pink">some</span> of Britain had turned up?
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink/80">
-          Send the over-65s to the garden centre. Lock the graduates in the library. Let only the
-          women vote. Then watch every seat get re-counted, first-past-the-post style. Silly?
-          Absolutely. Interesting? Weirdly, yes.
+          Pick an election. Send the over-65s to the garden centre. Lock the graduates in the
+          library. Let only the women vote. Then watch every seat get re-counted,
+          first-past-the-post style. Silly? Absolutely. Interesting? Weirdly, yes.
         </p>
         <p className="mt-3 text-sm text-muted">
           It&apos;s a toy model, not a forecast —{" "}
@@ -31,7 +30,6 @@ function Play() {
           🇬🇧
         </span>
       </section>
-      <PlaceholderBanner />
       <WhatIfApp />
     </div>
   );

@@ -1,7 +1,7 @@
-import type { Dimension, DimensionId, GroupId, ScenarioMode } from "@/lib/types";
-import { groupVoting, dimensions as allDimensions, sources } from "@/lib/data";
+import type { Dimension, DimensionId, GroupId, GroupVoting, ScenarioMode } from "@/lib/types";
+import { sources } from "@/lib/data";
 
-const dimEmoji: Record<DimensionId, string> = {
+const dimEmoji: Record<string, string> = {
   age: "🎂",
   sex: "🚻",
   class: "🎩",
@@ -16,6 +16,7 @@ const dimEmoji: Record<DimensionId, string> = {
 
 export function ScenarioPicker({
   dimensions,
+  groupVoting,
   dimension,
   mode,
   groups,
@@ -25,6 +26,7 @@ export function ScenarioPicker({
   onReset,
 }: {
   dimensions: Dimension[];
+  groupVoting: GroupVoting;
   dimension: DimensionId;
   mode: ScenarioMode;
   groups: GroupId[];
@@ -122,7 +124,7 @@ export function ScenarioPicker({
             </button>
           )}
         </div>
-        <TurnoutFacts dimensionId={dim.id} />
+        <TurnoutFacts dimension={dim} groupVoting={groupVoting} />
         {allChosen && (
           <p className="mt-2 text-sm font-bold text-pink">
             You&apos;ve stopped literally everyone voting. Bold. Democracy has left the building.
@@ -147,10 +149,9 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
   );
 }
 
-function TurnoutFacts({ dimensionId }: { dimensionId: string }) {
-  const dv = groupVoting[dimensionId as keyof typeof groupVoting];
-  const dimension = allDimensions.find((d) => d.id === dimensionId);
-  if (!dv || !dimension) return null;
+function TurnoutFacts({ dimension, groupVoting }: { dimension: Dimension; groupVoting: GroupVoting }) {
+  const dv = groupVoting[dimension.id];
+  if (!dv) return null;
   const facts = dimension.groups
     .map((g) => ({ g, t: dv.groups[g.id]?.turnout }))
     .filter((x): x is { g: (typeof x)["g"]; t: number } => typeof x.t === "number");
