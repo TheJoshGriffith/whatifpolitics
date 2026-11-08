@@ -48,6 +48,11 @@ export const presets: Preset[] = [
   { id: "only-labour-indy", label: "Only Labour voters", emoji: "🔴", blurb: "Westminster Labour voters only. Better Together's home turf?", scenario: { dimension: "party", mode: "only", groups: ["lab"] } },
   { id: "only-bme", label: "Only ethnic minorities", emoji: "🌍", blurb: "Ethnic-minority voters only.", scenario: { dimension: "ethnicity", mode: "only", groups: ["bme"] } },
   { id: "only-white-old", label: "Only White voters", emoji: "🔵", blurb: "White voters only.", scenario: { dimension: "ethnicity", mode: "only", groups: ["white"] } },
+  // Grade × sex (2005, 2014)
+  { id: "only-c2de-women", label: "Only working-class women", emoji: "🧺", blurb: "Only women in social grades C2 and DE vote.", scenario: { dimension: "classsex", mode: "only", groups: ["fC2", "fDE"] } },
+  { id: "only-c2de-men", label: "Only working-class men", emoji: "🧤", blurb: "Only men in social grades C2 and DE vote.", scenario: { dimension: "classsex", mode: "only", groups: ["mC2", "mDE"] } },
+  { id: "only-over-55-men", label: "Only men over 55", emoji: "👴", blurb: "Only men aged 55 and over vote.", scenario: { dimension: "agesex", mode: "only", groups: ["m55"] } },
+  { id: "only-over-55-women", label: "Only women over 55", emoji: "👵", blurb: "Only women aged 55 and over vote.", scenario: { dimension: "agesex", mode: "only", groups: ["f55"] } },
   { id: "only-sun", label: "Only Sun readers", emoji: "☀️", blurb: "It's the Sun wot won it. Allegedly.", scenario: { dimension: "paper", mode: "only", groups: ["sun"] } },
   { id: "only-guardian", label: "Only Guardian readers", emoji: "🥗", blurb: "Quinoa at the ready.", scenario: { dimension: "paper", mode: "only", groups: ["guardian"] } },
   { id: "only-mail", label: "Only Daily Mail readers", emoji: "📰", blurb: "House prices and the weather.", scenario: { dimension: "paper", mode: "only", groups: ["mail"] } },
