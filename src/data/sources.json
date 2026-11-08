@@ -117,6 +117,22 @@
    "note": "86% of people identified as White in 2011. Used with Ipsos turnout to size ethnic groups among voters, 2010–2019."
   },
   {
+   "id": "ge2005-results",
+   "name": "UK general election results: May 2005",
+   "publisher": "Richard Kimber, Political Science Resources",
+   "url": "https://web.archive.org/web/2018/http://www.politicsresources.net/area/uk/ge05/i01.htm",
+   "year": 2005,
+   "note": "Every candidate's votes in all 646 seats, via the archived copy in github.com/CampaignLab/constituency-counts. Party totals match the official figures (Labour 9,552,436; Conservatives 8,784,915; Lib Dems 5,985,454)."
+  },
+  {
+   "id": "ipsos-2005",
+   "name": "How Britain voted in 2005",
+   "publisher": "Ipsos MORI",
+   "url": "https://www.ipsos.com/en-uk/node/171536",
+   "year": 2005,
+   "note": "17,959 adults across MORI's campaign polls, 10,986 of them certain to vote. Con/Lab/LD/Other shares, turnout and each group's share of voters by sex, age, social grade and housing. No ethnicity breakdown."
+  },
+  {
    "id": "census-2021-wpc",
    "name": "2024 General Election Census constituency summaries",
    "publisher": "Ralph Scott (from ONS / Nomis and Scotland's Census, Census 2021)",

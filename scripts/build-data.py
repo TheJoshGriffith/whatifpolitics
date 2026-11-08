@@ -225,6 +225,8 @@ LA_MERGES = {  # 2021 council -> the 2016 counting areas it was made from
 def attach_map(ev):
   """Hex map for an event: [[hexId, name, q, r, memberIds?], ...]. Members default to [hexId]."""
   ids = {c["id"] for c in ev["constituencies"]}
+  if ev["kind"] == "general" and ev["year"] < 2010:
+    return  # no hex map for the 1997-2005 boundaries
   if ev["kind"] == "general":
     fname = "uk-constituencies-2023.hexjson" if ev["year"] >= 2024 else "constituencies.hexjson"
     hexes = json.load(open(os.path.join(MAPS, fname)))["hexes"]

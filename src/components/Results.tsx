@@ -48,7 +48,7 @@ export function Results({
   const shown = { ...result, seats };
   const sys = systems.find((x) => x.id === system)!;
   const [picked, setView] = useState<"map" | "commons" | null>(null);
-  const view = picked ?? (system === "fptp" ? "map" : "commons");
+  const view = !event.map ? "commons" : (picked ?? (system === "fptp" ? "map" : "commons"));
 
   return (
     <section
@@ -108,6 +108,7 @@ export function Results({
             <h3 className="font-display text-lg font-extrabold">
               {view === "map" ? "Who wins where" : "The new House of Commons"}
             </h3>
+            {event.map && (
             <div
               className="flex gap-1 rounded-full border-2 border-ink p-0.5 text-xs font-extrabold"
               role="tablist"
@@ -130,6 +131,7 @@ export function Results({
                 </button>
               ))}
             </div>
+            )}
           </div>
           {view === "map" && event.map ? (
             <>
