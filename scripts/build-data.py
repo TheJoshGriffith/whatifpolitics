@@ -146,6 +146,7 @@ SAMPLE_VOTERS = {
   "ipsos-2015": round(9149 * 0.66),   # x the 'All' row turnout
   "ipsos-2017": round(7505 * 0.63),
   "ipsos-2019": round(27951 * 0.61),
+  "ipsos-2005": 10986,           # "absolutely certain to vote" base
 }
 def fill_n(d):
   for g in d["groups"].values():
