@@ -12,6 +12,7 @@ const dimEmoji: Record<string, string> = {
   agesex: "👫",
   brexit: "🇪🇺",
   income: "💷",
+  paper: "📰",
 };
 
 export function ScenarioPicker({

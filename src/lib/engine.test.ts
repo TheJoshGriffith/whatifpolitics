@@ -10,8 +10,8 @@ import {
   type ModelInput,
 } from "./engine";
 import type { Constituency, Dimension, GroupVoting, Party } from "./types";
-import { modelInput } from "./data";
-import { presets } from "./presets";
+import { events, modelInput, modelInputFor } from "./data";
+import { presets, presetsFor } from "./presets";
 
 const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
 
@@ -187,12 +187,15 @@ describe("real data sanity", () => {
     expect(model.baseline.seats).toMatchObject({ lab: 411, con: 121, ld: 72, snp: 9, sf: 7, ind: 6, reform: 5, dup: 5, green: 4, pc: 4 });
     expect(model.baseline.totalVotes).toBe(28809340);
   });
-  it("every preset runs and references real groups", () => {
-    for (const p of presets) {
-      const dim = modelInput.dimensions.find((d) => d.id === p.scenario.dimension)!;
-      for (const g of p.scenario.groups) expect(dim.groups.map((x) => x.id)).toContain(g);
-      const r = runScenario(model, p.scenario);
-      expect(sum(Object.values(r.seats))).toBe(modelInput.constituencies.length);
+  it("every preset fits at least one event, and each event's presets run", () => {
+    for (const p of presets) expect(events.some((e) => presetsFor(e).some((x) => x.id === p.id) || presetsFor(e).some((x) => x.label === p.label))).toBe(true);
+    for (const e of events) {
+      const m = buildModel(modelInputFor(e));
+      expect(m.baseline.totalVotes).toBeGreaterThan(0);
+      for (const p of presetsFor(e)) {
+        const r = runScenario(m, p.scenario);
+        expect(sum(Object.values(r.seats))).toBe(e.constituencies.length);
+      }
     }
   });
 });

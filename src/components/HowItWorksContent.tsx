@@ -8,15 +8,15 @@ export function HowItWorksContent() {
       </h1>
       <div className="card prose-casual p-5 sm:p-8">
         <p className="text-lg">
-          Short version: we take the real 2024 result in every seat, make an educated guess about{" "}
+          Short version: pick an election (2010 to 2024), we take the real result in every seat, make an educated guess about{" "}
           <i>who</i> cast those votes, then quietly remove some people and recount. No polling
           station staff were harmed.
         </p>
 
         <h2>1. Start with the real result</h2>
         <p>
-          For each of the 650 constituencies we know how many votes every party actually got on 4
-          July 2024. That&apos;s our anchor: whatever we do, if everybody votes, we get the real
+          For each of the 650 constituencies we know how many votes every party actually got, from
+          the House of Commons Library&apos;s results database. That&apos;s our anchor: whatever we do, if everybody votes, we get the real
           result back.
         </p>
 
@@ -66,6 +66,13 @@ export function HowItWorksContent() {
             are the national mix (say 10% are 18–24). In real life a student-heavy seat in Sheffield
             and a retirement hotspot on the coast look nothing alike. Plugging in Census 2021
             figures for each seat is next on the to-do list; the engine already supports it.
+          </li>
+          <li>
+            <b>Older elections have thinner polling.</b> For 2010 and 2015 the only big post-election
+            breakdowns we could get are Ipsos&apos;s, which split out Con, Lab, Lib Dem (and UKIP and
+            Green in 2015) and lump everyone else together. The SNP, Plaid and friends are worked
+            out from where they actually won votes. Group sizes for 2015–2019 Ipsos slices are
+            estimated from Ipsos&apos;s 2010 survey profile.
           </li>
           <li>
             <b>Ethnicity is the roughest slice.</b> Ipsos is the only post-election poll we could

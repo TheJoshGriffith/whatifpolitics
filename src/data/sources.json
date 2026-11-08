@@ -49,6 +49,72 @@
    "url": "https://www.ippr.org/articles/half-of-us",
    "year": 2024,
    "note": "Background on who didn't vote: just 52.8% of the voting-age population turned out."
+  },
+  {
+   "id": "ge-results-db",
+   "name": "UK general election results 2010–2019",
+   "publisher": "House of Commons Library / UK Parliament",
+   "url": "https://electionresults.parliament.uk/",
+   "year": 2024,
+   "note": "Every candidate's votes in every seat at the 2010, 2015, 2017 and 2019 general elections."
+  },
+  {
+   "id": "ipsos-2010",
+   "name": "How Britain voted in 2010",
+   "publisher": "Ipsos",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-2010",
+   "year": 2010,
+   "note": "10,211 adults over the campaign. Con/Lab/LD/Other shares and turnout by sex, age, class, housing and ethnicity, plus group sizes."
+  },
+  {
+   "id": "ipsos-2015",
+   "name": "How Britain voted in 2015",
+   "publisher": "Ipsos",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-2015",
+   "year": 2015,
+   "note": "9,149 adults. Con/Lab/LD/UKIP/Green shares and turnout by sex, age, class, housing and ethnicity. Group sizes estimated from Ipsos's 2010 profile."
+  },
+  {
+   "id": "ipsos-2017",
+   "name": "How Britain voted in the 2017 election",
+   "publisher": "Ipsos",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-2017-election",
+   "year": 2017,
+   "note": "7,505 adults. We use it for housing and ethnicity (Con/Lab/LD/UKIP/Other) and turnout."
+  },
+  {
+   "id": "ipsos-2019",
+   "name": "How Britain voted in the 2019 election",
+   "publisher": "Ipsos",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-2019-election",
+   "year": 2019,
+   "note": "27,951 adults. We use it for housing and ethnicity (Con/Lab/LD/Other) and turnout."
+  },
+  {
+   "id": "yougov-2017",
+   "name": "How Britain voted at the 2017 general election",
+   "publisher": "YouGov",
+   "url": "https://yougov.com/en-gb/articles/18384-how-britain-voted-2017-general-election",
+   "year": 2017,
+   "tablesUrl": "https://ygo-assets-websites-editorial-emea.yougov.net/documents/InternalResults_170613_2017Election_Demographics_W_mbyPEzo.pdf",
+   "note": "52,615 adults. Full party shares and turnout by age, sex, social grade, education, work and the newspaper people read."
+  },
+  {
+   "id": "yougov-2019",
+   "name": "How Britain voted in the 2019 general election",
+   "publisher": "YouGov",
+   "url": "https://yougov.com/en-gb/articles/26925-how-britain-voted-2019-general-election",
+   "year": 2019,
+   "tablesUrl": "https://ygo-assets-websites-editorial-emea.yougov.net/documents/Results_HowBritainVoted_2019_w.pdf",
+   "note": "41,995 adults. Full party shares by age, sex, social grade, education, work, income and Brexit vote. No turnout, so group sizes use YouGov's 2017 turnout."
+  },
+  {
+   "id": "ons-census-2011-ethnicity",
+   "name": "Ethnicity and national identity in England and Wales: 2011",
+   "publisher": "Office for National Statistics",
+   "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/articles/ethnicityandnationalidentityinenglandandwales/2012-12-11",
+   "year": 2012,
+   "note": "86% of people identified as White in 2011. Used with Ipsos turnout to size ethnic groups among voters, 2010–2019."
   }
  ]
 }
