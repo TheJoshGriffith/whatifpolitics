@@ -307,7 +307,7 @@ export function headline(gov: GovernmentOutcome, flips: number, parties: Party[]
   const name = parties.find((p) => p.id === gov.largestParty)?.name ?? "Nobody";
   if (!gov.largestParty) return "Nobody voted. The returning officer has gone home early.";
   if (!gov.hasMajority) {
-    return `Hung parliament! ${name} are the biggest gang but short of ${gov.majorityNeeded}. Cue frantic phone calls.`;
+    return `Hung parliament! ${name} are the biggest gang but ${gov.majorityNeeded - gov.largestPartySeats} short of the ${gov.majorityNeeded} they need. Cue frantic phone calls.`;
   }
   const share = gov.largestPartySeats / Math.max(gov.totalSeats, 1);
   if (share >= 0.75) return `${name} by a country mile. The opposition could fit in a minibus.`;

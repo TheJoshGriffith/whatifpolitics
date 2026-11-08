@@ -85,6 +85,89 @@
    ]
   },
   {
+   "id": "tenure",
+   "label": "Housing",
+   "groups": [
+    {
+     "id": "outright",
+     "label": "Own it outright",
+     "emoji": "🏡"
+    },
+    {
+     "id": "mortgage",
+     "label": "Paying a mortgage",
+     "emoji": "🏦"
+    },
+    {
+     "id": "private",
+     "label": "Private renters",
+     "emoji": "🔑"
+    },
+    {
+     "id": "social",
+     "label": "Social renters",
+     "emoji": "🏢"
+    },
+    {
+     "id": "family",
+     "label": "Living with family/friends",
+     "emoji": "🛏️"
+    }
+   ]
+  },
+  {
+   "id": "work",
+   "label": "Work",
+   "groups": [
+    {
+     "id": "working",
+     "label": "Working",
+     "emoji": "💻"
+    },
+    {
+     "id": "student",
+     "label": "Students",
+     "emoji": "📖"
+    },
+    {
+     "id": "retired",
+     "label": "Retired",
+     "emoji": "🎣"
+    },
+    {
+     "id": "notworking",
+     "label": "Not working",
+     "emoji": "🛋️"
+    }
+   ]
+  },
+  {
+   "id": "ethnicity",
+   "label": "Ethnicity",
+   "groups": [
+    {
+     "id": "white",
+     "label": "White",
+     "emoji": "🔵"
+    },
+    {
+     "id": "asian",
+     "label": "Asian",
+     "emoji": "🟢"
+    },
+    {
+     "id": "black",
+     "label": "Black",
+     "emoji": "🟣"
+    },
+    {
+     "id": "mixed",
+     "label": "Mixed & other",
+     "emoji": "🟠"
+    }
+   ]
+  },
+  {
    "id": "education",
    "label": "Education",
    "groups": [

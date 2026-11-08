@@ -20,4 +20,10 @@ export const presets: Preset[] = [
   { id: "only-grads", label: "Only graduates", emoji: "🎓", blurb: "Mortarboards at the ready.", scenario: { dimension: "education", mode: "only", groups: ["degree"] } },
   { id: "only-c2de", label: "Only working class", emoji: "🔧", blurb: "Social grades C2 and DE only.", scenario: { dimension: "class", mode: "only", groups: ["C2", "DE"] } },
   { id: "only-ab", label: "Only the bosses", emoji: "💼", blurb: "Social grade AB only. Very senior. Many lanyards.", scenario: { dimension: "class", mode: "only", groups: ["AB"] } },
+  { id: "only-renters", label: "Only renters", emoji: "🔑", blurb: "Generation Rent finally gets its way.", scenario: { dimension: "tenure", mode: "only", groups: ["private", "social"] } },
+  { id: "only-owners", label: "Only homeowners", emoji: "🏡", blurb: "If you can't show a deed, you can't vote. Very 1820s.", scenario: { dimension: "tenure", mode: "only", groups: ["outright", "mortgage"] } },
+  { id: "only-students", label: "Only students", emoji: "📖", blurb: "Polling day moved to the union bar.", scenario: { dimension: "work", mode: "only", groups: ["student"] } },
+  { id: "retirees-home", label: "Retirees stay home", emoji: "🎣", blurb: "Gone fishing. Literally.", scenario: { dimension: "work", mode: "exclude", groups: ["retired"] } },
+  { id: "only-white", label: "Only White voters", emoji: "🔵", blurb: "What the 85% of voters who are White picked on their own.", scenario: { dimension: "ethnicity", mode: "only", groups: ["white"] } },
+  { id: "only-minorities", label: "Only ethnic minorities", emoji: "🌍", blurb: "Asian, Black, Mixed and other voters only.", scenario: { dimension: "ethnicity", mode: "only", groups: ["asian", "black", "mixed"] } },
 ];

@@ -24,7 +24,15 @@
    "publisher": "Ipsos",
    "url": "https://www.ipsos.com/en-uk/uk-opinion-polls/how-britain-voted-in-the-2024-election",
    "year": 2024,
-   "note": "17,394 adults, 5–8 July 2024. We quote its turnout estimates (share of all adults who voted) for the fun facts, e.g. only 37% of 18–24s."
+   "note": "17,394 adults, 5–8 July 2024. Our source for how White, Asian, Black and Mixed voters split (Ipsos warns the minority sub-group samples are small), plus turnout estimates for the fun facts, e.g. only 37% of 18–24s."
+  },
+  {
+   "id": "ons-census-ethnicity",
+   "name": "Ethnic group, England and Wales: Census 2021",
+   "publisher": "Office for National Statistics",
+   "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021",
+   "year": 2022,
+   "note": "Population by ethnic group (White 81.7%, Asian 9.3%, Black 4.0%, Mixed 2.9%, Other 2.1%). Combined with Ipsos turnout to size each group among voters."
   },
   {
    "id": "ippr-half-of-us",

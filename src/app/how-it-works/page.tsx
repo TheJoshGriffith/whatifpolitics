@@ -27,7 +27,8 @@ export default function HowItWorks() {
         <p>
           Nobody publishes &ldquo;how 18–24s voted in Clacton&rdquo;. What we do have is
           YouGov&apos;s huge post-election survey (42,000 people) saying how each age group, sex,
-          social grade and education level voted nationally, and how big a slice of all voters each
+          social grade, education level, housing situation and work status voted nationally (plus
+          Ipsos for ethnicity), and how big a slice of all voters each
           group was.
         </p>
         <p>
@@ -68,6 +69,14 @@ export default function HowItWorks() {
             are the national mix (say 10% are 18–24). In real life a student-heavy seat in Sheffield
             and a retirement hotspot on the coast look nothing alike. Plugging in Census 2021
             figures for each seat is next on the to-do list; the engine already supports it.
+          </li>
+          <li>
+            <b>Ethnicity is the roughest slice.</b> Ipsos is the only post-election poll we could
+            get with a White / Asian / Black / Mixed split, and it warns the minority samples are
+            small. It doesn&apos;t report &ldquo;other&rdquo; ethnic groups separately, so we lump
+            them in with Mixed. And because every seat currently gets the national mix, Leicester
+            South gets the same share of Asian voters as Penrith, which really isn&apos;t true.
+            Take these ones with a big pinch of salt.
           </li>
           <li>
             <b>One slice at a time.</b> Age, sex, class and education are modelled separately, so

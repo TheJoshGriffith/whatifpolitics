@@ -6,6 +6,9 @@ const dimEmoji: Record<DimensionId, string> = {
   sex: "🚻",
   class: "🎩",
   education: "🎓",
+  tenure: "🏠",
+  work: "💼",
+  ethnicity: "🌍",
 };
 
 export function ScenarioPicker({

@@ -65,6 +65,10 @@ def yg(n, *vals, turnout=None, tsrc=None):
   shares["ind"] = shares["other"]  # independents seeded like "other"
   g = {"voterWeight": n, "shares": shares, "turnout": turnout}
   return g
+def ipsos(n, con, lab, ld, ref, grn, nat, oth, turnout=None):
+  shares = {"con": con/100, "lab": lab/100, "ld": ld/100, "reform": ref/100, "green": grn/100,
+            "snp": nat/100, "pc": nat/100, "other": oth/100, "ind": oth/100}
+  return {"voterWeight": n, "shares": shares, "turnout": turnout}
 groupVoting = {
  "age": {"source": "yougov-2024", "turnoutSource": "ipsos-2024", "groups": {
    "18-24": yg(4390, 8,41,16,3,1,9,18,4, turnout=0.37),
@@ -85,6 +89,27 @@ groupVoting = {
    "C1": yg(12222, 23,36,13,3,1,13,8,3, turnout=0.57),
    "C2": yg(8835, 24,32,11,3,1,20,6,4, turnout=0.50),
    "DE": yg(9255, 23,34,10,3,1,19,6,4, turnout=0.45),
+ }},
+ "tenure": {"source": "yougov-2024", "turnoutSource": "ipsos-2024", "groups": {
+   "outright": yg(13095, 37,25,12,2,1,16,4,3, turnout=0.71),
+   "mortgage": yg(11514, 21,39,13,2,1,14,6,3, turnout=0.60),
+   "private":  yg(5954, 12,42,14,2,1,13,12,4, turnout=0.37),
+   "social":   yg(4310, 14,42,9,4,0,21,7,4, turnout=0.37),
+   "family":   yg(4493, 15,40,14,3,1,11,12,4),
+ }},
+ "work": {"source": "yougov-2024", "groups": {
+   "working":    yg(24287, 20,39,13,2,1,14,8,4),
+   "student":    yg(2042, 7,40,19,3,1,6,19,5),
+   "retired":    yg(10070, 41,23,11,3,1,16,3,3),
+   "notworking": yg(4473, 15,39,12,4,1,17,9,4),
+ }},
+ "ethnicity": {"source": "ipsos-2024", "turnoutSource": "ipsos-2024", "groups": {
+   # Ipsos slide 33 "Voting by Ethnic Group" (% of voters): Con, Lab, LD, Reform, Green, SNP/Plaid, Ind/other.
+   # Voter mix = Census 2021 population share x Ipsos turnout (White 56%, ethnic minority 43%).
+   "white": ipsos(0.817*0.56, 26,33,13,16,7,4,3, turnout=0.56),
+   "asian": ipsos(0.093*0.43, 18,39,8,3,11,1,20),
+   "black": ipsos(0.040*0.43, 16,68,6,1,8,1,1),
+   "mixed": ipsos(0.050*0.43, 14,50,11,6,13,2,2),
  }},
  "education": {"source": "yougov-2024", "turnoutSource": "ipsos-2024", "groups": {
    "low":    yg(11286, 31,28,9,2,1,23,4,3),
@@ -109,6 +134,22 @@ dimensions = [
    {"id":"C1","label":"C1 (supervisory & clerical)","emoji":"🖇️"},
    {"id":"C2","label":"C2 (skilled manual)","emoji":"🔧"},
    {"id":"DE","label":"DE (semi/unskilled, not working)","emoji":"🧤"}]},
+ {"id":"tenure","label":"Housing","groups":[
+   {"id":"outright","label":"Own it outright","emoji":"🏡"},
+   {"id":"mortgage","label":"Paying a mortgage","emoji":"🏦"},
+   {"id":"private","label":"Private renters","emoji":"🔑"},
+   {"id":"social","label":"Social renters","emoji":"🏢"},
+   {"id":"family","label":"Living with family/friends","emoji":"🛏️"}]},
+ {"id":"work","label":"Work","groups":[
+   {"id":"working","label":"Working","emoji":"💻"},
+   {"id":"student","label":"Students","emoji":"📖"},
+   {"id":"retired","label":"Retired","emoji":"🎣"},
+   {"id":"notworking","label":"Not working","emoji":"🛋️"}]},
+ {"id":"ethnicity","label":"Ethnicity","groups":[
+   {"id":"white","label":"White","emoji":"🔵"},
+   {"id":"asian","label":"Asian","emoji":"🟢"},
+   {"id":"black","label":"Black","emoji":"🟣"},
+   {"id":"mixed","label":"Mixed & other","emoji":"🟠"}]},
  {"id":"education","label":"Education","groups":[
    {"id":"low","label":"GCSE or below","emoji":"📒"},
    {"id":"mid","label":"A-level / vocational","emoji":"📚"},
@@ -125,7 +166,10 @@ sources = [
   "note":"42,119 adults polled 5–8 July 2024. Gives the vote share of each party by age, sex, social grade and education, and how big each group was among voters."},
  {"id":"ipsos-2024","name":"How Britain voted in the 2024 election","publisher":"Ipsos",
   "url":"https://www.ipsos.com/en-uk/uk-opinion-polls/how-britain-voted-in-the-2024-election","year":2024,
-  "note":"17,394 adults, 5–8 July 2024. We quote its turnout estimates (share of all adults who voted) for the fun facts, e.g. only 37% of 18–24s."},
+  "note":"17,394 adults, 5–8 July 2024. Our source for how White, Asian, Black and Mixed voters split (Ipsos warns the minority sub-group samples are small), plus turnout estimates for the fun facts, e.g. only 37% of 18–24s."},
+ {"id":"ons-census-ethnicity","name":"Ethnic group, England and Wales: Census 2021","publisher":"Office for National Statistics",
+  "url":"https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021","year":2022,
+  "note":"Population by ethnic group (White 81.7%, Asian 9.3%, Black 4.0%, Mixed 2.9%, Other 2.1%). Combined with Ipsos turnout to size each group among voters."},
  {"id":"ippr-half-of-us","name":"Half of us: turnout patterns at the 2024 general election","publisher":"IPPR",
   "url":"https://www.ippr.org/articles/half-of-us","year":2024,
   "note":"Background on who didn't vote: just 52.8% of the voting-age population turned out."},
