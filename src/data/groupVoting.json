@@ -1,0 +1,221 @@
+{
+  "placeholder": true,
+  "_note": "PLACEHOLDER DATA – made up for development. Replace with real data.",
+  "groupVoting": {
+    "age": {
+      "source": "yougov-2024-how-britain-voted",
+      "groups": {
+        "18-24": {
+          "turnout": 0.47,
+          "shares": {
+            "lab": 0.41,
+            "con": 0.08,
+            "ld": 0.16,
+            "reform": 0.09,
+            "green": 0.18,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.049
+          }
+        },
+        "25-34": {
+          "turnout": 0.53,
+          "shares": {
+            "lab": 0.41,
+            "con": 0.12,
+            "ld": 0.11,
+            "reform": 0.12,
+            "green": 0.14,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.069
+          }
+        },
+        "35-44": {
+          "turnout": 0.58,
+          "shares": {
+            "lab": 0.38,
+            "con": 0.15,
+            "ld": 0.12,
+            "reform": 0.16,
+            "green": 0.1,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.059
+          }
+        },
+        "45-54": {
+          "turnout": 0.64,
+          "shares": {
+            "lab": 0.33,
+            "con": 0.2,
+            "ld": 0.12,
+            "reform": 0.19,
+            "green": 0.07,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.059
+          }
+        },
+        "55-64": {
+          "turnout": 0.7,
+          "shares": {
+            "lab": 0.28,
+            "con": 0.28,
+            "ld": 0.12,
+            "reform": 0.21,
+            "green": 0.05,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.029
+          }
+        },
+        "65+": {
+          "turnout": 0.77,
+          "shares": {
+            "lab": 0.2,
+            "con": 0.43,
+            "ld": 0.12,
+            "reform": 0.17,
+            "green": 0.03,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.019
+          }
+        }
+      }
+    },
+    "sex": {
+      "source": "yougov-2024-how-britain-voted",
+      "groups": {
+        "male": {
+          "turnout": 0.61,
+          "shares": {
+            "lab": 0.33,
+            "con": 0.24,
+            "ld": 0.11,
+            "reform": 0.18,
+            "green": 0.06,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.049
+          }
+        },
+        "female": {
+          "turnout": 0.59,
+          "shares": {
+            "lab": 0.35,
+            "con": 0.24,
+            "ld": 0.13,
+            "reform": 0.11,
+            "green": 0.08,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.059
+          }
+        }
+      }
+    },
+    "class": {
+      "source": "ipsos-2024-how-britain-voted",
+      "groups": {
+        "AB": {
+          "turnout": 0.68,
+          "shares": {
+            "lab": 0.34,
+            "con": 0.26,
+            "ld": 0.15,
+            "reform": 0.11,
+            "green": 0.07,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.039
+          }
+        },
+        "C1": {
+          "turnout": 0.62,
+          "shares": {
+            "lab": 0.35,
+            "con": 0.24,
+            "ld": 0.13,
+            "reform": 0.13,
+            "green": 0.07,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.049
+          }
+        },
+        "C2": {
+          "turnout": 0.55,
+          "shares": {
+            "lab": 0.31,
+            "con": 0.23,
+            "ld": 0.09,
+            "reform": 0.23,
+            "green": 0.06,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.049
+          }
+        },
+        "DE": {
+          "turnout": 0.48,
+          "shares": {
+            "lab": 0.35,
+            "con": 0.21,
+            "ld": 0.08,
+            "reform": 0.22,
+            "green": 0.06,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.049
+          }
+        }
+      }
+    },
+    "education": {
+      "source": "yougov-2024-how-britain-voted",
+      "groups": {
+        "low": {
+          "turnout": 0.54,
+          "shares": {
+            "lab": 0.29,
+            "con": 0.28,
+            "ld": 0.08,
+            "reform": 0.24,
+            "green": 0.04,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.039
+          }
+        },
+        "mid": {
+          "turnout": 0.58,
+          "shares": {
+            "lab": 0.33,
+            "con": 0.24,
+            "ld": 0.11,
+            "reform": 0.16,
+            "green": 0.07,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.059
+          }
+        },
+        "degree": {
+          "turnout": 0.7,
+          "shares": {
+            "lab": 0.4,
+            "con": 0.19,
+            "ld": 0.16,
+            "reform": 0.08,
+            "green": 0.1,
+            "snp": 0.025,
+            "pc": 0.006,
+            "other": 0.039
+          }
+        }
+      }
+    }
+  }
+}

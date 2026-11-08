@@ -1,0 +1,105 @@
+{
+  "placeholder": true,
+  "_note": "PLACEHOLDER DATA – made up for development. Replace with real data.",
+  "dimensions": [
+    {
+      "id": "age",
+      "label": "Age",
+      "groups": [
+        {
+          "id": "18-24",
+          "label": "18–24",
+          "emoji": "🛹"
+        },
+        {
+          "id": "25-34",
+          "label": "25–34",
+          "emoji": "☕"
+        },
+        {
+          "id": "35-44",
+          "label": "35–44",
+          "emoji": "🧸"
+        },
+        {
+          "id": "45-54",
+          "label": "45–54",
+          "emoji": "🚗"
+        },
+        {
+          "id": "55-64",
+          "label": "55–64",
+          "emoji": "⛳"
+        },
+        {
+          "id": "65+",
+          "label": "65+",
+          "emoji": "🫖"
+        }
+      ]
+    },
+    {
+      "id": "sex",
+      "label": "Sex",
+      "groups": [
+        {
+          "id": "female",
+          "label": "Women",
+          "emoji": "👩"
+        },
+        {
+          "id": "male",
+          "label": "Men",
+          "emoji": "👨"
+        }
+      ]
+    },
+    {
+      "id": "class",
+      "label": "Social grade",
+      "groups": [
+        {
+          "id": "AB",
+          "label": "AB (managerial & professional)",
+          "emoji": "💼"
+        },
+        {
+          "id": "C1",
+          "label": "C1 (supervisory & clerical)",
+          "emoji": "🖇️"
+        },
+        {
+          "id": "C2",
+          "label": "C2 (skilled manual)",
+          "emoji": "🔧"
+        },
+        {
+          "id": "DE",
+          "label": "DE (semi/unskilled, not working)",
+          "emoji": "🧤"
+        }
+      ]
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "groups": [
+        {
+          "id": "low",
+          "label": "GCSE or below",
+          "emoji": "📒"
+        },
+        {
+          "id": "mid",
+          "label": "A-level / vocational",
+          "emoji": "📚"
+        },
+        {
+          "id": "degree",
+          "label": "Degree or above",
+          "emoji": "🎓"
+        }
+      ]
+    }
+  ]
+}

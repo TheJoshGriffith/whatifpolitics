@@ -1,26 +1,94 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #fff8ec;
+  --ink: #1f1a3d;
+  --card: #ffffff;
+  --muted: #6b6590;
+  --pink: #ff5fa2;
+  --sun: #ffd23f;
+  --mint: #3ddc97;
+  --sky: #5bc0eb;
+  --grape: #7b5cff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-pink: var(--pink);
+  --color-sun: var(--sun);
+  --color-mint: var(--mint);
+  --color-sky: var(--sky);
+  --color-grape: var(--grape);
+  --font-sans: ui-rounded, "SF Pro Rounded", "Nunito", "Varela Round", "Segoe UI", system-ui,
+    -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Segoe UI",
+    system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --shadow-chunky: 4px 4px 0 0 var(--ink);
+  --shadow-chunky-sm: 2px 2px 0 0 var(--ink);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--paper);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  /* faint polka dots, very pub-quiz-flyer */
+  background-image: radial-gradient(rgba(31, 26, 61, 0.06) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+@layer components {
+.card {
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-chunky);
+}
+
+.chip {
+  border: 2px solid var(--ink);
+  border-radius: 9999px;
+  box-shadow: var(--shadow-chunky-sm);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
+}
+.chip:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+.chip:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--grape);
+  outline-offset: 2px;
+}
+}
+
+.prose-casual p {
+  margin: 0.75rem 0;
+  line-height: 1.65;
+}
+.prose-casual h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.35rem;
+  margin-top: 1.75rem;
+}
+.prose-casual ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.prose-casual li {
+  margin: 0.4rem 0;
+  line-height: 1.6;
+}
+.prose-casual a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
