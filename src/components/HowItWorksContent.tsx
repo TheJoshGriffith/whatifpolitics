@@ -34,6 +34,14 @@ export function HowItWorksContent() {
           (it&apos;s called <b>raking</b>, or iterative proportional fitting, if you want to sound
           clever at a party) until two things are true:
         </p>
+        <p>
+          The &ldquo;slice of voters&rdquo; is local. We take each seat&apos;s Census figures (2021
+          on the 2024 boundaries, 2011 on the old ones) and compare them with Great Britain as a
+          whole. If a seat has three times the national share of 18–24s, it gets three times the
+          national share of 18–24 voters. So Sheffield Central&apos;s voters come out at about 37%
+          18–24s, against about 10% nationally, while a retirement hotspot on the coast is stacked with
+          over-70s. This covers age, sex, social grade, education, housing, work and ethnicity.
+        </p>
         <ul>
           <li>each party&apos;s votes add up to exactly what it really got in that seat, and</li>
           <li>each group still makes up the same slice of that seat&apos;s voters.</li>
@@ -131,10 +139,14 @@ export function HowItWorksContent() {
             people nationally, adjusted to fit Truro&apos;s result. Reality is lumpier.
           </li>
           <li>
-            <b>Every seat gets the same mix of people.</b> For now we assume each seat&apos;s voters
-            are the national mix (say 10% are 18–24). In real life a student-heavy seat in Sheffield
-            and a retirement hotspot on the coast look nothing alike. Plugging in Census 2021
-            figures for each seat is next on the to-do list; the engine already supports it.
+            <b>The local mix is an estimate.</b> The Census tells us who lives in each seat, not who
+            voted there. We assume each group&apos;s national turnout gap holds everywhere (if young
+            people vote less nationally, they vote less in Sheffield too). Census bands don&apos;t
+            always line up with the polls&apos; bands, so some are split evenly by year of age, and
+            social grade is approximated from the Census&apos;s occupation classes (NS-SeC). Northern
+            Ireland has no Census figures here, and Scotland&apos;s 2021 figures only cover age, sex and
+            ethnicity, so those seats use the national mix for the rest. Income, Brexit vote and
+            newspaper readership aren&apos;t in the Census, so they always use the national mix.
           </li>
           <li>
             <b>Older elections have thinner polling.</b> For 2010 and 2015 the only big post-election
@@ -147,9 +159,7 @@ export function HowItWorksContent() {
             <b>Ethnicity is the roughest slice.</b> Ipsos is the only post-election poll we could
             get with a White / Asian / Black / Mixed split, and it warns the minority samples are
             small. It doesn&apos;t report &ldquo;other&rdquo; ethnic groups separately, so we lump
-            them in with Mixed. And because every seat currently gets the national mix, Leicester
-            South gets the same share of Asian voters as Penrith, which really isn&apos;t true.
-            Take these ones with a big pinch of salt.
+            them in with Mixed. Take these ones with a big pinch of salt.
           </li>
           <li>
             <b>One slice at a time.</b> Age, sex, class and education are modelled separately, so

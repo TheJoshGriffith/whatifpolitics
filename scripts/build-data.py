@@ -248,8 +248,13 @@ def attach_map(ev):
   assert len(missing) <= 1, (ev["id"], missing)  # Gibraltar has no hex
   ev["map"] = {"layout": "odd-r", "hexes": out}
 
+import census
+
 def add_event(ev):
   attach_map(ev)
+  if ev["kind"] == "general":
+    matched, used = census.attach(ev)
+    print("  census:", ev["id"], matched, "seats", used)
   EVENTS.append(ev)
   with open(os.path.join(OUT, "events", ev["id"] + ".json"), "w") as f:
     json.dump(ev, f, ensure_ascii=False, separators=(",", ":"))

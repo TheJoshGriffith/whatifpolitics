@@ -70,7 +70,7 @@ const seat = (id: string, a: number, b: number): Constituency =>
     region: "Testshire",
     electorate: 1000,
     votes: { a, b },
-    groupShares: { age: { young: 0.5, old: 0.5 } },
+    groupShares: { age: { young: 0.3, old: 0.7 } },
   }) as unknown as Constituency;
 
 const world: ModelInput = {
@@ -82,14 +82,14 @@ const world: ModelInput = {
 };
 
 describe("estimateSeatGroupVotes", () => {
-  it("reproduces actual party votes and keeps group totals ∝ share × turnout", () => {
+  it("reproduces actual party votes and uses the seat's own voter mix", () => {
     const est = estimateSeatGroupVotes(world.constituencies[0], dim, groupVoting, ["a", "b"]);
     expect(est.young.a + est.old.a).toBeCloseTo(300, 6);
     expect(est.young.b + est.old.b).toBeCloseTo(350, 6);
     const young = est.young.a + est.young.b;
     const old = est.old.a + est.old.b;
-    // 0.5*0.5 : 0.5*0.8 = 0.25 : 0.40
-    expect(young / old).toBeCloseTo(0.25 / 0.4, 2);
+    // seat voter mix is 30:70
+    expect(young / old).toBeCloseTo(0.3 / 0.7, 2);
     // young lean to a, old to b
     expect(est.young.a / young).toBeGreaterThan(est.old.a / old);
   });

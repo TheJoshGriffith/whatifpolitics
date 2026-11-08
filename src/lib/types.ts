@@ -27,9 +27,9 @@ export interface Constituency {
   /** Actual 2024 votes per party id. Parties missing here got zero. */
   votes: Record<PartyId, number>;
   /**
-   * Optional seat-specific share of the adult population in each group
-   * (e.g. from the Census). When present, the seat's voter mix is
-   * share × group turnout; when absent, the national voter mix is used.
+   * Optional seat-specific voter mix: each group's share of this seat's voters (sums to 1).
+   * Built from the Census (local vs national share of each group, applied to the national
+   * voter mix). When absent, the national voter mix is used.
    */
   groupShares?: Partial<Record<DimensionId, Record<GroupId, number>>>;
 }
@@ -136,9 +136,15 @@ export interface FlippedSeat {
   region: string;
   from: PartyId;
   to: PartyId;
-  /** Original 2024 majority as a share of votes, bigger = more surprising */
+  /** Real majority (winner's lead over second place) as a share of votes */
   originalMargin: number;
+  /** New winner's lead over second place under the scenario */
   newMargin: number;
+  /**
+   * Butler swing from `from` to `to`, in share points (0..1): the average of `to`'s gain
+   * in vote share and `from`'s loss. Half the change in the lead between the two.
+   */
+  swing: number;
 }
 
 export interface GovernmentOutcome {

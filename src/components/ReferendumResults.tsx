@@ -107,7 +107,7 @@ export function ReferendumResults({
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-bold">{f.name}</p>
                     <p className="text-xs text-muted">
-                      {f.region} · really went {byId.get(f.from)!.name} by {pct(f.originalMargin)}
+                      {f.region} · {pct(f.swing)} swing to {to.name} (was {byId.get(f.from)!.name} by {pct(f.originalMargin)})
                     </p>
                   </div>
                   <span

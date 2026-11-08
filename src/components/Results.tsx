@@ -579,13 +579,20 @@ function Flips({
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-bold">{f.name}</p>
                   <p className="text-xs text-muted">
-                    {f.region} · was a {pct(f.originalMargin)} majority
+                    {f.region} · {to.short} gain from {from.short}
+                  </p>
+                  <p className="text-xs text-muted">
+                    {from.short} maj {pct(f.originalMargin)} → {to.short} maj{" "}
+                    {pct(f.newMargin)}
                   </p>
                 </div>
-                <div className="flex shrink-0 items-center gap-1 text-xs font-extrabold">
-                  <PartyPill p={from} />
-                  <span aria-label="to">→</span>
-                  <PartyPill p={to} />
+                <div className="flex shrink-0 flex-col items-end gap-1 text-xs font-extrabold">
+                  <span className="flex items-center gap-1">
+                    <PartyPill p={from} />
+                    <span aria-label="to">→</span>
+                    <PartyPill p={to} />
+                  </span>
+                  <span className="tabular-nums">{pct(f.swing)} swing</span>
                 </div>
               </li>
             );
@@ -595,6 +602,13 @@ function Flips({
       {result.flipped.length > top.length && (
         <p className="text-xs text-muted">
           …plus {result.flipped.length - top.length} more.
+        </p>
+      )}
+      {top.length > 0 && (
+        <p className="text-xs text-muted">
+          Sorted by swing: the average of the winner&apos;s gain and the
+          loser&apos;s drop in vote share (the standard Butler swing). Majority
+          = the winner&apos;s lead over second place.
         </p>
       )}
     </div>

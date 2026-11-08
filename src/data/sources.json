@@ -117,6 +117,22 @@
    "note": "86% of people identified as White in 2011. Used with Ipsos turnout to size ethnic groups among voters, 2010–2019."
   },
   {
+   "id": "census-2021-wpc",
+   "name": "2024 General Election Census constituency summaries",
+   "publisher": "Ralph Scott (from ONS / Nomis and Scotland's Census, Census 2021)",
+   "url": "https://github.com/ralphascott/UKGE24_wpc_census_summaries",
+   "year": 2024,
+   "note": "Census 2021 for all 632 GB seats on the 2024 boundaries. We use it to give each 2024 seat its own mix of ages, sexes, social grades, education, housing, work and ethnicity."
+  },
+  {
+   "id": "census-2011-wpc",
+   "name": "parlitools: Census 2011 by constituency",
+   "publisher": "Evan Odell (from ONS and Scotland's Census, Census 2011)",
+   "url": "https://cran.r-project.org/package=parlitools",
+   "year": 2011,
+   "note": "Census 2011 for all 632 GB seats on the 2010–2019 boundaries. Gives each 2010–2019 seat its own local mix."
+  },
+  {
    "id": "hexmaps",
    "name": "UK hex maps (constituencies 2010–2023 and local authorities 2021)",
    "publisher": "Open Innovations (formerly ODI Leeds)",

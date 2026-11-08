@@ -89,7 +89,7 @@ export function estimateSeatGroupVotes(
   // Expected share of this seat's voters in each group.
   const weights = groups.map((g) => {
     const beh = gv?.groups[g];
-    if (seatShares) return (seatShares[g] ?? 0) * (beh?.turnout ?? 1);
+    if (seatShares) return seatShares[g] ?? 0;
     return beh?.voterShare ?? 0;
   });
   const seed = groups.map((g, i) =>
@@ -119,7 +119,10 @@ export type Model = {
   baseline: ScenarioResult;
 };
 
-export function buildModel(input: ModelInput, iterations = DEFAULT_ITERATIONS): Model {
+export function buildModel(
+  input: ModelInput,
+  iterations = DEFAULT_ITERATIONS,
+): Model {
   const partyIds = input.parties.map((p) => p.id);
   const estimates: Model["estimates"] = {};
   for (const seat of input.constituencies) {
@@ -134,14 +137,19 @@ export function buildModel(input: ModelInput, iterations = DEFAULT_ITERATIONS): 
       );
     }
   }
-  const baselineSeats = input.constituencies.map((c) => seatResult(c, c.votes, partyIds));
+  const baselineSeats = input.constituencies.map((c) =>
+    seatResult(c, c.votes, partyIds),
+  );
   const partial = { input, partyIds, estimates } as Omit<Model, "baseline">;
   const baseline = summarise(partial, null, baselineSeats, baselineSeats);
   return { ...partial, baseline };
 }
 
 /** Which groups' votes survive a scenario? */
-export function keptGroups(scenario: Scenario, allGroups: GroupId[]): GroupId[] {
+export function keptGroups(
+  scenario: Scenario,
+  allGroups: GroupId[],
+): GroupId[] {
   const chosen = new Set(scenario.groups);
   return scenario.mode === "exclude"
     ? allGroups.filter((g) => !chosen.has(g))
@@ -179,8 +187,23 @@ export function seatResult(
   };
 }
 
+/** Butler swing from party a to party b between two results for the same seat (share points, 0..1). */
+export function butlerSwing(
+  before: SeatResult,
+  after: SeatResult,
+  a: PartyId,
+  b: PartyId,
+): number {
+  const sh = (r: SeatResult, p: PartyId) =>
+    r.totalVotes > 0 ? (r.votes[p] ?? 0) / r.totalVotes : 0;
+  return (sh(after, b) - sh(before, b) - (sh(after, a) - sh(before, a))) / 2;
+}
+
 /** Apply a scenario to a prebuilt model. */
-export function runScenario(model: Model, scenario: Scenario | null): ScenarioResult {
+export function runScenario(
+  model: Model,
+  scenario: Scenario | null,
+): ScenarioResult {
   if (!scenario) return model.baseline;
   const dim = model.input.dimensions.find((d) => d.id === scenario.dimension);
   if (!dim) throw new Error(`Unknown dimension: ${scenario.dimension}`);
@@ -203,7 +226,10 @@ export function runScenario(model: Model, scenario: Scenario | null): ScenarioRe
 }
 
 /** Convenience one-shot (builds the model each call — fine for tests). */
-export function simulate(input: ModelInput, scenario: Scenario | null): ScenarioResult {
+export function simulate(
+  input: ModelInput,
+  scenario: Scenario | null,
+): ScenarioResult {
   return runScenario(buildModel(input), scenario);
 }
 
@@ -227,7 +253,8 @@ function summarise(
     totalVotes += s.totalVotes;
   }
   const voteShares: Record<PartyId, number> = {};
-  for (const p of partyIds) voteShares[p] = totalVotes > 0 ? votes[p] / totalVotes : 0;
+  for (const p of partyIds)
+    voteShares[p] = totalVotes > 0 ? votes[p] / totalVotes : 0;
 
   const baseById = new Map(baselineSeats.map((s) => [s.id, s]));
   const flipped: FlippedSeat[] = [];
@@ -242,10 +269,11 @@ function summarise(
         to: s.winner,
         originalMargin: b.margin,
         newMargin: s.margin,
+        swing: butlerSwing(b, s, b.winner, s.winner),
       });
     }
   }
-  flipped.sort((a, b) => b.originalMargin - a.originalMargin);
+  flipped.sort((a, b) => b.swing - a.swing);
 
   const government = governmentOutcome(seats, seatResults.length, partyIds);
   return {
@@ -271,7 +299,9 @@ export function governmentOutcome(
   partyIds: PartyId[],
 ): GovernmentOutcome {
   const needed = majorityNeeded(totalSeats);
-  const ranked = [...partyIds].sort((a, b) => (seats[b] ?? 0) - (seats[a] ?? 0));
+  const ranked = [...partyIds].sort(
+    (a, b) => (seats[b] ?? 0) - (seats[a] ?? 0),
+  );
   const largest = ranked[0] && seats[ranked[0]] > 0 ? ranked[0] : null;
   const largestSeats = largest ? seats[largest] : 0;
   const hasMajority = largestSeats >= needed;
@@ -303,16 +333,24 @@ export function governmentOutcome(
   };
 }
 
-export function headline(gov: GovernmentOutcome, flips: number, parties: Party[]): string {
+export function headline(
+  gov: GovernmentOutcome,
+  flips: number,
+  parties: Party[],
+): string {
   const name = parties.find((p) => p.id === gov.largestParty)?.name ?? "Nobody";
-  if (!gov.largestParty) return "Nobody voted. The returning officer has gone home early.";
+  if (!gov.largestParty)
+    return "Nobody voted. The returning officer has gone home early.";
   if (!gov.hasMajority) {
     return `Hung parliament! ${name} are the biggest gang but ${gov.majorityNeeded - gov.largestPartySeats} short of the ${gov.majorityNeeded} they need. Cue frantic phone calls.`;
   }
   const share = gov.largestPartySeats / Math.max(gov.totalSeats, 1);
-  if (share >= 0.75) return `${name} by a country mile. The opposition could fit in a minibus.`;
-  if (share >= 0.6) return `A whopping ${name} landslide. Somebody fetch the bunting.`;
-  if (flips === 0) return `${name} win and… nothing changes. Not a single seat budges. Very British.`;
+  if (share >= 0.75)
+    return `${name} by a country mile. The opposition could fit in a minibus.`;
+  if (share >= 0.6)
+    return `A whopping ${name} landslide. Somebody fetch the bunting.`;
+  if (flips === 0)
+    return `${name} win and… nothing changes. Not a single seat budges. Very British.`;
   // ≈ a majority of 20 or fewer in a 650-seat House
   if (gov.majority <= Math.max(1, Math.round(gov.totalSeats * 0.03)))
     return `${name} scrape over the line. Every backbencher just got a lot more important.`;
