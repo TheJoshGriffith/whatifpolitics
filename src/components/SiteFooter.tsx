@@ -8,7 +8,7 @@ export function SiteFooter() {
           ⚠️ This is a toy, not a prediction.
         </p>
         <p className="max-w-2xl opacity-80">
-          It&apos;s a back-of-a-beer-mat model built from national polling averages and constituency
+          It&apos;s a back-of-the-fag-packet model built from national polling averages and constituency
           results. Real people don&apos;t vote in neat demographic blocks, and nobody here is telling you
           how to vote. Have fun, don&apos;t quote it in Parliament.
         </p>
