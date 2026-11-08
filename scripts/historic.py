@@ -325,6 +325,113 @@ def build(G):
     "\"Get Brexit Done.\" Johnson wins an 80-seat majority and the Red Wall turns blue.",
     [DIM_YGAGE, "sex", DIM_AGESEX19, "class", DIM_EDU, DIM_WORK19, DIM_INCOME19, DIM_BREXIT, "tenure", "ethnicity"], gv19)
 
+  G["_hist_dims"] = DIM
+  ge2005(G)
+
+
+def ge2005(G):
+  """2005 general election: 646 seats on the 1997-2005 boundaries (Scotland's 59 were new in 2005).
+
+  Results: scripts/ge2005_candidacies.csv, every candidate's votes, parsed from Richard Kimber's
+  Political Science Resources results pages (politicsresources.net, as archived in
+  github.com/CampaignLab/constituency-counts, html/ge05). English regions were matched by name to
+  the 2010 seats (by hand for 11 seats whose names share no word with a 2010 seat).
+  Polls: Ipsos MORI "How Britain Voted in 2005" (scripts/polls/polls_2005.md), which gives
+  each group's share of voters as well as its vote, so group sizes come straight from Ipsos.
+  No map (no hex map exists for these boundaries) and no Census mix (no 2001 Census by seat to hand).
+  """
+  import csv
+  add_event, party_list, sources = G["add_event"], G["party_list"], G["sources"]
+  PARTY = {"Labour":"lab", "Conservative":"con", "LibDem":"ld", "UKIP":"ukip", "SNP":"snp", "Green":"green",
+           "Democratic Unionist":"dup", "BNP":"bnp", "Plaid Cymru":"pc", "Sinn Fein":"sf", "Ulster Unionist":"uup",
+           "SDLP":"sdlp", "Respect":"respect", "Alliance Party NI":"apni", "Speaker Seeking Re-Election":"spk"}
+  # Independents: plain "Ind", plus Dr Richard Taylor's Health Concern in Wyre Forest.
+  INDEP = {"Ind", "Ind Kidderminster Hospital and Health Concern"}
+  by = {}
+  with open(os.path.join(HERE, "ge2005_candidacies.csv")) as f:
+    for r in csv.DictReader(f):
+      s = by.setdefault(r["seat_no"], {"name": r["constituency"].replace(" & ", " and "), "region": r["region"],
+                                       "electorate": int(r["electorate"]), "votes": {}, "inds": []})
+      v = int(r["votes"])
+      if r["party"] in INDEP: s["inds"].append(v)
+      else:
+        pid = PARTY.get(r["party"], "other")
+        s["votes"][pid] = s["votes"].get(pid, 0) + v
+  seats, used = [], set()
+  for s in by.values():
+    inds = sorted(s.pop("inds"), reverse=True)
+    if inds:  # biggest independent counts as "ind", any others go into "other" (as for 2010-2024)
+      s["votes"]["ind"] = inds[0]
+      if len(inds) > 1: s["votes"]["other"] = s["votes"].get("other", 0) + sum(inds[1:])
+    sid = "ge05-" + re.sub(r"[^a-z]+", "-", s["name"].lower()).strip("-")
+    assert sid not in used, sid
+    used.add(sid)
+    seats.append({"id": sid, **s})
+  seats.sort(key=lambda s: s["name"])
+
+  # Official totals (Commons Library / Electoral Commission), including the deferred South Staffordshire poll.
+  tot = lambda p: sum(s["votes"].get(p, 0) for s in seats)
+  assert len(seats) == 646
+  assert sum(sum(s["votes"].values()) for s in seats) == 27148510
+  assert (tot("lab"), tot("con"), tot("ld"), tot("ukip")) == (9552436, 8784915, 5985454, 605973)
+  from collections import Counter
+  won = Counter(max(s["votes"], key=s["votes"].get) for s in seats)
+  assert won == {"lab":355, "con":198, "ld":62, "dup":9, "snp":6, "sf":5, "sdlp":3, "pc":3, "ind":2,
+                 "respect":1, "uup":1, "spk":1}, won
+
+  tab = ipsos_table("polls_2005.md")
+  for sec, rows in tab.items():
+    for lab, row in rows.items():
+      lead = row["Lab lead %"]
+      assert lead == "*" or num(lead) == num(row["Lab %"]) - num(row["Con %"]), (sec, lab)
+      assert abs(sum(num(row[c]) for c in ("Con %","Lab %","LD %","Oth %")) - 100) <= 1, (sec, lab)
+  oth = "Oth %"
+  cols = {"con":"Con %","lab":"Lab %","ld":"LD %"}
+  cols.update({p: oth for p in ("other","ind","ukip","bnp","green","snp","pc","respect")})
+  def groups(section, labels):
+    out = {}
+    for gid, lab in labels.items():
+      row = tab[section][lab]
+      out[gid] = {"voterWeight": num(row["Voters %"]), "turnout": num(row["Turnout %"]) / 100,
+                  "shares": {p: num(row[c]) / 100 for p, c in cols.items()}}
+    return out
+  def two(secs, labels):
+    out = {}
+    for prefix, sec in secs.items():
+      out.update({prefix + k: v for k, v in groups(sec, labels).items()})
+    return out
+  src = {"source": "ipsos-2005", "turnoutSource": "ipsos-2005"}
+  gv = {
+    "age": {**src, "groups": groups("Age", {g: g for g in ("18-24","25-34","35-44","45-54","55-64","65+")})},
+    "sex": {**src, "groups": groups("Gender", {"female":"Women","male":"Men"})},
+    "agesex": {**src, "groups": two({"m":"Men by Age","f":"Women by Age"}, {"18":"18-24","25":"25-34","35":"35-54","55":"55+"})},
+    "class": {**src, "groups": groups("Social Class", {g: g for g in ("AB","C1","C2","DE")})},
+    "classsex": {**src, "groups": two({"m":"Men by Class","f":"Women by Class"}, {g: g for g in ("AB","C1","C2","DE")})},
+    "tenure": {**src, "groups": groups("Housing Tenure", {"outright":"Owned","mortgage":"Mortgaged",
+                                                           "social":"Social renter","private":"Private renter"})},
+  }
+  for d in gv.values():
+    assert abs(sum(g["voterWeight"] for g in d["groups"].values()) - 100) <= 1
+  D = G["_hist_dims"]
+  dims = [D["age"], D["sex"], D["agesex"], D["class"],
+    {"id":"classsex","label":"Grade × sex","groups":[{"id":"mAB","label":"AB men","emoji":"💼"},{"id":"fAB","label":"AB women","emoji":"👩‍💼"},
+      {"id":"mC1","label":"C1 men","emoji":"🖇️"},{"id":"fC1","label":"C1 women","emoji":"📎"},{"id":"mC2","label":"C2 men","emoji":"🔧"},
+      {"id":"fC2","label":"C2 women","emoji":"🪛"},{"id":"mDE","label":"DE men","emoji":"🧤"},{"id":"fDE","label":"DE women","emoji":"🧺"}]},
+    D["tenure"]]
+  RESPECT = ("respect", "Respect", "Resp", "#46801C")
+  parties = [RESPECT] + BASE + [BNP, UKIP]
+  add_event({"id":"ge2005", "label":"2005 general election", "short":"GE 2005", "year":2005, "kind":"general",
+    "date":"2005-05-05", "blurb":"Labour, led by Tony Blair, wins a third term with 355 seats on 35.2% of the vote. The Lib Dems win 62 seats, their most since 1923.",
+    "resultsSource":"ge2005-results", "parties":party_list(parties), "constituencies":seats,
+    "dimensions":dims, "groupVoting":finish(gv)})
+  sources += [
+    {"id":"ge2005-results","name":"UK general election results: May 2005","publisher":"Richard Kimber, Political Science Resources",
+     "url":"https://web.archive.org/web/2018/http://www.politicsresources.net/area/uk/ge05/i01.htm","year":2005,
+     "note":"Every candidate's votes in all 646 seats, via the archived copy in github.com/CampaignLab/constituency-counts. Party totals match the official figures (Labour 9,552,436; Conservatives 8,784,915; Lib Dems 5,985,454)."},
+    {"id":"ipsos-2005","name":"How Britain voted in 2005","publisher":"Ipsos MORI","url":"https://www.ipsos.com/en-uk/node/171536","year":2005,
+     "note":"17,959 adults across MORI's campaign polls, 10,986 of them certain to vote. Con/Lab/LD/Other shares, turnout and each group's share of voters by sex, age, social grade and housing. No ethnicity breakdown."},
+  ]
+
 
 def referendums(G):
   add_event, sources = G["add_event"], G["sources"]
