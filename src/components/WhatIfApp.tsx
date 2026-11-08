@@ -2,6 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { referendumHeadline } from "./ReferendumResults";
+import {
+  allocateSeats,
+  formGovernment,
+  governmentHeadline,
+  type VotingSystem,
+} from "@/lib/systems";
 import { buildModel, runScenario } from "@/lib/engine";
 import { defaultEvent, events, getEvent, modelInputFor } from "@/lib/data";
 import { presets, presetsFor } from "@/lib/presets";
@@ -46,6 +52,19 @@ export function WhatIfApp() {
     [dimension, mode, groups],
   );
   const result = useMemo(() => runScenario(model, scenario), [model, scenario]);
+  const [system, setSystem] = useState<VotingSystem>("fptp");
+  const seats = useMemo(() => allocateSeats(system, result), [system, result]);
+  const formation = useMemo(
+    () => formGovernment(eventId, seats),
+    [eventId, seats],
+  );
+  const govHeadline = governmentHeadline(
+    formation,
+    seats,
+    result.voteShares,
+    parties,
+    system,
+  );
 
   const dim = dimensions.find((d) => d.id === dimension) ?? dimensions[0];
 
@@ -86,12 +105,16 @@ export function WhatIfApp() {
 
   const summary =
     event.kind === "referendum"
-      ? event.parties.map((p) => `${p.short} ${(result.voteShares[p.id] * 100).toFixed(1)}%`).join(" · ")
+      ? event.parties
+          .map(
+            (p) => `${p.short} ${(result.voteShares[p.id] * 100).toFixed(1)}%`,
+          )
+          .join(" · ")
       : [...parties]
-          .filter((p) => result.seats[p.id] > 0)
-          .sort((a, b) => result.seats[b.id] - result.seats[a.id])
+          .filter((p) => (seats[p.id] ?? 0) > 0)
+          .sort((a, b) => (seats[b.id] ?? 0) - (seats[a.id] ?? 0))
           .slice(0, 3)
-          .map((p) => `${p.short} ${result.seats[p.id]}`)
+          .map((p) => `${p.short} ${seats[p.id]}`)
           .join(" · ");
 
   return (
@@ -223,6 +246,11 @@ export function WhatIfApp() {
             event={event}
             description={describe()}
             isBaseline={!scenario}
+            system={system}
+            onSystem={setSystem}
+            seats={seats}
+            formation={formation}
+            headline={govHeadline}
           />
         )}
       </div>
@@ -240,7 +268,7 @@ export function WhatIfApp() {
               ? `The real ${event.label}.`
               : event.kind === "referendum"
                 ? referendumHeadline(result, model.baseline, event)
-                : result.headline}
+                : govHeadline}
           </span>
           <span className="flex shrink-0 flex-col items-end text-xs font-bold text-ink/70">
             <span className="tabular-nums">{summary}</span>

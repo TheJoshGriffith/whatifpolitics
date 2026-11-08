@@ -62,6 +62,65 @@ export function HowItWorksContent() {
           the day, so the same caveats apply (the Scottish poll only had 14 16–17-year-olds in it).
         </p>
 
+        <h2>5. Change the rules</h2>
+        <p>
+          First past the post hands out seats very unevenly: in 2024 Labour won 63% of the seats on 34% of
+          the vote. So you can re-count the same votes under three other systems:
+        </p>
+        <ul>
+          <li>
+            <b>Pure proportional:</b> all 650 seats shared out by national vote share, using the
+            Sainte-Laguë method (the fairest of the usual formulas).
+          </li>
+          <li>
+            <b>PR with a 5% hurdle:</b> like Germany. Parties under 5% of the national vote get nothing, so
+            the SNP, Plaid and all the Northern Irish parties drop out. Seats are shared with the D&apos;Hondt
+            method, which leans slightly towards big parties.
+          </li>
+          <li>
+            <b>Regional lists:</b> how Britain elected MEPs until 2019. Each of the 12 regions keeps its
+            number of seats and shares them out by its own vote, using D&apos;Hondt.
+          </li>
+        </ul>
+        <p>
+          Votes for independents and &ldquo;other&rdquo; candidates don&apos;t count under PR, because there&apos;s
+          no party list for them. We also assume everyone votes the same way under every system, which
+          they wouldn&apos;t: under PR, lots of tactical voters would switch to their real first choice.
+          The &ldquo;wonkiness score&rdquo; is the Gallagher index, the standard measure of how far seats
+          are from votes (0 is perfect; UK general elections usually land between 15 and 25).
+        </p>
+
+        <h2>6. Who gets the keys to No 10?</h2>
+        <p>
+          If one party has a majority, they govern. If not, we list every combination of up to four
+          parties that adds up to a majority, where nobody is a passenger (drop any member and it falls
+          short). Sinn Féin don&apos;t take their seats and the Speaker doesn&apos;t vote, so the line
+          moves down a bit. Each deal gets a score from two things:
+        </p>
+        <ul>
+          <li>
+            <b>How willing the parties are to work together</b>, on a 0 to 1 scale. This is our own
+            judgement, not a poll. For example, Conservatives and DUP score 0.8 (0.9 in 2017, when they
+            did a deal), Labour and the Greens 0.6, Labour and the SNP 0.3, and Labour and the
+            Conservatives almost zero.
+          </li>
+          <li>
+            <b>How many parties are in it</b>, since every extra partner makes a deal harder.
+          </li>
+        </ul>
+        <p>
+          Parties close to the line also get a shot at running a minority government. The scores are then
+          turned into percentages. The willingness numbers shift with each election to match what was
+          going on at the time:
+        </p>
+        <ul>
+          <li><b>2010:</b> the Conservatives and Lib Dems actually did a coalition.</li>
+          <li><b>2015:</b> Ed Miliband ruled out any deal with the SNP.</li>
+          <li><b>2017:</b> Theresa May did a confidence-and-supply deal with the DUP, and the Lib Dems ruled out coalitions.</li>
+          <li><b>2019:</b> Jo Swinson ruled out putting either Johnson or Corbyn in No 10, and the Brexit Party stood down in Tory-held seats.</li>
+          <li><b>2024:</b> Labour ruled out deals with the SNP.</li>
+        </ul>
+
         <h2>The big fat caveats 🧂</h2>
         <ul>
           <li>
