@@ -1,8 +1,11 @@
 import { WhatIfApp } from "@/components/WhatIfApp";
 import { PlaceholderBanner } from "@/components/PlaceholderBanner";
 import { SiteLink as Link } from "@/components/SiteLink";
+import { HashViews } from "@/components/HashViews";
+import { HowItWorksContent } from "@/components/HowItWorksContent";
+import { SourcesContent } from "@/components/SourcesContent";
 
-export default function Home() {
+function Play() {
   return (
     <div className="flex flex-col gap-8">
       <section className="relative pt-4 sm:pt-10">
@@ -32,4 +35,21 @@ export default function Home() {
       <WhatIfApp />
     </div>
   );
+}
+
+export default function Home() {
+  // The single-file preview can't open other pages, so it shows every page here and
+  // switches between them on the URL hash (#how-it-works, #sources).
+  if (process.env.NEXT_PUBLIC_ARTIFACT) {
+    return (
+      <HashViews
+        views={{
+          play: <Play />,
+          "how-it-works": <HowItWorksContent />,
+          sources: <SourcesContent />,
+        }}
+      />
+    );
+  }
+  return <Play />;
 }

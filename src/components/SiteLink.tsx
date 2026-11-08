@@ -1,12 +1,14 @@
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
+const HASHES: Record<string, string> = { "/": "#play", "/how-it-works/": "#how-it-works", "/sources/": "#sources" };
+
 /**
- * Internal link. Normally a Next <Link>. In the ARTIFACT preview build
- * (NEXT_PUBLIC_ARTIFACT=1) it's a plain <a>, and scripts/artifact-postprocess.mjs
- * rewrites the hrefs to relative paths so the site works from any sub-folder.
+ * Internal link. Normally a Next <Link>. In the single-page preview build
+ * (NEXT_PUBLIC_ARTIFACT=1) every page lives on the home page, so links become #hashes.
  */
 export function SiteLink({ href, ...rest }: ComponentProps<typeof Link> & { href: string }) {
-  if (process.env.NEXT_PUBLIC_ARTIFACT) return <a href={href} {...(rest as ComponentProps<"a">)} />;
+  if (process.env.NEXT_PUBLIC_ARTIFACT)
+    return <a href={HASHES[href] ?? href} {...(rest as ComponentProps<"a">)} />;
   return <Link href={href} {...rest} />;
 }
