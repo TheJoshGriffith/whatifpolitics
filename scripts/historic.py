@@ -458,6 +458,9 @@ def referendums(G):
     "constituencies":councils,"dimensions":dims2,"groupVoting":finish(gv2)})
 
   sources += [
+    {"id":"hexmaps","name":"UK hex maps (constituencies 2010–2023 and local authorities 2021)","publisher":"Open Innovations (formerly ODI Leeds)",
+     "url":"https://github.com/odileeds/hexmaps","year":2023,
+     "note":"Hex layouts for the maps: one hexagon per seat or council, so every area is the same size."},
     {"id":"ec-eu2016","name":"EU referendum results by counting area","publisher":"Electoral Commission",
      "url":"https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/eu-referendum/results-and-turnout-eu-referendum","year":2016,
      "note":"Remain and Leave votes in all 382 counting areas (Remain 16,141,241; Leave 17,410,742)."},

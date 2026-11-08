@@ -183,4 +183,14 @@ export interface ElectionEvent {
   constituencies: Constituency[];
   dimensions: Dimension[];
   groupVoting: GroupVoting;
+  /** Hex map: [hexId, name, q, r, memberIds?]. Members default to [hexId]. */
+  map?: EventMap;
+}
+
+export type MapHex = [string, string, number, number] | [string, string, number, number, string[]];
+
+/** Hex cartogram (Open Innovations hexjson, "odd-r" layout: odd rows shifted right, r grows northwards). */
+export interface EventMap {
+  layout: "odd-r";
+  hexes: MapHex[];
 }

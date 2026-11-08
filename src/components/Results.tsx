@@ -1,5 +1,7 @@
 import type { ElectionEvent, Party, PartyId, ScenarioResult } from "@/lib/types";
+import { useState } from "react";
 import { Hemicycle } from "./Hemicycle";
+import { HexMap } from "./HexMap";
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 
@@ -20,6 +22,7 @@ export function Results({
 }) {
   const byId = new Map(parties.map((p) => [p.id, p]));
   const g = result.government;
+  const [view, setView] = useState<"map" | "commons">("map");
 
   return (
     <section aria-labelledby="results-h" className="flex flex-col gap-5" aria-live="polite">
@@ -35,13 +38,46 @@ export function Results({
 
       <div className="grid gap-5 md:grid-cols-5 [&>*]:min-w-0">
         <div className="card flex flex-col gap-3 p-4 sm:p-5 md:col-span-3">
-          <h3 className="font-display text-lg font-extrabold">The new House of Commons</h3>
-          <Hemicycle
-            seats={result.seats}
-            parties={parties}
-            majorityNeeded={g.majorityNeeded}
-            label="Seats under this scenario"
-          />
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-display text-lg font-extrabold">
+              {view === "map" ? "Who wins where" : "The new House of Commons"}
+            </h3>
+            <div className="flex gap-1 rounded-full border-2 border-ink p-0.5 text-xs font-extrabold" role="tablist">
+              {(
+                [
+                  ["map", "🗺️ Map"],
+                  ["commons", "🏛️ Commons"],
+                ] as const
+              ).map(([v, label]) => (
+                <button
+                  key={v}
+                  type="button"
+                  role="tab"
+                  aria-selected={view === v}
+                  onClick={() => setView(v)}
+                  className={`rounded-full px-2.5 py-1 ${view === v ? "bg-ink text-paper" : "hover:bg-sun"}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+          {view === "map" && event.map ? (
+            <HexMap
+              map={event.map}
+              seatResults={result.seatResults}
+              baselineResults={baseline.seatResults}
+              parties={parties}
+              isBaseline={isBaseline}
+            />
+          ) : (
+            <Hemicycle
+              seats={result.seats}
+              parties={parties}
+              majorityNeeded={g.majorityNeeded}
+              label="Seats under this scenario"
+            />
+          )}
           <Legend parties={parties} seats={result.seats} />
         </div>
         <No10Card

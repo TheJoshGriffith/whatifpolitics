@@ -1,4 +1,5 @@
 import type { ElectionEvent, ScenarioResult } from "@/lib/types";
+import { HexMap } from "./HexMap";
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 
@@ -65,6 +66,27 @@ export function ReferendumResults({
           <Stat k="Share of real voters left" v={pct(keptShare)} />
         </dl>
       </div>
+
+      {event.map && (
+        <div className="card flex flex-col gap-3 p-4 sm:p-5">
+          <h3 className="font-display text-lg font-extrabold">Who wins where</h3>
+          <HexMap
+            map={event.map}
+            seatResults={result.seatResults}
+            baselineResults={baseline.seatResults}
+            parties={event.parties}
+            areaWord={event.id === "indyref2014" ? "council" : "area"}
+            isBaseline={isBaseline}
+          />
+          {event.id === "eu2016" && (
+            <p className="text-xs text-muted">
+              Drawn on today&apos;s council map, so a few merged councils (like Dorset and Buckinghamshire) show their old
+              districts added together. Northern Ireland was counted as one area, so all its hexes share one colour, and
+              Gibraltar doesn&apos;t get a hex.
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="card flex flex-col gap-3 p-4 sm:p-5">
         <h3 className="font-display text-lg font-extrabold">

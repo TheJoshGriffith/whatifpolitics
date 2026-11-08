@@ -209,7 +209,47 @@ sources = [
 ]
 
 EVENTS = []
+MAPS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "maps")
+LA_MERGES = {  # 2021 council -> the 2016 counting areas it was made from
+  "E06000058": ["E06000028", "E07000048", "E06000029"],
+  "E06000059": ["E07000049", "E07000050", "E07000051", "E07000052", "E07000053"],
+  "E06000060": ["E07000004", "E07000005", "E07000006", "E07000007"],
+  "E06000061": ["E07000150", "E07000152", "E07000153", "E07000156"],
+  "E06000062": ["E07000151", "E07000154", "E07000155"],
+  "E07000244": ["E07000205", "E07000206"],
+  "E07000245": ["E07000201", "E07000204"],
+  "E07000246": ["E07000190", "E07000191"],
+  "S12000047": ["S12000015"], "S12000048": ["S12000024"], "S12000049": ["S12000046"], "S12000050": ["S12000044"],
+}
+
+def attach_map(ev):
+  """Hex map for an event: [[hexId, name, q, r, memberIds?], ...]. Members default to [hexId]."""
+  ids = {c["id"] for c in ev["constituencies"]}
+  if ev["kind"] == "general":
+    fname = "uk-constituencies-2023.hexjson" if ev["year"] >= 2024 else "constituencies.hexjson"
+    hexes = json.load(open(os.path.join(MAPS, fname)))["hexes"]
+    out = [[k, v["n"], v["q"], v["r"]] for k, v in hexes.items()]
+  else:
+    hexes = json.load(open(os.path.join(MAPS, "uk-local-authority-districts-2021.hexjson")))["hexes"]
+    out = []
+    if ev["id"] == "indyref2014":
+      byname = {c["name"]: c["id"] for c in ev["constituencies"]}
+      for k, v in hexes.items():
+        if k.startswith("S"):
+          out.append([k, v["n"], v["q"], v["r"], [byname[v["n"]]]])
+    else:
+      for k, v in hexes.items():
+        if k in ids: out.append([k, v["n"], v["q"], v["r"]])
+        elif k in LA_MERGES: out.append([k, v["n"], v["q"], v["r"], LA_MERGES[k]])
+        elif k.startswith("N09"): out.append([k, v["n"], v["q"], v["r"], ["N92000002"]])
+  members = [m for h in out for m in (h[4] if len(h) > 4 else [h[0]])]
+  assert all(m in ids for m in members), (ev["id"], [m for m in members if m not in ids][:5])
+  missing = ids - set(members)
+  assert len(missing) <= 1, (ev["id"], missing)  # Gibraltar has no hex
+  ev["map"] = {"layout": "odd-r", "hexes": out}
+
 def add_event(ev):
+  attach_map(ev)
   EVENTS.append(ev)
   with open(os.path.join(OUT, "events", ev["id"] + ".json"), "w") as f:
     json.dump(ev, f, ensure_ascii=False, separators=(",", ":"))

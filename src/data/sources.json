@@ -117,6 +117,14 @@
    "note": "86% of people identified as White in 2011. Used with Ipsos turnout to size ethnic groups among voters, 2010–2019."
   },
   {
+   "id": "hexmaps",
+   "name": "UK hex maps (constituencies 2010–2023 and local authorities 2021)",
+   "publisher": "Open Innovations (formerly ODI Leeds)",
+   "url": "https://github.com/odileeds/hexmaps",
+   "year": 2023,
+   "note": "Hex layouts for the maps: one hexagon per seat or council, so every area is the same size."
+  },
+  {
    "id": "ec-eu2016",
    "name": "EU referendum results by counting area",
    "publisher": "Electoral Commission",
