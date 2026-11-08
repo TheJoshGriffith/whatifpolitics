@@ -241,11 +241,11 @@ export function WhatIfApp() {
       .filter((g) => groups.includes(g.id))
       .map((g) => g.label);
     if (second) {
-      const a = `${dim.label.toLowerCase()} ${joinNice(labels, "or")}`;
-      const b = `${second.label.toLowerCase()} ${secondList}`;
+      const a = `${dim.label}: ${joinNice(labels, "or")}`;
+      const b = `${second.label}: ${secondList}`;
       return mode === "exclude"
-        ? `${dim.label} + ${second.label} · 🙅 Anyone with ${a} and ${b} stays at home…`
-        : `${dim.label} + ${second.label} · ☝️ Only people with ${a} and ${b} turn up…`;
+        ? `🙅 Staying home: anyone who's both ${a} and ${b}…`
+        : `☝️ Only voting: people who are both ${a} and ${b}…`;
     }
     const list = joinNice(labels);
     return mode === "exclude"
