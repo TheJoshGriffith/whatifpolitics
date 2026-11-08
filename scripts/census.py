@@ -8,7 +8,13 @@ groups are kept.
 
 Census 2021 on 2024 boundaries: ralphascott/UKGE24_wpc_census_summaries (Nomis / ONS / Scotland's
 Census). Census 2011 on 2010 boundaries: the parlitools R package (census_11). Scotland 2021 only
-has age, sex and ethnicity; Northern Ireland has nothing, so those seats keep the national mix.
+has age, sex and ethnicity, so those seats keep the national mix for the rest. Northern Ireland
+seats get age and sex from NISRA: Census 2011 key statistics by Assembly Area
+(KS101NI, KS102NI; the Assembly Areas match the 2010-2019 Westminster seats) and the mid-2021
+population estimates by 2024 Assembly Area (MYE01T013, based on Census 2021), transcribed from
+the NISRA data portal into census11_ni_wpc2010.csv and census21_ni_wpc2024.csv.
+
+Referendum counting areas (local authorities) use Census 2011 by council, see make_la_extract.py.
 """
 import csv, os
 
@@ -108,24 +114,31 @@ def groups11(r):
 def local_mixes(year):
   """{seat id: {dimension: {group: local amount}}} plus population weights."""
   if year >= 2024:
-    rows = _rows("census21_wpc2024.csv")
+    rows = _rows("census21_wpc2024.csv") + _rows("census21_ni_wpc2024.csv")
     return {r["ONSConstID"]: (groups21(r), _f(r["c21Population"]) or 0) for r in rows}
-  rows = _rows("census11_wpc2010.csv")
+  rows = _rows("census11_wpc2010.csv") + [r for r in _rows("census11_ni_wpc2010.csv") if r["ons_const_id"] != "N92000002"]
   return {r["ons_const_id"]: (groups11(r), _f(r["population"]) or 0) for r in rows}
 
 
 def attach(ev):
   """Add groupShares (a per-seat voter mix) to every seat of a general election we have Census data for."""
   year = ev["year"]
-  data = local_mixes(year)
-  dims = {d["id"]: [g["id"] for g in d["groups"]] for d in ev["dimensions"]}
-  # Census dimension feeding each event dimension.
-  src = {k: k for k in dims}
-  if year < 2017 and "age" in dims:
+  src = {d["id"]: d["id"] for d in ev["dimensions"]}
+  if year < 2017 and "age" in src:
     src["age"] = "age_ipsos"
-  # National (GB) average of each local amount, weighted by population.
+  return apply_mixes(ev, local_mixes(year), src)
+
+
+def apply_mixes(ev, data, src):
+  """data: {area id: ({census dimension: {group: local amount}}, population)}; src: event dimension -> census dimension.
+  Sets groupShares on every area found in data and returns (areas matched, {dimension: areas given a mix})."""
+  dims = {d["id"]: [g["id"] for g in d["groups"]] for d in ev["dimensions"]}
+  # National average of each local amount, weighted by population. The polls behind voterShare cover Great
+  # Britain only, so Northern Ireland areas (ids starting N) are indexed against the GB average.
   nat = {}
-  for local, pop in data.values():
+  for k, (local, pop) in data.items():
+    if k.startswith("N"):
+      continue
     for d, gs in local.items():
       for g, v in gs.items():
         t = nat.setdefault(d, {}).setdefault(g, [0.0, 0.0])
@@ -162,3 +175,70 @@ def attach(ev):
     if shares:
       c["groupShares"] = shares
   return matched, used
+
+
+# ---- Referendums: Census 2011 by council -----------------------------------------------------
+
+def _la_groups(r):
+  """census11_la.csv row (or the same keys for Northern Ireland as a whole) -> {dimension: {group: amount}}."""
+  g = lambda k: _f(r.get(k))
+  out = {}
+  a = {k: g("age_" + k) for k in ["16_to_17","18_to_19","20_to_24","25_to_29","30_to_44","45_to_59","60_to_64","65_to_74","75_plus"]}
+  if all(v is not None for v in a.values()):
+    o65 = a["65_to_74"] + a["75_plus"]
+    # Census bands spread evenly by year of age where a poll band cuts through them.
+    out["age_eu"] = {"18-24": a["18_to_19"] + a["20_to_24"], "25-49": a["25_to_29"] + a["30_to_44"] + a["45_to_59"] / 3,
+                     "50-64": a["45_to_59"] * 2 / 3 + a["60_to_64"], "65+": o65}
+    out["age_indy"] = {"16-17": a["16_to_17"], "18-24": a["18_to_19"] + a["20_to_24"], "25-34": a["25_to_29"] + a["30_to_44"] / 3,
+                       "35-44": a["30_to_44"] * 2 / 3, "45-54": a["45_to_59"] * 2 / 3, "55-64": a["45_to_59"] / 3 + a["60_to_64"], "65+": o65}
+  m, f = g("male"), g("female")
+  if m is not None and f is not None:
+    out["sex"] = {"female": f, "male": m}
+  sg = {k: g("sg_" + k) for k in ["AB","C1","C2","DE"]}
+  if all(v is not None for v in sg.values()):
+    out["class"] = sg
+  # No Census table crosses these, so a joint group is sized as (share in group A) x (share in group B).
+  if "age_eu" in out and "sex" in out:
+    pop = m + f
+    ae = out["age_eu"]
+    out["agesex"] = {s + k: ae[b] * v / pop for s, v in (("m", m), ("f", f)) for k, b in (("18", "18-24"), ("25", "25-49"), ("50", "50-64"), ("65", "65+"))}
+  if "class" in out and "sex" in out:
+    pop = m + f
+    out["classsex"] = {s + c: sg[c] * v / pop for s, v in (("m", m), ("f", f)) for c in sg}
+  q = {k: g("qual_" + k) for k in ["none","level_1","level_2","apprentice","level_3","level_4","other"]}
+  if all(v is not None for v in q.values()):
+    # The Census puts every qualification above A level in Level 4, so "higher, below degree" and "degree" share its index.
+    out["education"] = {"low": q["none"] + q["level_1"] + q["level_2"] + q["apprentice"], "alevel": q["level_3"],
+                        "higher": q["level_4"] * 0.3, "degree": q["level_4"] * 0.7, "other": q["other"]}
+  h = {k: g("house_" + k) for k in ["outright","mortgage","council","ha","private"]}
+  if all(v is not None for v in h.values()):
+    out["tenure"] = h
+  e = {k: g("eth_" + k) for k in ["white","mixed","asian","chinese","black","other"]}
+  if all(v is not None for v in e.values()):
+    out["ethnicity"] = e
+  return out
+
+
+def _ni_total():
+  """Northern Ireland as a whole (Census 2011, NISRA KS101NI/KS102NI) in census11_la.csv terms: age and sex only."""
+  r = next(r for r in _rows("census11_ni_wpc2010.csv") if r["ons_const_id"] == "N92000002")
+  g = lambda k: _f(r[k])
+  row = {k: r[k] for k in ["male","female","age_16_to_17","age_18_to_19","age_20_to_24","age_25_to_29","age_30_to_44","age_45_to_59","age_60_to_64","age_65_to_74"]}
+  row["age_75_plus"] = g("age_75_to_84") + g("age_85_to_89") + g("age_90_plus")
+  return _la_groups(row), g("population")
+
+
+def attach_referendum(ev):
+  """groupShares for each counting area of the EU referendum (councils, plus Northern Ireland) or the indyref (Scottish councils)."""
+  rows = _rows("census11_la.csv")
+  if ev["id"] == "indyref2014":
+    byname = {c["name"]: c["id"] for c in ev["constituencies"]}
+    data = {byname[r["name"]]: (_la_groups(r), _f(r["population"])) for r in rows if r["area_code"].startswith("S")}
+    assert len(data) == len(ev["constituencies"]) == 32
+    src = {"age": "age_indy", "sex": "sex", "class": "class", "classsex": "classsex"}
+  else:
+    data = {r["area_code"]: (_la_groups(r), _f(r["population"])) for r in rows}
+    data["N92000002"] = _ni_total()
+    src = {"age": "age_eu", "sex": "sex", "agesex": "agesex", "class": "class", "education": "education",
+           "tenure": "tenure", "ethnicity": "ethnicity"}
+  return apply_mixes(ev, data, src)

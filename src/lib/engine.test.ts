@@ -102,6 +102,28 @@ describe("estimateSeatGroupVotes", () => {
     expect(young / old).toBeCloseTo(0.4 / 0.6, 2);
     expect(est.young.a + est.old.a).toBeCloseTo(300, 6);
   });
+
+  it("uses a seat's own group party shares when it has an override", () => {
+    // Nationally young lean to a; in this seat the override says young lean to b.
+    const flipped = {
+      ...world.constituencies[0],
+      groupVotingOverride: { age: { young: { a: 0.2, b: 0.8 }, old: { a: 0.7, b: 0.3 } } },
+    };
+    const est = estimateSeatGroupVotes(flipped, dim, groupVoting, ["a", "b"]);
+    const young = est.young.a + est.young.b;
+    const old = est.old.a + est.old.b;
+    expect(est.young.a + est.old.a).toBeCloseTo(300, 6);
+    expect(est.young.b + est.old.b).toBeCloseTo(350, 6);
+    expect(young / old).toBeCloseTo(0.3 / 0.7, 2);
+    expect(est.young.b / young).toBeGreaterThan(est.old.b / old);
+  });
+
+  it("falls back to national shares for dimensions and groups the override leaves out", () => {
+    const partial = { ...world.constituencies[0], groupVotingOverride: { sex: { women: { a: 1 } } } };
+    const a = estimateSeatGroupVotes(partial, dim, groupVoting, ["a", "b"]);
+    const b = estimateSeatGroupVotes(world.constituencies[0], dim, groupVoting, ["a", "b"]);
+    expect(a).toEqual(b);
+  });
 });
 
 describe("scenarios", () => {
@@ -200,7 +222,39 @@ describe("real data sanity", () => {
   });
 });
 
+describe("Northern Ireland", () => {
+  it("NI seats carry their own group behaviour, and dropping a group changes NI votes unevenly", () => {
+    for (const e of events.filter((x) => x.kind === "general")) {
+      const ni = e.constituencies.filter((c) => c.region === "Northern Ireland");
+      expect(ni).toHaveLength(18);
+      for (const c of ni) {
+        expect(c.groupVotingOverride?.age).toBeDefined();
+        expect(c.groupVotingOverride?.sex).toBeDefined();
+        expect(c.groupShares?.age).toBeDefined();
+      }
+      const m = buildModel(modelInputFor(e));
+      const r = runScenario(m, { dimension: "age", mode: "exclude", groups: [e.dimensions.find((d) => d.id === "age")!.groups.at(-1)!.id] });
+      // With GB behaviour every NI party lost the same share; with NI behaviour they don't.
+      const before = m.baseline.seatResults.filter((s) => s.region === "Northern Ireland");
+      const after = r.seatResults.filter((s) => s.region === "Northern Ireland");
+      const ratios = after.flatMap((s, i) =>
+        ["dup", "sf", "apni"].filter((p) => (before[i].votes[p] ?? 0) > 0).map((p) => s.votes[p] / before[i].votes[p]),
+      );
+      expect(Math.max(...ratios) - Math.min(...ratios)).toBeGreaterThan(0.02);
+    }
+  });
+});
+
 describe("referendums", () => {
+  it("counting areas have a local Census voter mix, except Gibraltar", async () => {
+    const { getEvent } = await import("./data");
+    const eu = getEvent("eu2016");
+    expect(eu.constituencies.filter((c) => !c.groupShares?.age).map((c) => c.id)).toEqual(["GI"]);
+    expect(eu.constituencies.filter((c) => c.groupShares?.tenure).length).toBe(348);
+    const indy = getEvent("indyref2014");
+    expect(indy.constituencies.every((c) => c.groupShares?.age && c.groupShares?.class)).toBe(true);
+  });
+
   it("reproduce the real 2016 and 2014 results", async () => {
     const { getEvent, modelInputFor } = await import("./data");
     const eu = buildModel(modelInputFor(getEvent("eu2016"))).baseline;

@@ -56,7 +56,7 @@
    "publisher": "House of Commons Library / UK Parliament",
    "url": "https://electionresults.parliament.uk/",
    "year": 2024,
-   "note": "Every candidate's votes in every seat at the 2010, 2015, 2017 and 2019 general elections."
+   "note": "Every candidate's votes in every seat at the 2010, 2015, 2017 and 2019 general elections. In 2010 the Ulster Unionists stood jointly with the Conservatives in Northern Ireland (as UCUNF); we count those votes as UUP."
   },
   {
    "id": "ipsos-2010",
@@ -133,6 +133,14 @@
    "note": "Census 2011 for all 632 GB seats on the 2010–2019 boundaries. Gives each 2010–2019 seat its own local mix."
   },
   {
+   "id": "census-2011-la",
+   "name": "Census 2011 by local authority (age, sex, social grade, qualifications, housing, ethnicity)",
+   "publisher": "ONS, Nomis and National Records of Scotland, via GitHub mirrors (dxe4/demographics, 0emerald/GB-Hyperlinks_N-S-Divide, anetobradley/energy_flex)",
+   "url": "https://github.com/dxe4/demographics/tree/master/data",
+   "year": 2011,
+   "note": "Census 2011 for every council in Great Britain. Gives each referendum counting area its own mix of ages, sexes, social grades and ethnic groups, plus qualifications and (England and Wales only) housing. Northern Ireland's count uses NISRA's Census 2011 ages and sexes for Northern Ireland as a whole."
+  },
+  {
    "id": "hexmaps",
    "name": "UK hex maps (constituencies 2010–2023 and local authorities 2021)",
    "publisher": "Open Innovations (formerly ODI Leeds)",
@@ -196,6 +204,62 @@
    "url": "https://www.whatscotlandthinks.org/2014/12/many-16-17-year-olds-voted/",
    "year": 2014,
    "note": "Self-reported turnout by age, e.g. 75% of 16–17s."
+  },
+  {
+   "id": "nilt-2010",
+   "name": "Northern Ireland Life and Times Survey 2010: political party support (POLPART2)",
+   "publisher": "ARK (Queen's University Belfast and Ulster University)",
+   "url": "https://www.ark.ac.uk/nilt/2010/Political_Attitudes/POLPART2.html",
+   "year": 2010,
+   "note": "About 1,200 adults in Northern Ireland. Which party people support, by age and sex. Used for how Northern Ireland groups differ in 2010."
+  },
+  {
+   "id": "nilt-2015",
+   "name": "Northern Ireland Life and Times Survey 2015: political party support (POLPART2)",
+   "publisher": "ARK (Queen's University Belfast and Ulster University)",
+   "url": "https://www.ark.ac.uk/nilt/2015/Political_Attitudes/POLPART2.html",
+   "year": 2015,
+   "note": "Party support by age and sex in Northern Ireland, used for the 2015 election."
+  },
+  {
+   "id": "nilt-2016",
+   "name": "Northern Ireland Life and Times Survey 2016: how you voted in the EU referendum (BREXVOTE)",
+   "publisher": "ARK (Queen's University Belfast and Ulster University)",
+   "url": "https://www.ark.ac.uk/nilt/2016/Political_Attitudes/BREXVOTE.html",
+   "year": 2016,
+   "note": "Remain and Leave by age and sex among Northern Ireland voters, used for Northern Ireland's count in the EU referendum."
+  },
+  {
+   "id": "nilt-2017",
+   "name": "Northern Ireland Life and Times Survey 2017: political party support (POLPART2)",
+   "publisher": "ARK (Queen's University Belfast and Ulster University)",
+   "url": "https://www.ark.ac.uk/nilt/2017/Political_Attitudes/POLPART2.html",
+   "year": 2017,
+   "note": "Party support by age and sex in Northern Ireland, used for the 2017 election."
+  },
+  {
+   "id": "nilt-2020",
+   "name": "Northern Ireland Life and Times Survey 2020: vote at the 2019 general election (VOTEGE19)",
+   "publisher": "ARK (Queen's University Belfast and Ulster University)",
+   "url": "https://ark.ac.uk/nilt/2020/Political_Attitudes/VOTEGE19.html",
+   "year": 2020,
+   "note": "How Northern Ireland voters remember voting in December 2019, by age and sex. Too few 18–24s to report, so they're given the 25–34 figures."
+  },
+  {
+   "id": "nilt-2024",
+   "name": "Northern Ireland Life and Times Survey 2024: political party support (POLPART2)",
+   "publisher": "ARK (Queen's University Belfast and Ulster University)",
+   "url": "https://www.ark.ac.uk/nilt/2024/Political_Attitudes/POLPART2.html",
+   "year": 2024,
+   "note": "Party support by age and sex in Northern Ireland in 2024, used for the 2024 election."
+  },
+  {
+   "id": "nisra-census-ni",
+   "name": "Census 2011 key statistics by Assembly Area, and mid-2021 population estimates by 2024 Assembly Area",
+   "publisher": "NISRA",
+   "url": "https://data.nisra.gov.uk/",
+   "year": 2022,
+   "note": "Ages and sexes in each Northern Ireland seat (tables KS101NI and KS102NI for the 2010–2019 seats, MYE01T013 for the 2024 seats, which is based on Census 2021). Gives each Northern Ireland seat its own age and sex mix."
   }
  ]
 }

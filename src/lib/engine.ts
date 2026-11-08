@@ -92,9 +92,12 @@ export function estimateSeatGroupVotes(
     if (seatShares) return seatShares[g] ?? 0;
     return beh?.voterShare ?? 0;
   });
-  const seed = groups.map((g, i) =>
-    partyIds.map((p) => weights[i] * (gv?.groups[g]?.shares[p] ?? 0)),
-  );
+  // A seat can carry its own party shares per group (e.g. Northern Ireland, which GB polls don't cover).
+  const override = seat.groupVotingOverride?.[dimension.id];
+  const seed = groups.map((g, i) => {
+    const shares = override?.[g] ?? gv?.groups[g]?.shares;
+    return partyIds.map((p) => weights[i] * (shares?.[p] ?? 0));
+  });
 
   const colTargets = partyIds.map((p) => seat.votes[p] ?? 0);
   const total = colTargets.reduce((a, b) => a + b, 0);
