@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "screenshot": "node scripts/screenshot.mjs"
+    "screenshot": "node scripts/screenshot.mjs",
+    "build:artifact": "NEXT_PUBLIC_ARTIFACT=1 next build && node scripts/artifact-postprocess.mjs"
   },
   "dependencies": {
     "next": "16.4.5",

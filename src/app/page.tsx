@@ -1,6 +1,6 @@
 import { WhatIfApp } from "@/components/WhatIfApp";
 import { PlaceholderBanner } from "@/components/PlaceholderBanner";
-import Link from "next/link";
+import { SiteLink as Link } from "@/components/SiteLink";
 
 export default function Home() {
   return (

@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
   basePath,
+  // NEXT_PUBLIC_ARTIFACT=1 builds a single-page copy with relative asset URLs.
+  assetPrefix: process.env.NEXT_PUBLIC_ARTIFACT ? "." : undefined,
   images: { unoptimized: true },
   turbopack: {
     rules: {
