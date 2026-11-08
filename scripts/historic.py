@@ -97,15 +97,21 @@ def ipsos_groups(tab, section, labels, shares_cols, voter_weight):
   return groups
 
 
+FILL_N = None  # set by build(): build-data.py's fill_n (estimates n where a poll prints no base)
+
+
 def finish(gv):
   for d in gv.values():
     tot = sum(g["voterWeight"] for g in d["groups"].values())
     for g in d["groups"].values():
       g["voterShare"] = round(g.pop("voterWeight") / tot, 5)
+    if FILL_N: FILL_N(d)
   return gv
 
 
 def build(G):
+  global FILL_N
+  FILL_N = G["fill_n"]
   load_ge, add_event, party_list = G["load_ge"], G["add_event"], G["party_list"]
   sources = G["sources"]
 
@@ -250,7 +256,9 @@ def build(G):
         n = num(c.get("Weighted Sample") or c.get("Weighted sample"))
         shares = {p: num(c[row]) / 100 for p, row in partymap.items()}
         out[gid] = {"voterWeight": n * (voted if voted is not None else 1), "shares": shares,
-                    "turnout": num(c["Voted"]) / 100 if "Voted" in c else None}
+                    "turnout": num(c["Voted"]) / 100 if "Voted" in c else None,
+                    # voters in the group: printed weighted sample x (YouGov 2017) turnout
+                    "n": round(n * (voted if voted is not None else 1))}
       gv[dim] = {"source": src, "groups": out}
     return gv
 
@@ -335,7 +343,7 @@ def referendums(G):
       r = tab[label]
       out[gid] = {"voterWeight": num(r[base_col]),
                   "shares": {ids[0]: num(r[yes_col]) / 100, ids[1]: num(r[no_col]) / 100},
-                  "turnout": (turnout or {}).get(gid)}
+                  "turnout": (turnout or {}).get(gid), "n": round(num(r[base_col]))}
     return out
 
   # ---------------- 2016 EU referendum ----------------

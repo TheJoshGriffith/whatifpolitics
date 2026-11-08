@@ -43,6 +43,30 @@
    "note": "Remain 48.1%, Leave 51.9%. Used as a rough guide to how many 2024 voters were Remainers vs Leavers (people who didn't vote in 2016 are folded in)."
   },
   {
+   "id": "yougov-tactical-2024",
+   "name": "One in five voters say they are voting tactically at the 2024 general election",
+   "publisher": "YouGov",
+   "url": "https://yougov.com/en-gb/articles/49886-one-in-five-voters-say-they-are-voting-tactically-at-the-2024-general-election",
+   "year": 2024,
+   "note": "Matthew Smith, 1 July 2024. 22% of voters said they were voting tactically (39% of Lib Dem voters, 29% of Labour voters, 8-12% for Con, Reform and Green). If nobody voted tactically, YouGov's implied shares were Labour 29% (8 points lower), Lib Dems about 12% (2 lower) and Greens 13% (6 higher), with little change for the Conservatives and Reform. We use these net changes for the 'Undo tactical voting' switch under PR."
+  },
+  {
+   "id": "bes-ld-tactical-2024",
+   "name": "The Liberal Democrats in 2024: vote efficiency and tactical voting",
+   "publisher": "British Election Study",
+   "url": "https://britishelectionstudy.com/bes-impact/the-liberal-democrats-in-2024-vote-efficiency-and-tactical-voting",
+   "year": 2024,
+   "note": "Griffiths, Green and Fieldhouse, 5 September 2024. Shows 44% of 2019 Labour voters switched to the Lib Dems where the Lib Dems were the main challenger to the Conservatives. Background on where tactical voting happened; not used in the numbers."
+  },
+  {
+   "id": "yougov-tactical-2019",
+   "name": "Who's tactically voting, and why?",
+   "publisher": "YouGov",
+   "url": "https://yougov.com/en-gb/articles/26824-whos-tactically-voting-and-why",
+   "year": 2019,
+   "note": "Connor Ibbetson, 10 December 2019. 19% of voters said they were voting tactically (36% of Lib Dem first-choice voters, 19% of Labour, 12% of Conservative). It doesn't say where those votes would otherwise go, so we leave the tactical switch off for 2019."
+  },
+  {
    "id": "ippr-half-of-us",
    "name": "Half of us: turnout patterns at the 2024 general election",
    "publisher": "IPPR",
