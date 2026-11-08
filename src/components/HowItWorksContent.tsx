@@ -60,6 +60,47 @@ export function HowItWorksContent() {
           326 or more, and write a cheeky headline.
         </p>
 
+        <h3 className="mt-5 font-display text-lg font-extrabold">Two slices at once</h3>
+        <p>
+          You can combine two slices, like &ldquo;only under-30s who rent&rdquo; or &ldquo;no over-60
+          homeowners&rdquo;. The polls don&apos;t tell us how many 18–24-year-old renters voted Labour in
+          each seat, so we build it from the two estimates we do have. Within each party&apos;s voters
+          in a seat, we assume the two slices are independent: if 20% of a party&apos;s voters there are
+          under 30 and 40% rent, we take 20% × 40% = 8% to be under-30 renters. In maths terms the
+          cell is <i>age votes × housing votes ÷ the party&apos;s votes</i>.
+        </p>
+        <p>
+          That keeps both slices adding up exactly (all the age groups still match the age estimate,
+          and the same for housing), and it lets the link between age and renting differ from party
+          to party. What it misses is any link left over <i>within</i> a party&apos;s voters: young Labour
+          voters probably rent more often than older Labour voters, and this method can&apos;t see that.
+          So combined slices are rougher than single ones.
+        </p>
+
+        <h3 className="mt-5 font-display text-lg font-extrabold">Turnout dials</h3>
+        <p>
+          Instead of switching a group on or off, you can turn its turnout up or down. A dial at 100%
+          is what really happened, 0% means the whole group stays at home, and 150% means half as many
+          again turn up. We simply multiply that group&apos;s estimated votes in every seat by the dial,
+          and the extra voters vote the same way as the group&apos;s real voters did. &ldquo;Nobody in
+          these groups voted&rdquo; is the same as setting their dials to 0%.
+        </p>
+        <p>
+          Where the polls give a group&apos;s real turnout (for example 57% of 18–19s in 2017), we show
+          what each dial means in turnout terms and stop the dial at 100% turnout. That cap uses the
+          national figure, so in a seat where a group already turned out above average the model can
+          still nudge it a little past 100%. The &ldquo;votes like pensioners&rdquo; presets set each
+          group&apos;s dial so its turnout matches the oldest group&apos;s, and only appear for votes where
+          the polls report turnout by age (2010, 2015 and 2017).
+        </p>
+
+        <h3 className="mt-5 font-display text-lg font-extrabold">Sharing a what-if</h3>
+        <p>
+          The address bar keeps up with whatever you pick (the vote, the slices, the dials and the
+          voting system), so you can copy the link, or press &ldquo;Copy link&rdquo;, and anyone who
+          opens it sees the same what-if.
+        </p>
+
         <h2>4. Referendums work the same way</h2>
         <p>
           For the 2016 EU referendum we use the Electoral Commission&apos;s Remain and Leave counts in
@@ -162,8 +203,9 @@ export function HowItWorksContent() {
             them in with Mixed. Take these ones with a big pinch of salt.
           </li>
           <li>
-            <b>One slice at a time.</b> Age, sex, class and education are modelled separately, so
-            you can&apos;t (yet) do &ldquo;only female graduates under 35&rdquo;.
+            <b>Two slices at most.</b> Each slice is modelled separately and combined with the
+            independence assumption above, so you can do &ldquo;only women graduates&rdquo; but not
+            three slices like &ldquo;only female graduates under 35&rdquo;.
           </li>
           <li>
             <b>Nobody changes their mind.</b> If half the country stayed home, the other half might

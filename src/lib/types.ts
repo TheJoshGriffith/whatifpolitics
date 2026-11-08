@@ -108,12 +108,34 @@ export interface SourcesFile extends DataFile {
 
 // ---------- Engine types ----------
 
-export type ScenarioMode = "exclude" | "only";
+/**
+ * "exclude": the chosen groups stay home. "only": nobody else votes.
+ * "turnout": every group of the slice has a turnout dial (see `turnout`).
+ */
+export type ScenarioMode = "exclude" | "only" | "turnout";
+
+/** A second slice that narrows a scenario down, e.g. "...who rent". */
+export interface ScenarioFilter {
+  dimension: DimensionId;
+  groups: GroupId[];
+}
 
 export interface Scenario {
   dimension: DimensionId;
   mode: ScenarioMode;
+  /** The chosen groups for "exclude" / "only". Ignored in "turnout" mode. */
   groups: GroupId[];
+  /**
+   * Optional second slice. "only": keep voters in (chosen groups AND `and.groups`).
+   * "exclude": remove voters in (chosen groups AND `and.groups`). "turnout": the dials
+   * apply only to voters in `and.groups`; everyone else votes as they really did.
+   */
+  and?: ScenarioFilter;
+  /**
+   * "turnout" mode: multiplier on each group's real votes (0 = stayed home, 1 = as real,
+   * 2 = twice as many). Groups left out count as 1.
+   */
+  turnout?: Record<GroupId, number>;
 }
 
 /** Raked votes for one seat & dimension: group -> party -> votes */

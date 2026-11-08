@@ -1,4 +1,5 @@
-import type { ElectionEvent, Scenario } from "./types";
+import type { ElectionEvent, GroupId, Scenario } from "./types";
+import { MAX_TURNOUT_FACTOR } from "./engine";
 
 export interface Preset {
   id: string;
@@ -53,14 +54,83 @@ export const presets: Preset[] = [
   { id: "only-mail", label: "Only Daily Mail readers", emoji: "📰", blurb: "House prices and the weather.", scenario: { dimension: "paper", mode: "only", groups: ["mail"] } },
 ];
 
+/** Two slices at once (each line keeps both slices' group ids in one event's bands). */
+export const comboPresets: Preset[] = [
+  { id: "only-young-renters", label: "Only under-30s who rent", emoji: "🔑", blurb: "Only people aged under 30 who rent their home vote.", scenario: { dimension: "age", mode: "only", groups: ["18-19", "20-24", "25-29"], and: { dimension: "tenure", groups: ["private", "social"] } } },
+  { id: "only-young-renters-24", label: "Only under-30s who rent", emoji: "🔑", blurb: "Only people aged under 30 who rent their home vote.", scenario: { dimension: "age", mode: "only", groups: ["18-24", "25-29"], and: { dimension: "tenure", groups: ["private", "social"] } } },
+  { id: "only-young-renters-ipsos", label: "Only under-35s who rent", emoji: "🔑", blurb: "Only people aged under 35 who rent their home vote.", scenario: { dimension: "age", mode: "only", groups: ["18-24", "25-34"], and: { dimension: "tenure", groups: ["private", "social"] } } },
+  { id: "no-old-owners", label: "No over-60 homeowners", emoji: "🏡", blurb: "People aged 60 and over who own their home stay at home.", scenario: { dimension: "age", mode: "exclude", groups: ["60-69", "70+"], and: { dimension: "tenure", groups: ["outright", "mortgage"] } } },
+  { id: "no-old-owners-ipsos", label: "No over-55 homeowners", emoji: "🏡", blurb: "People aged 55 and over who own their home stay at home.", scenario: { dimension: "age", mode: "exclude", groups: ["55-64", "65+"], and: { dimension: "tenure", groups: ["outright", "mortgage"] } } },
+  { id: "only-women-grads", label: "Only women graduates", emoji: "🎓", blurb: "Only women with a degree vote.", scenario: { dimension: "sex", mode: "only", groups: ["female"], and: { dimension: "education", groups: ["degree"] } } },
+];
+
+/**
+ * Turnout presets: some groups turn out at the same rate as another group. Only offered
+ * when the event's polling gives real turnout for every group involved.
+ */
+interface TurnoutPreset extends Omit<Preset, "scenario"> {
+  dimension: string;
+  /** Groups whose turnout changes ("all" = every group in the slice). */
+  groups: GroupId[] | "all";
+  /** The group whose real turnout they copy. */
+  like: GroupId;
+}
+
+export const turnoutPresets: TurnoutPreset[] = [
+  { id: "young-like-old-yg", label: "Young people vote like pensioners", emoji: "📈", blurb: "Under-30s turn out at the same rate as over-70s did.", dimension: "age", groups: ["18-19", "20-24", "25-29"], like: "70+" },
+  { id: "young-like-old-ipsos", label: "Young people vote like pensioners", emoji: "📈", blurb: "Under-35s turn out at the same rate as over-65s did.", dimension: "age", groups: ["18-24", "25-34"], like: "65+" },
+  { id: "old-like-young-yg", label: "Pensioners vote like young people", emoji: "📉", blurb: "Over-60s turn out at the same rate as 18–19s did.", dimension: "age", groups: ["60-69", "70+"], like: "18-19" },
+  { id: "old-like-young-ipsos", label: "Pensioners vote like young people", emoji: "📉", blurb: "Over-55s turn out at the same rate as 18–24s did.", dimension: "age", groups: ["55-64", "65+"], like: "18-24" },
+  { id: "renters-like-owners", label: "Renters vote like homeowners", emoji: "🗝️", blurb: "Private and social renters turn out at the same rate as outright owners did.", dimension: "tenure", groups: ["private", "social"], like: "outright" },
+  { id: "c2de-like-ab", label: "Every grade votes like AB", emoji: "📊", blurb: "Social grades C1, C2 and DE turn out at the same rate as AB did.", dimension: "class", groups: ["C1", "C2", "DE"], like: "AB" },
+  { id: "all-like-old-yg", label: "Every age votes like pensioners", emoji: "💯", blurb: "Every age group turns out at the same rate as over-70s did.", dimension: "age", groups: "all", like: "70+" },
+  { id: "all-like-old-ipsos", label: "Every age votes like pensioners", emoji: "💯", blurb: "Every age group turns out at the same rate as over-65s did.", dimension: "age", groups: "all", like: "65+" },
+];
+
+/** Resolve a turnout preset for one event, or null if its turnout figures are missing. */
+export function turnoutPresetScenario(t: TurnoutPreset, event: ElectionEvent): Scenario | null {
+  const dim = event.dimensions.find((d) => d.id === t.dimension);
+  const gv = event.groupVoting[t.dimension];
+  if (!dim || !gv) return null;
+  const groups = t.groups === "all" ? dim.groups.map((g) => g.id) : t.groups;
+  const real = (g: GroupId) => {
+    const x = gv.groups[g]?.turnout;
+    return dim.groups.some((d) => d.id === g) && typeof x === "number" && x > 0 ? x : null;
+  };
+  const target = real(t.like);
+  if (target === null) return null;
+  const turnout: Record<GroupId, number> = {};
+  for (const g of groups) {
+    const r = real(g);
+    if (r === null) return null;
+    if (g === t.like) continue;
+    turnout[g] = Math.min(Math.round((target / r) * 100) / 100, MAX_TURNOUT_FACTOR);
+  }
+  return { dimension: t.dimension, mode: "turnout", groups: [], turnout };
+}
+
 /** Presets whose slice and groups exist in this event's data. */
 export function presetsFor(event: ElectionEvent): Preset[] {
   const seen = new Set<string>();
-  return presets.filter((p) => {
-    if (seen.has(p.label)) return false;
-    const dim = event.dimensions.find((d) => d.id === p.scenario.dimension);
-    const ok = !!dim && p.scenario.groups.every((g) => dim.groups.some((x) => x.id === g));
-    if (ok) seen.add(p.label);
-    return ok;
-  });
+  const fits = (dimension: string, groups: GroupId[]) => {
+    const dim = event.dimensions.find((d) => d.id === dimension);
+    return !!dim && groups.every((g) => dim.groups.some((x) => x.id === g));
+  };
+  const out: Preset[] = [];
+  for (const p of [...presets, ...comboPresets]) {
+    if (seen.has(p.label)) continue;
+    const { dimension, groups, and } = p.scenario;
+    if (!fits(dimension, groups) || (and && (and.dimension === dimension || !fits(and.dimension, and.groups)))) continue;
+    seen.add(p.label);
+    out.push(p);
+  }
+  for (const t of turnoutPresets) {
+    if (seen.has(t.label)) continue;
+    const scenario = turnoutPresetScenario(t, event);
+    if (!scenario) continue;
+    seen.add(t.label);
+    const { id, label, emoji, blurb } = t;
+    out.push({ id, label, emoji, blurb, scenario });
+  }
+  return out;
 }
