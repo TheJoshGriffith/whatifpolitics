@@ -26,4 +26,9 @@ export const presets: Preset[] = [
   { id: "retirees-home", label: "Retirees stay home", emoji: "🎣", blurb: "Gone fishing. Literally.", scenario: { dimension: "work", mode: "exclude", groups: ["retired"] } },
   { id: "only-white", label: "Only White voters", emoji: "🔵", blurb: "What the 85% of voters who are White picked on their own.", scenario: { dimension: "ethnicity", mode: "only", groups: ["white"] } },
   { id: "only-minorities", label: "Only ethnic minorities", emoji: "🌍", blurb: "Asian, Black, Mixed and other voters only.", scenario: { dimension: "ethnicity", mode: "only", groups: ["asian", "black", "mixed"] } },
+  { id: "only-young-women", label: "Only young women", emoji: "🎧", blurb: "Women aged 18–24 only. Greens, brace yourselves.", scenario: { dimension: "agesex", mode: "only", groups: ["f18"] } },
+  { id: "only-young-men", label: "Only young men", emoji: "🧢", blurb: "Men aged 18–24 only. Group chat goes to the polls.", scenario: { dimension: "agesex", mode: "only", groups: ["m18"] } },
+  { id: "only-leave", label: "Only Leavers", emoji: "🇬🇧", blurb: "2016 Leave voters only. Take back control (of the ballot box).", scenario: { dimension: "brexit", mode: "only", groups: ["leave"] } },
+  { id: "only-remain", label: "Only Remainers", emoji: "🇪🇺", blurb: "2016 Remain voters only. Still have the beret.", scenario: { dimension: "brexit", mode: "only", groups: ["remain"] } },
+  { id: "only-70k", label: "Only £70k+ households", emoji: "🛥️", blurb: "Comfortably off and allowed to vote. Nobody else.", scenario: { dimension: "income", mode: "only", groups: ["70plus"] } },
 ];

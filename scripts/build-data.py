@@ -111,6 +111,22 @@ groupVoting = {
    "black": ipsos(0.040*0.43, 16,68,6,1,8,1,1),
    "mixed": ipsos(0.050*0.43, 14,50,11,6,13,2,2),
  }},
+ "agesex": {"source": "yougov-2024", "groups": {
+   "m18": yg(2216, 10,40,16,3,1,12,12,6), "f18": yg(2174, 6,42,16,3,0,6,23,3),
+   "m25": yg(8567, 14,43,13,3,0,15,8,4), "f25": yg(8863, 15,45,14,2,1,10,10,4),
+   "m50": yg(5099, 23,32,11,3,1,22,5,4), "f50": yg(5310, 29,32,11,3,1,16,5,3),
+   "m65": yg(4504, 41,21,10,3,1,19,3,3), "f65": yg(5387, 42,23,12,2,1,13,3,3),
+ }},
+ "brexit": {"source": "yougov-2024", "groups": {
+   # Voter mix approximated from the 2016 referendum result (Remain 48.1%, Leave 51.9%).
+   "remain": yg(48.1, 16,47,17,4,1,3,8,3),
+   "leave":  yg(51.9, 37,19,7,1,0,28,3,4),
+ }},
+ "income": {"source": "yougov-2024", "groups": {
+   "u20": yg(6547, 24,33,11,3,1,17,8,4), "20to30": yg(5665, 26,32,11,3,1,17,6,4),
+   "30to50": yg(8127, 25,34,12,3,1,15,7,4), "50to70": yg(4768, 20,40,13,3,0,14,7,3),
+   "70plus": yg(6078, 22,40,16,2,1,10,6,3),
+ }},
  "education": {"source": "yougov-2024", "turnoutSource": "ipsos-2024", "groups": {
    "low":    yg(11286, 31,28,9,2,1,23,4,3),
    "mid":    yg(16571, 26,32,12,3,1,16,7,4),
@@ -150,6 +166,17 @@ dimensions = [
    {"id":"asian","label":"Asian","emoji":"🟢"},
    {"id":"black","label":"Black","emoji":"🟣"},
    {"id":"mixed","label":"Mixed & other","emoji":"🟠"}]},
+ {"id":"agesex","label":"Age × sex","groups":[
+   {"id":"m18","label":"Men 18–24","emoji":"🧢"},{"id":"f18","label":"Women 18–24","emoji":"🎧"},
+   {"id":"m25","label":"Men 25–49","emoji":"🧔"},{"id":"f25","label":"Women 25–49","emoji":"👩‍💼"},
+   {"id":"m50","label":"Men 50–64","emoji":"🏌️"},{"id":"f50","label":"Women 50–64","emoji":"🌻"},
+   {"id":"m65","label":"Men 65+","emoji":"👴"},{"id":"f65","label":"Women 65+","emoji":"👵"}]},
+ {"id":"brexit","label":"Brexit vote","groups":[
+   {"id":"remain","label":"Voted Remain","emoji":"🇪🇺"},{"id":"leave","label":"Voted Leave","emoji":"🇬🇧"}]},
+ {"id":"income","label":"Income","groups":[
+   {"id":"u20","label":"Under £20k","emoji":"🪙"},{"id":"20to30","label":"£20–30k","emoji":"💷"},
+   {"id":"30to50","label":"£30–50k","emoji":"💳"},{"id":"50to70","label":"£50–70k","emoji":"🚙"},
+   {"id":"70plus","label":"£70k+","emoji":"🛥️"}]},
  {"id":"education","label":"Education","groups":[
    {"id":"low","label":"GCSE or below","emoji":"📒"},
    {"id":"mid","label":"A-level / vocational","emoji":"📚"},
@@ -170,6 +197,9 @@ sources = [
  {"id":"ons-census-ethnicity","name":"Ethnic group, England and Wales: Census 2021","publisher":"Office for National Statistics",
   "url":"https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021","year":2022,
   "note":"Population by ethnic group (White 81.7%, Asian 9.3%, Black 4.0%, Mixed 2.9%, Other 2.1%). Combined with Ipsos turnout to size each group among voters."},
+ {"id":"ec-eu-ref-2016","name":"EU referendum results","publisher":"Electoral Commission",
+  "url":"https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/eu-referendum/results-and-turnout-eu-referendum","year":2016,
+  "note":"Remain 48.1%, Leave 51.9%. Used as a rough guide to how many 2024 voters were Remainers vs Leavers (people who didn't vote in 2016 are folded in)."},
  {"id":"ippr-half-of-us","name":"Half of us: turnout patterns at the 2024 general election","publisher":"IPPR",
   "url":"https://www.ippr.org/articles/half-of-us","year":2024,
   "note":"Background on who didn't vote: just 52.8% of the voting-age population turned out."},

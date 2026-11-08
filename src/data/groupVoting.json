@@ -425,6 +425,246 @@
     }
    }
   },
+  "agesex": {
+   "source": "yougov-2024",
+   "groups": {
+    "m18": {
+     "shares": {
+      "con": 0.1,
+      "lab": 0.4,
+      "ld": 0.16,
+      "snp": 0.03,
+      "pc": 0.01,
+      "reform": 0.12,
+      "green": 0.12,
+      "other": 0.06,
+      "ind": 0.06
+     },
+     "turnout": null,
+     "voterShare": 0.05261
+    },
+    "f18": {
+     "shares": {
+      "con": 0.06,
+      "lab": 0.42,
+      "ld": 0.16,
+      "snp": 0.03,
+      "pc": 0.0,
+      "reform": 0.06,
+      "green": 0.23,
+      "other": 0.03,
+      "ind": 0.03
+     },
+     "turnout": null,
+     "voterShare": 0.05161
+    },
+    "m25": {
+     "shares": {
+      "con": 0.14,
+      "lab": 0.43,
+      "ld": 0.13,
+      "snp": 0.03,
+      "pc": 0.0,
+      "reform": 0.15,
+      "green": 0.08,
+      "other": 0.04,
+      "ind": 0.04
+     },
+     "turnout": null,
+     "voterShare": 0.2034
+    },
+    "f25": {
+     "shares": {
+      "con": 0.15,
+      "lab": 0.45,
+      "ld": 0.14,
+      "snp": 0.02,
+      "pc": 0.01,
+      "reform": 0.1,
+      "green": 0.1,
+      "other": 0.04,
+      "ind": 0.04
+     },
+     "turnout": null,
+     "voterShare": 0.21042
+    },
+    "m50": {
+     "shares": {
+      "con": 0.23,
+      "lab": 0.32,
+      "ld": 0.11,
+      "snp": 0.03,
+      "pc": 0.01,
+      "reform": 0.22,
+      "green": 0.05,
+      "other": 0.04,
+      "ind": 0.04
+     },
+     "turnout": null,
+     "voterShare": 0.12106
+    },
+    "f50": {
+     "shares": {
+      "con": 0.29,
+      "lab": 0.32,
+      "ld": 0.11,
+      "snp": 0.03,
+      "pc": 0.01,
+      "reform": 0.16,
+      "green": 0.05,
+      "other": 0.03,
+      "ind": 0.03
+     },
+     "turnout": null,
+     "voterShare": 0.12607
+    },
+    "m65": {
+     "shares": {
+      "con": 0.41,
+      "lab": 0.21,
+      "ld": 0.1,
+      "snp": 0.03,
+      "pc": 0.01,
+      "reform": 0.19,
+      "green": 0.03,
+      "other": 0.03,
+      "ind": 0.03
+     },
+     "turnout": null,
+     "voterShare": 0.10693
+    },
+    "f65": {
+     "shares": {
+      "con": 0.42,
+      "lab": 0.23,
+      "ld": 0.12,
+      "snp": 0.02,
+      "pc": 0.01,
+      "reform": 0.13,
+      "green": 0.03,
+      "other": 0.03,
+      "ind": 0.03
+     },
+     "turnout": null,
+     "voterShare": 0.1279
+    }
+   }
+  },
+  "brexit": {
+   "source": "yougov-2024",
+   "groups": {
+    "remain": {
+     "shares": {
+      "con": 0.16,
+      "lab": 0.47,
+      "ld": 0.17,
+      "snp": 0.04,
+      "pc": 0.01,
+      "reform": 0.03,
+      "green": 0.08,
+      "other": 0.03,
+      "ind": 0.03
+     },
+     "turnout": null,
+     "voterShare": 0.481
+    },
+    "leave": {
+     "shares": {
+      "con": 0.37,
+      "lab": 0.19,
+      "ld": 0.07,
+      "snp": 0.01,
+      "pc": 0.0,
+      "reform": 0.28,
+      "green": 0.03,
+      "other": 0.04,
+      "ind": 0.04
+     },
+     "turnout": null,
+     "voterShare": 0.519
+    }
+   }
+  },
+  "income": {
+   "source": "yougov-2024",
+   "groups": {
+    "u20": {
+     "shares": {
+      "con": 0.24,
+      "lab": 0.33,
+      "ld": 0.11,
+      "snp": 0.03,
+      "pc": 0.01,
+      "reform": 0.17,
+      "green": 0.08,
+      "other": 0.04,
+      "ind": 0.04
+     },
+     "turnout": null,
+     "voterShare": 0.20994
+    },
+    "20to30": {
+     "shares": {
+      "con": 0.26,
+      "lab": 0.32,
+      "ld": 0.11,
+      "snp": 0.03,
+      "pc": 0.01,
+      "reform": 0.17,
+      "green": 0.06,
+      "other": 0.04,
+      "ind": 0.04
+     },
+     "turnout": null,
+     "voterShare": 0.18166
+    },
+    "30to50": {
+     "shares": {
+      "con": 0.25,
+      "lab": 0.34,
+      "ld": 0.12,
+      "snp": 0.03,
+      "pc": 0.01,
+      "reform": 0.15,
+      "green": 0.07,
+      "other": 0.04,
+      "ind": 0.04
+     },
+     "turnout": null,
+     "voterShare": 0.26061
+    },
+    "50to70": {
+     "shares": {
+      "con": 0.2,
+      "lab": 0.4,
+      "ld": 0.13,
+      "snp": 0.03,
+      "pc": 0.0,
+      "reform": 0.14,
+      "green": 0.07,
+      "other": 0.03,
+      "ind": 0.03
+     },
+     "turnout": null,
+     "voterShare": 0.15289
+    },
+    "70plus": {
+     "shares": {
+      "con": 0.22,
+      "lab": 0.4,
+      "ld": 0.16,
+      "snp": 0.02,
+      "pc": 0.01,
+      "reform": 0.1,
+      "green": 0.06,
+      "other": 0.03,
+      "ind": 0.03
+     },
+     "turnout": null,
+     "voterShare": 0.1949
+    }
+   }
+  },
   "education": {
    "source": "yougov-2024",
    "turnoutSource": "ipsos-2024",

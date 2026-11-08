@@ -168,6 +168,99 @@
    ]
   },
   {
+   "id": "agesex",
+   "label": "Age × sex",
+   "groups": [
+    {
+     "id": "m18",
+     "label": "Men 18–24",
+     "emoji": "🧢"
+    },
+    {
+     "id": "f18",
+     "label": "Women 18–24",
+     "emoji": "🎧"
+    },
+    {
+     "id": "m25",
+     "label": "Men 25–49",
+     "emoji": "🧔"
+    },
+    {
+     "id": "f25",
+     "label": "Women 25–49",
+     "emoji": "👩‍💼"
+    },
+    {
+     "id": "m50",
+     "label": "Men 50–64",
+     "emoji": "🏌️"
+    },
+    {
+     "id": "f50",
+     "label": "Women 50–64",
+     "emoji": "🌻"
+    },
+    {
+     "id": "m65",
+     "label": "Men 65+",
+     "emoji": "👴"
+    },
+    {
+     "id": "f65",
+     "label": "Women 65+",
+     "emoji": "👵"
+    }
+   ]
+  },
+  {
+   "id": "brexit",
+   "label": "Brexit vote",
+   "groups": [
+    {
+     "id": "remain",
+     "label": "Voted Remain",
+     "emoji": "🇪🇺"
+    },
+    {
+     "id": "leave",
+     "label": "Voted Leave",
+     "emoji": "🇬🇧"
+    }
+   ]
+  },
+  {
+   "id": "income",
+   "label": "Income",
+   "groups": [
+    {
+     "id": "u20",
+     "label": "Under £20k",
+     "emoji": "🪙"
+    },
+    {
+     "id": "20to30",
+     "label": "£20–30k",
+     "emoji": "💷"
+    },
+    {
+     "id": "30to50",
+     "label": "£30–50k",
+     "emoji": "💳"
+    },
+    {
+     "id": "50to70",
+     "label": "£50–70k",
+     "emoji": "🚙"
+    },
+    {
+     "id": "70plus",
+     "label": "£70k+",
+     "emoji": "🛥️"
+    }
+   ]
+  },
+  {
    "id": "education",
    "label": "Education",
    "groups": [

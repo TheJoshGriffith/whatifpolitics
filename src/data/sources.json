@@ -35,6 +35,14 @@
    "note": "Population by ethnic group (White 81.7%, Asian 9.3%, Black 4.0%, Mixed 2.9%, Other 2.1%). Combined with Ipsos turnout to size each group among voters."
   },
   {
+   "id": "ec-eu-ref-2016",
+   "name": "EU referendum results",
+   "publisher": "Electoral Commission",
+   "url": "https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/eu-referendum/results-and-turnout-eu-referendum",
+   "year": 2016,
+   "note": "Remain 48.1%, Leave 51.9%. Used as a rough guide to how many 2024 voters were Remainers vs Leavers (people who didn't vote in 2016 are folded in)."
+  },
+  {
    "id": "ippr-half-of-us",
    "name": "Half of us: turnout patterns at the 2024 general election",
    "publisher": "IPPR",

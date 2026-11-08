@@ -9,6 +9,9 @@ const dimEmoji: Record<DimensionId, string> = {
   tenure: "🏠",
   work: "💼",
   ethnicity: "🌍",
+  agesex: "👫",
+  brexit: "🇪🇺",
+  income: "💷",
 };
 
 export function ScenarioPicker({

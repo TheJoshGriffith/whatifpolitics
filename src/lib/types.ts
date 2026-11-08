@@ -6,7 +6,7 @@
  */
 
 export type PartyId = string;
-export type DimensionId = "age" | "sex" | "class" | "education" | "tenure" | "work" | "ethnicity";
+export type DimensionId = "age" | "sex" | "class" | "education" | "tenure" | "work" | "ethnicity" | "agesex" | "brexit" | "income";
 export type GroupId = string;
 
 export interface Party {
