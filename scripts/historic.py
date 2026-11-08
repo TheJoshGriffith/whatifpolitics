@@ -316,3 +316,165 @@ def build(G):
   results_event(2019, "ge2019", {**COLMAP_BASE, "BRX":"brexit"}, BASE + [BRX],
     "\"Get Brexit Done.\" Johnson wins an 80-seat majority and the Red Wall turns blue.",
     [DIM_YGAGE, "sex", DIM_AGESEX19, "class", DIM_EDU, DIM_WORK19, DIM_INCOME19, DIM_BREXIT, "tenure", "ethnicity"], gv19)
+
+
+def referendums(G):
+  add_event, sources = G["add_event"], G["sources"]
+  import csv
+
+  def group_table(md, heading_prefix):
+    """Rows of the first table under a heading that starts with heading_prefix -> {first col: row dict}."""
+    for heading, header, rows in tables(md):
+      if heading.startswith(heading_prefix):
+        return {r[0] if header[0] != "Group" or header[1] != "Category" else r[1]: dict(zip(header, r)) for r in rows}
+    raise ValueError(heading_prefix)
+
+  def ref_groups(tab, mapping, yes_col, no_col, base_col, ids, turnout=None):
+    out = {}
+    for gid, label in mapping.items():
+      r = tab[label]
+      out[gid] = {"voterWeight": num(r[base_col]),
+                  "shares": {ids[0]: num(r[yes_col]) / 100, ids[1]: num(r[no_col]) / 100},
+                  "turnout": (turnout or {}).get(gid)}
+    return out
+
+  # ---------------- 2016 EU referendum ----------------
+  areas = []
+  with open(os.path.join(POLLS, "eu2016_areas.csv")) as f:
+    for r in csv.DictReader(f):
+      areas.append({"id": r["area_code"], "name": r["area"], "region": r["region"], "electorate": int(r["electorate"]),
+                    "votes": {"remain": int(r["remain"]), "leave": int(r["leave"])}})
+  assert sum(a["votes"]["remain"] for a in areas) == 16141241
+  assert sum(a["votes"]["leave"] for a in areas) == 17410742
+
+  yg = {}
+  for heading, header, rows in tables("eu2016_polls.md"):
+    if heading.startswith("2. YouGov"):
+      for r in rows:
+        yg[(r[0], r[1])] = dict(zip(header, r))
+  ash = {}
+  for heading, header, rows in tables("eu2016_polls.md"):
+    if heading.startswith("Tenure") or heading.startswith("Ethnicity"):
+      for r in rows:
+        ash[r[0]] = dict(zip(header, r))
+  ip = {}
+  for heading, header, rows in tables("eu2016_polls.md"):
+    if heading.startswith("3. Ipsos"):
+      for r in rows:
+        ip[r[0]] = dict(zip(header, r))
+  ipt = lambda label: num(ip[label]["Turnout all adults %"]) / 100
+
+  IDS = ("remain", "leave")
+  def ygd(mapping, turnout=None):
+    tab = {k[1]: v for k, v in yg.items() if k[1] in mapping.values() and k[0] != "Total"}
+    return ref_groups(tab, mapping, "Remain %", "Leave %", "Weighted base", IDS, turnout)
+  gv = {
+    "age": {"source": "yougov-eu2016", "turnoutSource": "ipsos-eu2016",
+            "groups": ygd({"18-24":"18-24","25-49":"25-49","50-64":"50-64","65+":"65+"}, {"18-24": ipt("18-24")})},
+    "sex": {"source": "yougov-eu2016", "turnoutSource": "ipsos-eu2016",
+            "groups": ygd({"female":"Female","male":"Male"}, {"female": ipt("Female"), "male": ipt("Male")})},
+    "agesex": {"source": "yougov-eu2016", "groups": ygd({"m18":"Male 18-24","f18":"Female 18-24","m25":"Male 25-49","f25":"Female 25-49",
+                                                          "m50":"Male 50-64","f50":"Female 50-64","m65":"Male 65+","f65":"Female 65+"})},
+    "class": {"source": "yougov-eu2016", "turnoutSource": "ipsos-eu2016",
+              "groups": ygd({"AB":"AB","C1":"C1","C2":"C2","DE":"DE"}, {g: ipt(g) for g in ("AB","C1","C2","DE")})},
+    "education": {"source": "yougov-eu2016", "groups": ygd({"low":"GCSE or lower","alevel":"A level or equivalent","higher":"Higher below degree",
+                                                             "degree":"Degree","other":"Other or don't know"})},
+    "income": {"source": "yougov-eu2016", "groups": ygd({"u20":"< £20,000","20to40":"£20,000-39,999","40to60":"£40,000-59,999","60plus":"£60,000+"})},
+    "party2015": {"source": "yougov-eu2016", "groups": ygd({"con":"Con","lab":"Lab","ld":"Lib Dem","ukip":"UKIP","green":"Green","other":"Other","dnv":"Did not vote"})},
+    "tenure": {"source": "ashcroft-eu2016", "groups": ref_groups(ash, {"outright":"Owned outright","mortgage":"Owned with mortgage",
+               "council":"Rent from council","ha":"Rent from HA","private":"Other rent"}, "Remain %", "Leave %", "Weighted base", IDS)},
+    "ethnicity": {"source": "ashcroft-eu2016", "groups": ref_groups(ash, {"white":"White","asian":"Asian","black":"Black","mixed":"Mixed",
+               "chinese":"Chinese","other":"Other"}, "Remain %", "Leave %", "Weighted base", IDS)},
+  }
+  dims = [
+    {"id":"age","label":"Age","groups":[{"id":"18-24","label":"18–24","emoji":"🛹"},{"id":"25-49","label":"25–49","emoji":"☕"},
+      {"id":"50-64","label":"50–64","emoji":"⛳"},{"id":"65+","label":"65+","emoji":"🫖"}]},
+    {"id":"sex","label":"Sex","groups":[{"id":"female","label":"Women","emoji":"👩"},{"id":"male","label":"Men","emoji":"👨"}]},
+    {"id":"agesex","label":"Age × sex","groups":[{"id":"m18","label":"Men 18–24","emoji":"🧢"},{"id":"f18","label":"Women 18–24","emoji":"🎧"},
+      {"id":"m25","label":"Men 25–49","emoji":"🧔"},{"id":"f25","label":"Women 25–49","emoji":"👩‍💼"},{"id":"m50","label":"Men 50–64","emoji":"🏌️"},
+      {"id":"f50","label":"Women 50–64","emoji":"🌻"},{"id":"m65","label":"Men 65+","emoji":"👴"},{"id":"f65","label":"Women 65+","emoji":"👵"}]},
+    {"id":"class","label":"Social grade","groups":[{"id":"AB","label":"AB (managerial & professional)","emoji":"💼"},
+      {"id":"C1","label":"C1 (supervisory & clerical)","emoji":"🖇️"},{"id":"C2","label":"C2 (skilled manual)","emoji":"🔧"},
+      {"id":"DE","label":"DE (semi/unskilled, not working)","emoji":"🧤"}]},
+    {"id":"education","label":"Education","groups":[{"id":"low","label":"GCSE or lower","emoji":"📒"},{"id":"alevel","label":"A level","emoji":"📚"},
+      {"id":"higher","label":"Higher, below degree","emoji":"📐"},{"id":"degree","label":"Degree","emoji":"🎓"},{"id":"other","label":"Other / not sure","emoji":"❔"}]},
+    {"id":"income","label":"Income","groups":[{"id":"u20","label":"Under £20k","emoji":"🪙"},{"id":"20to40","label":"£20–40k","emoji":"💷"},
+      {"id":"40to60","label":"£40–60k","emoji":"🚙"},{"id":"60plus","label":"£60k+","emoji":"🛥️"}]},
+    {"id":"party2015","label":"2015 vote","groups":[{"id":"con","label":"Conservative","emoji":"🔵"},{"id":"lab","label":"Labour","emoji":"🔴"},
+      {"id":"ld","label":"Lib Dem","emoji":"🟠"},{"id":"ukip","label":"UKIP","emoji":"🟣"},{"id":"green","label":"Green","emoji":"🟢"},
+      {"id":"other","label":"Other","emoji":"⚪"},{"id":"dnv","label":"Didn't vote in 2015","emoji":"🛋️"}]},
+    {"id":"tenure","label":"Housing","groups":[{"id":"outright","label":"Own it outright","emoji":"🏡"},{"id":"mortgage","label":"Paying a mortgage","emoji":"🏦"},
+      {"id":"council","label":"Council tenants","emoji":"🏢"},{"id":"ha","label":"Housing association","emoji":"🏘️"},{"id":"private","label":"Private renters","emoji":"🔑"}]},
+    {"id":"ethnicity","label":"Ethnicity","groups":[{"id":"white","label":"White","emoji":"🔵"},{"id":"asian","label":"Asian","emoji":"🟢"},
+      {"id":"black","label":"Black","emoji":"🟣"},{"id":"mixed","label":"Mixed","emoji":"🟠"},{"id":"chinese","label":"Chinese","emoji":"🟡"},
+      {"id":"other","label":"Other","emoji":"⚪"}]},
+  ]
+  add_event({"id":"eu2016","label":"2016 EU referendum","short":"Brexit 2016","year":2016,"kind":"referendum","date":"2016-06-23",
+    "blurb":"Leave won 51.9% to 48.1% on a 72% turnout. Counted in 382 local areas.",
+    "resultsSource":"ec-eu2016","parties":[{"id":"remain","name":"Remain","short":"Remain","colour":"#2B6CB0"},
+                                           {"id":"leave","name":"Leave","short":"Leave","colour":"#C53030"}],
+    "constituencies":areas,"dimensions":dims,"groupVoting":finish(gv)})
+
+  # ---------------- 2014 Scottish independence referendum ----------------
+  councils = []
+  with open(os.path.join(POLLS, "indyref2014_areas.csv")) as f:
+    for r in csv.DictReader(f):
+      councils.append({"id": "sc-" + re.sub(r"[^a-z]+", "-", r["council"].lower()).strip("-"), "name": r["council"], "region": "Scotland",
+                       "electorate": int(r["electorate"]), "votes": {"yes": int(r["yes"]), "no": int(r["no"])}})
+  assert sum(c["votes"]["yes"] for c in councils) == 1617989
+  ashs = {}
+  for heading, header, rows in tables("indyref2014_polls.md"):
+    if heading.startswith("Page 3") or heading.startswith("Page 4"):
+      for r in rows:
+        ashs[r[0]] = dict(zip(header, r))
+  IDS2 = ("yes", "no")
+  ar = lambda m, t=None: ref_groups(ashs, m, "Yes %", "No %", "Base", IDS2, t)
+  gv2 = {
+    "age": {"source":"ashcroft-indyref","turnoutSource":"icm-indyref","groups": ar({"16-17":"16-17","18-24":"18-24","25-34":"25-34","35-44":"35-44",
+             "45-54":"45-54","55-64":"55-64","65+":"65+"}, {"16-17":0.75,"18-24":0.54,"25-34":0.72})},
+    "sex": {"source":"ashcroft-indyref","groups": ar({"female":"Female","male":"Male"})},
+    "class": {"source":"ashcroft-indyref","groups": ar({"AB":"AB","C1":"C1","C2":"C2","DE":"DE"})},
+    "classsex": {"source":"ashcroft-indyref","groups": ar({"mAB":"AB Male","fAB":"AB Female","mC1":"C1 Male","fC1":"C1 Female",
+             "mC2":"C2 Male","fC2":"C2 Female","mDE":"DE Male","fDE":"DE Female"})},
+    "party": {"source":"ashcroft-indyref","groups": ar({"con":"Westminster: Con","lab":"Westminster: Lab","snp":"Westminster: SNP","ld":"Westminster: LibDem"})},
+  }
+  dims2 = [
+    {"id":"age","label":"Age","groups":[{"id":"16-17","label":"16–17","emoji":"🎒"},{"id":"18-24","label":"18–24","emoji":"🛹"},
+      {"id":"25-34","label":"25–34","emoji":"☕"},{"id":"35-44","label":"35–44","emoji":"🧸"},{"id":"45-54","label":"45–54","emoji":"🚗"},
+      {"id":"55-64","label":"55–64","emoji":"⛳"},{"id":"65+","label":"65+","emoji":"🫖"}]},
+    {"id":"sex","label":"Sex","groups":[{"id":"female","label":"Women","emoji":"👩"},{"id":"male","label":"Men","emoji":"👨"}]},
+    {"id":"class","label":"Social grade","groups":[{"id":"AB","label":"AB (managerial & professional)","emoji":"💼"},
+      {"id":"C1","label":"C1 (supervisory & clerical)","emoji":"🖇️"},{"id":"C2","label":"C2 (skilled manual)","emoji":"🔧"},
+      {"id":"DE","label":"DE (semi/unskilled, not working)","emoji":"🧤"}]},
+    {"id":"classsex","label":"Grade × sex","groups":[{"id":"mAB","label":"AB men","emoji":"💼"},{"id":"fAB","label":"AB women","emoji":"👩‍💼"},
+      {"id":"mC1","label":"C1 men","emoji":"🖇️"},{"id":"fC1","label":"C1 women","emoji":"📎"},{"id":"mC2","label":"C2 men","emoji":"🔧"},
+      {"id":"fC2","label":"C2 women","emoji":"🪛"},{"id":"mDE","label":"DE men","emoji":"🧤"},{"id":"fDE","label":"DE women","emoji":"🧺"}]},
+    {"id":"party","label":"Westminster vote","groups":[{"id":"con","label":"Conservative","emoji":"🔵"},{"id":"lab","label":"Labour","emoji":"🔴"},
+      {"id":"snp","label":"SNP","emoji":"🟡"},{"id":"ld","label":"Lib Dem","emoji":"🟠"}]},
+  ]
+  add_event({"id":"indyref2014","label":"2014 Scottish independence referendum","short":"Indyref 2014","year":2014,"kind":"referendum",
+    "date":"2014-09-18","blurb":"Scotland voted No to independence, 55.3% to 44.7%, on an 85% turnout. 16- and 17-year-olds could vote.",
+    "resultsSource":"indyref-results","parties":[{"id":"yes","name":"Yes","short":"Yes","colour":"#2B6CB0"},{"id":"no","name":"No","short":"No","colour":"#C53030"}],
+    "constituencies":councils,"dimensions":dims2,"groupVoting":finish(gv2)})
+
+  sources += [
+    {"id":"ec-eu2016","name":"EU referendum results by counting area","publisher":"Electoral Commission",
+     "url":"https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/eu-referendum/results-and-turnout-eu-referendum","year":2016,
+     "note":"Remain and Leave votes in all 382 counting areas (Remain 16,141,241; Leave 17,410,742)."},
+    {"id":"yougov-eu2016","name":"How Britain voted (EU referendum)","publisher":"YouGov","url":"https://yougov.com/en-gb/articles/15796-how-britain-voted","year":2016,
+     "tablesUrl":"https://d3nkl3psvxxpe9.cloudfront.net/documents/EUFinalCall_Reweighted.pdf",
+     "note":"5,455 adults on 23–24 June 2016. Remain/Leave split and each group's share of voters by age, sex, social grade, education, income and 2015 vote."},
+    {"id":"ashcroft-eu2016","name":"How the United Kingdom voted on Thursday… and why","publisher":"Lord Ashcroft Polls",
+     "url":"https://lordashcroftpolls.com/2016/06/how-the-united-kingdom-voted-and-why/","year":2016,
+     "note":"12,369 referendum voters. Our source for housing and ethnicity."},
+    {"id":"ipsos-eu2016","name":"How Britain voted in the 2016 EU referendum","publisher":"Ipsos","url":"https://www.ipsos.com/en-uk/how-britain-voted-2016-eu-referendum","year":2016,
+     "note":"Turnout estimates by group, e.g. 53% of 18–24s."},
+    {"id":"indyref-results","name":"Scottish independence referendum: results by council area","publisher":"Chief Counting Officer / Electoral Commission",
+     "url":"https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/scottish-independence-referendum","year":2014,
+     "note":"Yes and No votes in all 32 council areas (Yes 1,617,989; No 2,001,926)."},
+    {"id":"ashcroft-indyref","name":"How Scotland voted, and why","publisher":"Lord Ashcroft Polls","url":"https://lordashcroftpolls.com/2014/09/scotland-voted/","year":2014,
+     "note":"2,046 referendum voters. Yes/No by age (including 16–17s), sex, social grade and Westminster vote."},
+    {"id":"icm-indyref","name":"So how many 16 and 17 year olds voted?","publisher":"What Scotland Thinks (ICM for the Electoral Commission)",
+     "url":"https://www.whatscotlandthinks.org/2014/12/many-16-17-year-olds-voted/","year":2014,
+     "note":"Self-reported turnout by age, e.g. 75% of 16–17s."},
+  ]

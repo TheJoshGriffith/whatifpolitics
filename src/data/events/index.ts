@@ -3,7 +3,9 @@ import type { ElectionEvent } from "@/lib/types";
 import ge2024 from "./ge2024.json";
 import ge2019 from "./ge2019.json";
 import ge2017 from "./ge2017.json";
+import eu2016 from "./eu2016.json";
 import ge2015 from "./ge2015.json";
+import indyref2014 from "./indyref2014.json";
 import ge2010 from "./ge2010.json";
 
-export const events = [ge2024, ge2019, ge2017, ge2015, ge2010] as unknown as ElectionEvent[];
+export const events = [ge2024, ge2019, ge2017, eu2016, ge2015, indyref2014, ge2010] as unknown as ElectionEvent[];

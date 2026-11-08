@@ -7,6 +7,7 @@ import { presets, presetsFor } from "@/lib/presets";
 import type { DimensionId, GroupId, Scenario, ScenarioMode } from "@/lib/types";
 import { ScenarioPicker } from "./ScenarioPicker";
 import { Results } from "./Results";
+import { ReferendumResults } from "./ReferendumResults";
 
 const initial = presetsFor(defaultEvent)[0] ?? presets[0];
 
@@ -142,6 +143,15 @@ export function WhatIfApp() {
         }}
       />
 
+      {event.kind === "referendum" ? (
+        <ReferendumResults
+          result={result}
+          baseline={model.baseline}
+          event={event}
+          description={describe()}
+          isBaseline={!scenario}
+        />
+      ) : (
       <Results
         result={result}
         baseline={model.baseline}
@@ -150,6 +160,7 @@ export function WhatIfApp() {
         description={describe()}
         isBaseline={!scenario}
       />
+      )}
     </div>
   );
 }

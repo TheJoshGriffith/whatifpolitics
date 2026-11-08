@@ -38,6 +38,14 @@ export const presets: Preset[] = [
   // YouGov 2017/2019 age bands
   { id: "only-under-30-yg", label: "Only under-30s", emoji: "🥑", blurb: "Avocado toast takes the wheel.", scenario: { dimension: "age", mode: "only", groups: ["18-19", "20-24", "25-29"] } },
   { id: "only-over-60-yg", label: "Only over-60s", emoji: "🫖", blurb: "Polling stations, but make it a garden centre.", scenario: { dimension: "age", mode: "only", groups: ["60-69", "70+"] } },
+  // Referendums
+  { id: "only-under-50-eu", label: "Only under-50s", emoji: "☕", blurb: "Just the 18–49s.", scenario: { dimension: "age", mode: "only", groups: ["18-24", "25-49"] } },
+  { id: "only-over-65", label: "Only over-65s", emoji: "🫖", blurb: "Pensioners only. Werther's Originals all round.", scenario: { dimension: "age", mode: "only", groups: ["65+"] } },
+  { id: "only-2015-nonvoters", label: "Only 2015 no-shows", emoji: "🛋️", blurb: "People who skipped the 2015 election but turned up for this one.", scenario: { dimension: "party2015", mode: "only", groups: ["dnv"] } },
+  { id: "only-private-renters", label: "Only private renters", emoji: "🔑", blurb: "Generation Rent finally gets its way.", scenario: { dimension: "tenure", mode: "only", groups: ["private"] } },
+  { id: "only-16-17", label: "Only 16–17s", emoji: "🎒", blurb: "First big UK vote open to 16- and 17-year-olds. Tiny poll sample (14 people!), so pinch of salt.", scenario: { dimension: "age", mode: "only", groups: ["16-17"] } },
+  { id: "only-under-35-indy", label: "Only under-35s", emoji: "🥑", blurb: "Just the 16–34s.", scenario: { dimension: "age", mode: "only", groups: ["16-17", "18-24", "25-34"] } },
+  { id: "only-labour-indy", label: "Only Labour voters", emoji: "🔴", blurb: "Westminster Labour voters only. Better Together's home turf?", scenario: { dimension: "party", mode: "only", groups: ["lab"] } },
   { id: "only-bme", label: "Only ethnic minorities", emoji: "🌍", blurb: "Ethnic-minority voters only.", scenario: { dimension: "ethnicity", mode: "only", groups: ["bme"] } },
   { id: "only-white-old", label: "Only White voters", emoji: "🔵", blurb: "White voters only.", scenario: { dimension: "ethnicity", mode: "only", groups: ["white"] } },
   { id: "only-sun", label: "Only Sun readers", emoji: "☀️", blurb: "It's the Sun wot won it. Allegedly.", scenario: { dimension: "paper", mode: "only", groups: ["sun"] } },

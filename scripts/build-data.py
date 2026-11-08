@@ -227,6 +227,7 @@ spec = importlib.util.spec_from_file_location("historic", os.path.join(HERE, "hi
 if os.path.exists(spec.origin):
   historic = importlib.util.module_from_spec(spec); spec.loader.exec_module(historic)
   historic.build(globals())
+  historic.referendums(globals())
 
 order = sorted(EVENTS, key=lambda e: -e["year"])
 with open(os.path.join(OUT, "events", "index.ts"), "w") as f:

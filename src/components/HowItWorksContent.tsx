@@ -8,7 +8,7 @@ export function HowItWorksContent() {
       </h1>
       <div className="card prose-casual p-5 sm:p-8">
         <p className="text-lg">
-          Short version: pick an election (2010 to 2024), we take the real result in every seat, make an educated guess about{" "}
+          Short version: pick a vote (any general election from 2010 to 2024, the 2016 Brexit referendum or the 2014 Scottish independence referendum), we take the real result in every seat or counting area, make an educated guess about{" "}
           <i>who</i> cast those votes, then quietly remove some people and recount. No polling
           station staff were harmed.
         </p>
@@ -50,6 +50,16 @@ export function HowItWorksContent() {
           in these groups voted&rdquo;) or keep <i>only</i> theirs. Whoever has the most votes left
           in each seat wins it, first-past-the-post style. Add up the seats, check whether anyone has
           326 or more, and write a cheeky headline.
+        </p>
+
+        <h2>4. Referendums work the same way</h2>
+        <p>
+          For the 2016 EU referendum we use the Electoral Commission&apos;s Remain and Leave counts in
+          all 382 counting areas, and for the 2014 Scottish referendum the Yes and No counts in all 32
+          councils. Instead of parties there are two answers, and instead of seats we just add up the
+          votes, because a referendum is won on the national count. We still show which areas would
+          change sides, for fun. The group splits come from YouGov and Lord Ashcroft&apos;s polls on
+          the day, so the same caveats apply (the Scottish poll only had 14 16–17-year-olds in it).
         </p>
 
         <h2>The big fat caveats 🧂</h2>

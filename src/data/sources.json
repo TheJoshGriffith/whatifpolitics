@@ -115,6 +115,63 @@
    "url": "https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/articles/ethnicityandnationalidentityinenglandandwales/2012-12-11",
    "year": 2012,
    "note": "86% of people identified as White in 2011. Used with Ipsos turnout to size ethnic groups among voters, 2010–2019."
+  },
+  {
+   "id": "ec-eu2016",
+   "name": "EU referendum results by counting area",
+   "publisher": "Electoral Commission",
+   "url": "https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/eu-referendum/results-and-turnout-eu-referendum",
+   "year": 2016,
+   "note": "Remain and Leave votes in all 382 counting areas (Remain 16,141,241; Leave 17,410,742)."
+  },
+  {
+   "id": "yougov-eu2016",
+   "name": "How Britain voted (EU referendum)",
+   "publisher": "YouGov",
+   "url": "https://yougov.com/en-gb/articles/15796-how-britain-voted",
+   "year": 2016,
+   "tablesUrl": "https://d3nkl3psvxxpe9.cloudfront.net/documents/EUFinalCall_Reweighted.pdf",
+   "note": "5,455 adults on 23–24 June 2016. Remain/Leave split and each group's share of voters by age, sex, social grade, education, income and 2015 vote."
+  },
+  {
+   "id": "ashcroft-eu2016",
+   "name": "How the United Kingdom voted on Thursday… and why",
+   "publisher": "Lord Ashcroft Polls",
+   "url": "https://lordashcroftpolls.com/2016/06/how-the-united-kingdom-voted-and-why/",
+   "year": 2016,
+   "note": "12,369 referendum voters. Our source for housing and ethnicity."
+  },
+  {
+   "id": "ipsos-eu2016",
+   "name": "How Britain voted in the 2016 EU referendum",
+   "publisher": "Ipsos",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-2016-eu-referendum",
+   "year": 2016,
+   "note": "Turnout estimates by group, e.g. 53% of 18–24s."
+  },
+  {
+   "id": "indyref-results",
+   "name": "Scottish independence referendum: results by council area",
+   "publisher": "Chief Counting Officer / Electoral Commission",
+   "url": "https://www.electoralcommission.org.uk/research-reports-and-data/our-reports-and-data-past-elections-and-referendums/scottish-independence-referendum",
+   "year": 2014,
+   "note": "Yes and No votes in all 32 council areas (Yes 1,617,989; No 2,001,926)."
+  },
+  {
+   "id": "ashcroft-indyref",
+   "name": "How Scotland voted, and why",
+   "publisher": "Lord Ashcroft Polls",
+   "url": "https://lordashcroftpolls.com/2014/09/scotland-voted/",
+   "year": 2014,
+   "note": "2,046 referendum voters. Yes/No by age (including 16–17s), sex, social grade and Westminster vote."
+  },
+  {
+   "id": "icm-indyref",
+   "name": "So how many 16 and 17 year olds voted?",
+   "publisher": "What Scotland Thinks (ICM for the Electoral Commission)",
+   "url": "https://www.whatscotlandthinks.org/2014/12/many-16-17-year-olds-voted/",
+   "year": 2014,
+   "note": "Self-reported turnout by age, e.g. 75% of 16–17s."
   }
  ]
 }

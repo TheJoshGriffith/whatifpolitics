@@ -199,3 +199,16 @@ describe("real data sanity", () => {
     }
   });
 });
+
+describe("referendums", () => {
+  it("reproduce the real 2016 and 2014 results", async () => {
+    const { getEvent, modelInputFor } = await import("./data");
+    const eu = buildModel(modelInputFor(getEvent("eu2016"))).baseline;
+    expect(eu.votes.leave).toBe(17410742);
+    expect(eu.votes.remain).toBe(16141241);
+    expect(eu.seats.leave).toBe(263);
+    const indy = buildModel(modelInputFor(getEvent("indyref2014"))).baseline;
+    expect(indy.votes.no).toBe(2001926);
+    expect(indy.seats.yes).toBe(4);
+  });
+});
