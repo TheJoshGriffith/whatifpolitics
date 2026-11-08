@@ -1,4 +1,5 @@
 import type { Dimension, DimensionId, GroupId, ScenarioMode } from "@/lib/types";
+import { groupVoting, dimensions as allDimensions, sources } from "@/lib/data";
 
 const dimEmoji: Record<DimensionId, string> = {
   age: "🎂",
@@ -115,6 +116,7 @@ export function ScenarioPicker({
             </button>
           )}
         </div>
+        <TurnoutFacts dimensionId={dim.id} />
         {allChosen && (
           <p className="mt-2 text-sm font-bold text-pink">
             You&apos;ve stopped literally everyone voting. Bold. Democracy has left the building.
@@ -135,6 +137,35 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
         {title}
       </h3>
       {children}
+    </div>
+  );
+}
+
+function TurnoutFacts({ dimensionId }: { dimensionId: string }) {
+  const dv = groupVoting[dimensionId as keyof typeof groupVoting];
+  const dimension = allDimensions.find((d) => d.id === dimensionId);
+  if (!dv || !dimension) return null;
+  const facts = dimension.groups
+    .map((g) => ({ g, t: dv.groups[g.id]?.turnout }))
+    .filter((x): x is { g: (typeof x)["g"]; t: number } => typeof x.t === "number");
+  const voterBits = dimension.groups.map(
+    (g) => `${g.label} ${Math.round((dv.groups[g.id]?.voterShare ?? 0) * 100)}%`,
+  );
+  const src = sources.find((s) => s.id === dv.source);
+  const tsrc = sources.find((s) => s.id === dv.turnoutSource);
+  return (
+    <div className="mt-3 rounded-2xl bg-sun/30 px-3 py-2 text-sm text-ink/80">
+      <p>
+        <b>Who actually voted:</b> {voterBits.join(" · ")}{" "}
+        <span className="text-muted">({src?.publisher ?? "poll"})</span>
+      </p>
+      {facts.length > 0 && (
+        <p className="mt-1">
+          <b>Turnout gossip:</b>{" "}
+          {facts.map(({ g, t }) => `only ${Math.round(t * 100)}% of ${g.label.split(" (")[0]}`).join(", ")}{" "}
+          bothered to vote. <span className="text-muted">({tsrc?.publisher ?? "poll"})</span>
+        </p>
+      )}
     </div>
   );
 }

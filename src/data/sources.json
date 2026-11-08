@@ -1,38 +1,38 @@
 {
-  "placeholder": true,
-  "_note": "PLACEHOLDER DATA – made up for development. Replace with real data.",
-  "sources": [
-    {
-      "id": "hoc-library-ge2024",
-      "name": "General election 2024 results",
-      "publisher": "House of Commons Library",
-      "url": "https://commonslibrary.parliament.uk/research-briefings/cbp-10009/",
-      "year": 2024,
-      "note": "PLACEHOLDER – constituency votes and electorates will come from here."
-    },
-    {
-      "id": "yougov-2024-how-britain-voted",
-      "name": "How Britain voted in the 2024 general election",
-      "publisher": "YouGov",
-      "url": "https://yougov.co.uk/politics/articles/49978-how-britain-voted-in-the-2024-general-election",
-      "year": 2024,
-      "note": "PLACEHOLDER – national vote shares and turnout by age, sex and education."
-    },
-    {
-      "id": "ipsos-2024-how-britain-voted",
-      "name": "How Britain voted in the 2024 election",
-      "publisher": "Ipsos",
-      "url": "https://www.ipsos.com/en-uk/how-britain-voted-2024-election",
-      "year": 2024,
-      "note": "PLACEHOLDER – vote shares and turnout by social grade."
-    },
-    {
-      "id": "ons-census-2021",
-      "name": "Census 2021",
-      "publisher": "Office for National Statistics",
-      "url": "https://www.ons.gov.uk/census",
-      "year": 2021,
-      "note": "PLACEHOLDER – population shares by age, sex, social grade and qualifications for each constituency."
-    }
-  ]
+ "placeholder": false,
+ "sources": [
+  {
+   "id": "ge2024-results",
+   "name": "UK general election 2024: results by constituency",
+   "publisher": "House of Commons Library / UK Parliament",
+   "url": "https://electionresults.parliament.uk/general-elections/6",
+   "year": 2024,
+   "note": "Every candidate's votes in all 650 seats. We group them by party (Workers Party and small parties go into 'Other parties')."
+  },
+  {
+   "id": "yougov-2024",
+   "name": "How Britain voted in the 2024 general election",
+   "publisher": "YouGov",
+   "url": "https://yougov.com/en-gb/articles/49978-how-britain-voted-in-the-2024-general-election",
+   "year": 2024,
+   "tablesUrl": "https://ygo-assets-websites-editorial-emea.yougov.net/documents/How_Britian_voted_2024_HEAD.pdf",
+   "note": "42,119 adults polled 5–8 July 2024. Gives the vote share of each party by age, sex, social grade and education, and how big each group was among voters."
+  },
+  {
+   "id": "ipsos-2024",
+   "name": "How Britain voted in the 2024 election",
+   "publisher": "Ipsos",
+   "url": "https://www.ipsos.com/en-uk/uk-opinion-polls/how-britain-voted-in-the-2024-election",
+   "year": 2024,
+   "note": "17,394 adults, 5–8 July 2024. We quote its turnout estimates (share of all adults who voted) for the fun facts, e.g. only 37% of 18–24s."
+  },
+  {
+   "id": "ippr-half-of-us",
+   "name": "Half of us: turnout patterns at the 2024 general election",
+   "publisher": "IPPR",
+   "url": "https://www.ippr.org/articles/half-of-us",
+   "year": 2024,
+   "note": "Background on who didn't vote: just 52.8% of the voting-age population turned out."
+  }
+ ]
 }

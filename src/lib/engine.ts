@@ -2,10 +2,12 @@
  * The "What If Britain…?" engine. Pure functions only: no React, no I/O.
  *
  * Pipeline per seat, per dimension:
- *   seed[g][p] = popShare[g] × turnout[g] × share[g][p]
+ *   w[g]       = national share of voters in group g (or, if the seat has
+ *                Census shares, popShare[g] × turnout[g])
+ *   seed[g][p] = w[g] × share[g][p]
  *   rake (IPF) so that
  *     Σ_g votes[g][p] = actual 2024 votes for party p in the seat     (column targets)
- *     Σ_p votes[g][p] ∝ popShare[g] × turnout[g], scaled to total     (row targets)
+ *     Σ_p votes[g][p] ∝ w[g], scaled to total                        (row targets)
  * then a scenario drops (or keeps only) some groups and we re-run FPTP.
  */
 import type {
@@ -81,19 +83,21 @@ export function estimateSeatGroupVotes(
   iterations = DEFAULT_ITERATIONS,
 ): GroupPartyVotes {
   const gv = groupVoting[dimension.id];
-  const shares = seat.groupShares[dimension.id] ?? {};
+  const seatShares = seat.groupShares?.[dimension.id];
   const groups = dimension.groups.map((g) => g.id);
 
-  const seed = groups.map((g) => {
-    const pop = shares[g] ?? 0;
+  // Expected share of this seat's voters in each group.
+  const weights = groups.map((g) => {
     const beh = gv?.groups[g];
-    const turnout = beh?.turnout ?? 0;
-    return partyIds.map((p) => pop * turnout * (beh?.shares[p] ?? 0));
+    if (seatShares) return (seatShares[g] ?? 0) * (beh?.turnout ?? 1);
+    return beh?.voterShare ?? 0;
   });
+  const seed = groups.map((g, i) =>
+    partyIds.map((p) => weights[i] * (gv?.groups[g]?.shares[p] ?? 0)),
+  );
 
   const colTargets = partyIds.map((p) => seat.votes[p] ?? 0);
   const total = colTargets.reduce((a, b) => a + b, 0);
-  const weights = groups.map((g) => (shares[g] ?? 0) * (gv?.groups[g]?.turnout ?? 0));
   const wSum = weights.reduce((a, b) => a + b, 0);
   const rowTargets = weights.map((w) => (wSum > 0 ? (total * w) / wSum : 0));
 

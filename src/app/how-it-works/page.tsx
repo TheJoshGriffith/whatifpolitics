@@ -25,24 +25,25 @@ export default function HowItWorks() {
 
         <h2>2. Guess who voted for whom</h2>
         <p>
-          Nobody publishes &ldquo;how 18–24s voted in Clacton&rdquo;. What we do have is national
-          polling (how each age group, sex, social grade and education level voted, and how many of
-          them bothered to turn up) and census figures on who lives in each seat.
+          Nobody publishes &ldquo;how 18–24s voted in Clacton&rdquo;. What we do have is
+          YouGov&apos;s huge post-election survey (42,000 people) saying how each age group, sex,
+          social grade and education level voted nationally, and how big a slice of all voters each
+          group was.
         </p>
         <p>
-          So for every seat we make a first guess: <i>people in the group × their turnout × their
-          national vote share</i>. Then we nudge that guess up and down, round and round (it&apos;s
-          called <b>raking</b>, or iterative proportional fitting, if you want to sound clever at a
-          party) until two things are true:
+          So for every seat we make a first guess: <i>the group&apos;s slice of voters × its national
+          vote share for each party</i>. Then we nudge that guess up and down, round and round
+          (it&apos;s called <b>raking</b>, or iterative proportional fitting, if you want to sound
+          clever at a party) until two things are true:
         </p>
         <ul>
           <li>each party&apos;s votes add up to exactly what it really got in that seat, and</li>
-          <li>each group&apos;s total vote stays in proportion to its size × turnout.</li>
+          <li>each group still makes up the same slice of that seat&apos;s voters.</li>
         </ul>
         <p>
-          That&apos;s why the Greens do better among young people in a seat where they actually did
-          well, and the SNP only gets votes in Scotland, even though the national polling numbers are
-          the same everywhere.
+          That&apos;s why, in a seat where Reform did brilliantly, more of those Reform votes get
+          pinned on the groups that like Reform (older, non-graduate, C2DE voters), and the SNP only
+          gets votes in Scotland, even though the national polling numbers are the same everywhere.
         </p>
 
         <h2>3. Remove some people, recount</h2>
@@ -63,6 +64,12 @@ export default function HowItWorks() {
             people nationally, adjusted to fit Truro&apos;s result. Reality is lumpier.
           </li>
           <li>
+            <b>Every seat gets the same mix of people.</b> For now we assume each seat&apos;s voters
+            are the national mix (say 10% are 18–24). In real life a student-heavy seat in Sheffield
+            and a retirement hotspot on the coast look nothing alike. Plugging in Census 2021
+            figures for each seat is next on the to-do list; the engine already supports it.
+          </li>
+          <li>
             <b>One slice at a time.</b> Age, sex, class and education are modelled separately, so
             you can&apos;t (yet) do &ldquo;only female graduates under 35&rdquo;.
           </li>
@@ -77,7 +84,8 @@ export default function HowItWorks() {
           </li>
           <li>
             <b>Small parties get fuzzy.</b> &ldquo;Other&rdquo; and independents lump together lots
-            of very different candidates, and Northern Ireland&apos;s parties work differently again.
+            of very different candidates. The polls are Great Britain only, so in Northern Ireland we
+            assume every group voted the same way, which means NI seats basically never change.
           </li>
           <li>
             <b>Rounding.</b> Raking runs a fixed number of rounds, so tiny numbers can wobble by a

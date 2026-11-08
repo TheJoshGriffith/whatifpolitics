@@ -26,10 +26,11 @@ export interface Constituency {
   /** Actual 2024 votes per party id. Parties missing here got zero. */
   votes: Record<PartyId, number>;
   /**
-   * Share of the adult population in each group, per dimension.
-   * Each inner record should sum to 1.
+   * Optional seat-specific share of the adult population in each group
+   * (e.g. from the Census). When present, the seat's voter mix is
+   * share × group turnout; when absent, the national voter mix is used.
    */
-  groupShares: Record<DimensionId, Record<GroupId, number>>;
+  groupShares?: Partial<Record<DimensionId, Record<GroupId, number>>>;
 }
 
 export interface DimensionGroup {
@@ -46,8 +47,10 @@ export interface Dimension {
 
 /** National (poll-derived) behaviour of one group. */
 export interface GroupVote {
-  /** Turnout as a fraction of the group's adult population, 0..1 */
-  turnout: number;
+  /** This group's share of everyone who voted, nationally (0..1). */
+  voterShare: number;
+  /** Reported turnout (fraction of the group's adults who voted), if a source gives it. */
+  turnout: number | null;
   /** Vote share per party among those who voted. Should sum to ~1. */
   shares: Record<PartyId, number>;
 }
@@ -55,6 +58,8 @@ export interface GroupVote {
 export interface DimensionVoting {
   /** Id of a Source in sources.json */
   source: string;
+  /** Source id for the turnout figures, if different. */
+  turnoutSource?: string;
   groups: Record<GroupId, GroupVote>;
 }
 
@@ -68,6 +73,8 @@ export interface Source {
   url: string;
   year: number;
   note: string;
+  /** Optional link straight to the raw tables. */
+  tablesUrl?: string;
 }
 
 // ---------- JSON file wrappers (src/data/*.json) ----------

@@ -31,7 +31,7 @@ export function Results({
         </span>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-5">
+      <div className="grid gap-5 md:grid-cols-5 [&>*]:min-w-0">
         <div className="card flex flex-col gap-3 p-4 sm:p-5 md:col-span-3">
           <h3 className="font-display text-lg font-extrabold">The new House of Commons</h3>
           <Hemicycle
@@ -49,7 +49,7 @@ export function Results({
         />
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-5 md:grid-cols-2 [&>*]:min-w-0">
         <SeatTable result={result} baseline={baseline} parties={parties} />
         <Flips result={result} byId={byId} />
       </div>
@@ -228,7 +228,7 @@ function SeatTable({
                 </td>
                 <td className="py-2 pr-4 text-right tabular-nums sm:pr-5">
                   {pct(result.voteShares[p.id])}
-                  <span className={`ml-1 text-xs ${dv >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                  <span className={`ml-1 hidden text-xs sm:inline ${dv >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
                     {Math.abs(dv) >= 0.0005 ? `${dv > 0 ? "▲" : "▼"}${(Math.abs(dv) * 100).toFixed(1)}` : ""}
                   </span>
                 </td>

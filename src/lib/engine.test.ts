@@ -58,8 +58,8 @@ const groupVoting = {
   age: {
     source: "test",
     groups: {
-      young: { turnout: 0.5, shares: { a: 0.8, b: 0.2 } },
-      old: { turnout: 0.8, shares: { a: 0.3, b: 0.7 } },
+      young: { voterShare: 0.4, turnout: 0.5, shares: { a: 0.8, b: 0.2 } },
+      old: { voterShare: 0.6, turnout: 0.8, shares: { a: 0.3, b: 0.7 } },
     },
   },
 } as unknown as GroupVoting;
@@ -92,6 +92,15 @@ describe("estimateSeatGroupVotes", () => {
     expect(young / old).toBeCloseTo(0.25 / 0.4, 2);
     // young lean to a, old to b
     expect(est.young.a / young).toBeGreaterThan(est.old.a / old);
+  });
+
+  it("falls back to the national voter mix when a seat has no census shares", () => {
+    const bare = { ...world.constituencies[0], groupShares: undefined };
+    const est = estimateSeatGroupVotes(bare, dim, groupVoting, ["a", "b"]);
+    const young = est.young.a + est.young.b;
+    const old = est.old.a + est.old.b;
+    expect(young / old).toBeCloseTo(0.4 / 0.6, 2);
+    expect(est.young.a + est.old.a).toBeCloseTo(300, 6);
   });
 });
 
@@ -160,12 +169,23 @@ describe("government outcome", () => {
   });
 });
 
-describe("placeholder data sanity", () => {
+describe("real data sanity", () => {
   const model = buildModel(modelInput);
-  it("group shares sum to 1 in every seat & dimension", () => {
+  it("national voter shares sum to 1 in every dimension", () => {
+    for (const d of modelInput.dimensions)
+      expect(sum(d.groups.map((g) => modelInput.groupVoting[d.id].groups[g.id].voterShare))).toBeCloseTo(1, 3);
+  });
+  it("any seat-level census shares sum to 1", () => {
     for (const c of modelInput.constituencies)
-      for (const d of modelInput.dimensions)
-        expect(sum(Object.values(c.groupShares[d.id]))).toBeCloseTo(1, 3);
+      for (const d of modelInput.dimensions) {
+        const s = c.groupShares?.[d.id];
+        if (s) expect(sum(Object.values(s))).toBeCloseTo(1, 3);
+      }
+  });
+  it("baseline reproduces the real 2024 result", () => {
+    expect(modelInput.constituencies).toHaveLength(650);
+    expect(model.baseline.seats).toMatchObject({ lab: 411, con: 121, ld: 72, snp: 9, sf: 7, ind: 6, reform: 5, dup: 5, green: 4, pc: 4 });
+    expect(model.baseline.totalVotes).toBe(28809340);
   });
   it("every preset runs and references real groups", () => {
     for (const p of presets) {

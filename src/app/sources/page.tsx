@@ -34,6 +34,11 @@ export default function Sources() {
                 </a>
               </h2>
               <p className="text-sm leading-relaxed">{s.note}</p>
+              {s.tablesUrl && (
+                <a href={s.tablesUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold underline underline-offset-4">
+                  Full data tables ↗
+                </a>
+              )}
               {dims.length > 0 && (
                 <p className="text-xs font-bold text-muted">Used for: {dims.join(", ")}</p>
               )}
