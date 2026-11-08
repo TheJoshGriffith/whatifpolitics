@@ -264,11 +264,10 @@ function No10Card({
         vote.{" "}
         {vs < 0.5 ? (
           <>
-            So {pct(1 - vs)} of voters backed someone else, and they still get
-            to run the show.
+            {pct(1 - vs)} of voters backed other parties.
           </>
         ) : (
-          <>An actual majority of voters. Rare as hen&apos;s teeth.</>
+          <>That&apos;s a majority of voters as well as seats.</>
         )}
       </p>
     );
@@ -369,17 +368,17 @@ function No10Card({
         </div>
         <div className="rounded-2xl bg-paper p-2 ring-1 ring-ink/15">
           <dt className="text-[11px] font-extrabold uppercase tracking-wider text-muted">
-            Wonkiness score
+            Seats vs votes gap
           </dt>
           <dd className="font-display text-xl font-black tabular-nums">
             {fair.toFixed(1)}
           </dd>
           <dd className="text-[11px] text-muted">
             {fair < 5
-              ? "pretty fair"
+              ? "seats close to votes"
               : fair < 12
-                ? "a bit lopsided"
-                : "seats ≠ votes"}
+                ? "some gap"
+                : "big gap"}
             {system === "fptp" ? "" : ""}
           </dd>
         </div>

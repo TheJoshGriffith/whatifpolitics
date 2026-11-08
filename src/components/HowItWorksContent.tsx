@@ -72,13 +72,13 @@ export function HowItWorksContent() {
 
         <h2>5. Change the rules</h2>
         <p>
-          First past the post hands out seats very unevenly: in 2024 Labour won 63% of the seats on 34% of
+          Under first past the post, seats and votes can end up far apart: in 2024 Labour won 63% of the seats on 34% of
           the vote. So you can re-count the same votes under three other systems:
         </p>
         <ul>
           <li>
             <b>Pure proportional:</b> all 650 seats shared out by national vote share, using the
-            Sainte-Laguë method (the fairest of the usual formulas).
+            Sainte-Laguë method (the most proportional of the usual formulas).
           </li>
           <li>
             <b>PR with a 5% hurdle:</b> like Germany. Parties under 5% of the national vote get nothing, so
@@ -94,7 +94,7 @@ export function HowItWorksContent() {
           Votes for independents and &ldquo;other&rdquo; candidates don&apos;t count under PR, because there&apos;s
           no party list for them. We also assume everyone votes the same way under every system, which
           they wouldn&apos;t: under PR, lots of tactical voters would switch to their real first choice.
-          The &ldquo;wonkiness score&rdquo; is the Gallagher index, the standard measure of how far seats
+          The &ldquo;seats vs votes gap&rdquo; is the Gallagher index, the standard measure of how far seats
           are from votes (0 is perfect; UK general elections usually land between 15 and 25).
         </p>
 

@@ -257,7 +257,7 @@ export function governmentHeadline(
     const seatShare = (seats[p] ?? 0) / total;
     const vs = voteShares[p] ?? 0;
     if (vs < 0.5 && seatShare - vs > 0.08)
-      return `${name(p)} win ${pct(seatShare)} of the seats on ${pct(vs)} of the vote. First past the post, everybody!`;
+      return `${name(p)} win ${pct(seatShare)} of the seats on ${pct(vs)} of the vote.`;
     if (seatShare >= 0.6) return `A whopping ${name(p)} landslide, on ${pct(vs)} of the vote. Somebody fetch the bunting.`;
     return `${name(p)} win outright with ${pct(vs)} of the vote. Kettle on.`;
   }
@@ -268,7 +268,7 @@ export function governmentHeadline(
     best.parties.length === 1
       ? `${name(best.parties[0])} going it alone as a minority government`
       : best.parties.map(name).join(" + ");
-  const opener = system === "fptp" ? "Hung parliament!" : "Nobody gets a majority, which is normal under PR.";
+  const opener = system === "fptp" ? "Hung parliament!" : "Nobody gets a majority.";
   const odds = top[1] >= 0.98 ? `${name(top[0])} are nailed on for No 10` : `${name(top[0])} have a ${pct(top[1])} shot at No 10`;
   return `${opener} ${odds}. Likeliest outcome: ${shape}.`;
 }

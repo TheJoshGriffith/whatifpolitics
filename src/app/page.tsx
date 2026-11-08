@@ -15,9 +15,9 @@ function Play() {
           What if only <span className="text-pink">some</span> of Britain had turned up?
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink/80">
-          Pick an election. Send the over-65s to the garden centre. Lock the graduates in the
-          library. Let only the women vote. Then watch every seat get re-counted,
-          first-past-the-post style. Silly? Absolutely. Interesting? Weirdly, yes.
+          Pick an election or referendum. Keep the over-65s at home, let only graduates vote, or
+          let only women vote. Then watch every seat get re-counted. Silly? Absolutely.
+          Interesting? Weirdly, yes.
         </p>
         <p className="mt-3 text-sm text-muted">
           It&apos;s a toy model, not a forecast —{" "}
