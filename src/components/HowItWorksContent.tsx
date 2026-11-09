@@ -229,6 +229,23 @@ export function HowItWorksContent() {
           wider than the ranges shown.
         </p>
 
+        <h2>8. Tipping points and the time-lapse</h2>
+        <p>
+          The tipping-point finder takes one group at a time and turns its turnout dial: first all the
+          way down (nobody from that group votes), then all the way up (double, or as far as 100% turnout
+          allows). If either end changes who governs, or which side wins a referendum, it narrows down the
+          smallest change that still does it, to the nearest percentage point. It then lists the cheapest
+          ones, measured as the share of everyone who really voted that you&apos;d need to add or remove.
+          &ldquo;Who governs&rdquo; means a different party with a majority, a majority lost or won, or a
+          different largest party in a hung parliament. The &ldquo;smaller shake-ups&rdquo; are changes to
+          who comes second.
+        </p>
+        <p>
+          The time-lapse runs the same dial from 0% to the top in 50 steps and redraws the map each time.
+          Both use exactly the same model as everything else, so the same caveats apply, and a tipping point
+          that rests on a handful of seats is well inside the margin of error.
+        </p>
+
         <h2>The big fat caveats 🧂</h2>
         <ul>
           <li>

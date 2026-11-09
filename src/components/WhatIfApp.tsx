@@ -26,8 +26,14 @@ import type {
 import { ScenarioPicker } from "./ScenarioPicker";
 import { Results } from "./Results";
 import { ReferendumResults } from "./ReferendumResults";
+import { GuessCard, GuessVerdict, type GuessValue } from "./Guess";
+import { TippingPoints } from "./TippingPoints";
+import { TurnoutSweep } from "./TurnoutSweep";
+import { randomPick } from "@/lib/random";
 
 const initial = presetsFor(defaultEvent)[0] ?? presets[0];
+/** The "what really happened" chip: nobody left out, so the real result shows. */
+const REAL = "real";
 
 export function WhatIfApp() {
   const [eventId, setEventId] = useState(defaultEvent.id);
@@ -42,18 +48,15 @@ export function WhatIfApp() {
     initial.scenario.dimension,
   );
   const [mode, setMode] = useState<ScenarioMode>(initial.scenario.mode);
-  const [groups, setGroups] = useState<GroupId[]>(initial.scenario.groups);
-  const [turnout, setTurnout] = useState<Record<GroupId, number>>(
-    initial.scenario.turnout ?? {},
-  );
-  const [andDim, setAndDim] = useState<DimensionId | null>(
-    initial.scenario.and?.dimension ?? null,
-  );
-  const [andGroups, setAndGroups] = useState<GroupId[]>(
-    initial.scenario.and?.groups ?? [],
-  );
-  const [presetId, setPresetId] = useState<string | null>(initial.id);
+  const [groups, setGroups] = useState<GroupId[]>([]);
+  const [turnout, setTurnout] = useState<Record<GroupId, number>>({});
+  const [andDim, setAndDim] = useState<DimensionId | null>(null);
+  const [andGroups, setAndGroups] = useState<GroupId[]>([]);
+  const [presetId, setPresetId] = useState<string | null>(REAL);
   const [building, setBuilding] = useState(false);
+  // "Guess first": hide each new what-if's answer until the reader has had a go.
+  const [guessOn, setGuessOn] = useState(false);
+  const [guesses, setGuesses] = useState<Record<string, GuessValue | "skip">>({});
   const resultsRef = useRef<HTMLDivElement>(null);
   const [resultsVisible, setResultsVisible] = useState(true);
   useEffect(() => {
@@ -68,12 +71,13 @@ export function WhatIfApp() {
   }, []);
 
   const scenario = useMemo<Scenario | null>(() => {
+    if (presetId === REAL) return null;
     const s: Scenario = { dimension, mode, groups };
     if (mode === "turnout") s.turnout = turnout;
     if (andDim && andDim !== dimension && andGroups.length)
       s.and = { dimension: andDim, groups: andGroups };
     return isNoOp(s) ? null : s;
-  }, [dimension, mode, groups, turnout, andDim, andGroups]);
+  }, [presetId, dimension, mode, groups, turnout, andDim, andGroups]);
   const result = useMemo(() => runScenario(model, scenario), [model, scenario]);
   const [system, setSystem] = useState<VotingSystem>("fptp");
 
@@ -113,7 +117,7 @@ export function WhatIfApp() {
         setEventId(e.id);
         applyScenario(s);
         setSystem(st.system as VotingSystem);
-        setPresetId(matchPreset(e, s));
+        setPresetId(isNoOp(s) ? REAL : matchPreset(e, s));
         if (st.mode === "turnout" || st.and) setBuilding(true);
       }
     };
@@ -126,13 +130,14 @@ export function WhatIfApp() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
+  const isReal = presetId === REAL;
   const shareQuery = encodeShare({
     eventId,
     dimension,
     mode,
-    groups: mode === "turnout" ? [] : groups,
-    turnout: mode === "turnout" ? turnout : {},
-    and: andDim && andDim !== dimension && andGroups.length ? { dimension: andDim, groups: andGroups } : null,
+    groups: isReal || mode === "turnout" ? [] : groups,
+    turnout: !isReal && mode === "turnout" ? turnout : {},
+    and: !isReal && andDim && andDim !== dimension && andGroups.length ? { dimension: andDim, groups: andGroups } : null,
     system,
   });
   useEffect(() => {
@@ -149,6 +154,22 @@ export function WhatIfApp() {
     if (url !== `${pathname}${search}${hash}`)
       window.history.replaceState(window.history.state, "", url);
   }, [shareQuery]);
+  const guessKey = shareQuery;
+  // Not while building: every tweak of a dial would ask again.
+  const guessPending = guessOn && !building && scenario !== null && !(guessKey in guesses);
+  const guess = guesses[guessKey];
+  const surprise = () => {
+    const { event: e, scenario: s } = randomPick(events);
+    setEventId(e.id);
+    applyScenario(s);
+    setPresetId(matchPreset(e, s));
+  };
+  const tryScenario = (s: Scenario) => {
+    applyScenario(s);
+    setPresetId(matchPreset(event, s));
+    setBuilding(true);
+    resultsRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   const [copied, setCopied] = useState<"idle" | "copied" | "failed">("idle");
   useEffect(() => {
     if (copied === "idle") return;
@@ -207,6 +228,7 @@ export function WhatIfApp() {
 
   const pickEvent = (id: string) => {
     const e = getEvent(id);
+    const wasReal = presetId === REAL;
     setEventId(id);
     // Keep the current scenario if the new event has the same slice, otherwise start fresh.
     const same = e.dimensions.find((d) => d.id === dimension);
@@ -236,6 +258,8 @@ export function WhatIfApp() {
       // Turnout presets differ by event (they copy that year's real turnout).
       setPresetId(matchPreset(e, next));
     }
+    // Watching the real results? Stay on them for the new vote too.
+    if (wasReal) setPresetId(REAL);
   };
   const describe = () => {
     if (!scenario)
@@ -339,6 +363,19 @@ export function WhatIfApp() {
           Pick a what-if
         </h2>
         <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            title="Nobody left out: the result as it really happened."
+            aria-pressed={isReal}
+            onClick={() => {
+              // Clear the builder too, so a later tweak starts from a blank slate.
+              applyScenario({ dimension, mode: mode === "turnout" ? "exclude" : mode, groups: [] });
+              setPresetId(REAL);
+            }}
+            className={`chip px-3 py-1.5 text-sm font-bold ${isReal ? "bg-ink text-paper" : "bg-card hover:bg-sun"}`}
+          >
+            <span aria-hidden>📜</span> What really happened
+          </button>
           {eventPresets.map((p) => {
             const on = p.id === presetId;
             return (
@@ -357,6 +394,14 @@ export function WhatIfApp() {
               </button>
             );
           })}
+          <button
+            type="button"
+            title="A random vote and a random what-if."
+            onClick={surprise}
+            className="chip bg-mint/50 px-3 py-1.5 text-sm font-extrabold hover:bg-sun"
+          >
+            <span aria-hidden>🎲</span> Pub quiz: surprise me
+          </button>
           <button
             type="button"
             aria-expanded={building}
@@ -435,6 +480,15 @@ export function WhatIfApp() {
 
       <div ref={resultsRef} className="scroll-mt-4 flex flex-col gap-2" id="results">
         <div className="flex flex-wrap items-center justify-end gap-2">
+          <button
+            type="button"
+            aria-pressed={guessOn}
+            title="Hide each answer until you've had a guess."
+            onClick={() => setGuessOn((g) => !g)}
+            className={`chip mr-auto px-3 py-1.5 text-sm font-extrabold ${guessOn ? "bg-grape text-white" : "bg-card hover:bg-sun"}`}
+          >
+            <span aria-hidden>🤔</span> Guess first: {guessOn ? "on" : "off"}
+          </button>
           <span className="text-sm font-bold text-muted">
             Send this what-if to the group chat:
           </span>
@@ -452,6 +506,20 @@ export function WhatIfApp() {
                 : "Copy link"}
           </button>
         </div>
+        {guessPending ? (
+          <GuessCard
+            key={guessKey}
+            event={event}
+            baseline={model.baseline}
+            description={describe()}
+            onReveal={(g) => setGuesses((x) => ({ ...x, [guessKey]: g }))}
+            onSkip={() => setGuesses((x) => ({ ...x, [guessKey]: "skip" }))}
+          />
+        ) : (
+          <>
+          {guessOn && guess && guess !== "skip" && (
+            <GuessVerdict guess={guess} event={event} seats={seats} result={shown} />
+          )}
         {event.kind === "referendum" ? (
           <ReferendumResults
             result={result}
@@ -510,9 +578,20 @@ export function WhatIfApp() {
             }
           />
         )}
+          </>
+        )}
       </div>
 
-      {!resultsVisible && (
+      <TurnoutSweep key={`sweep-${eventId}`} event={event} model={model} />
+      <TippingPoints
+        key={`tip-${eventId}-${event.kind === "general" ? system : ""}`}
+        event={event}
+        model={model}
+        system={system}
+        onTry={tryScenario}
+      />
+
+      {!resultsVisible && !guessPending && (
         <button
           type="button"
           onClick={() =>
