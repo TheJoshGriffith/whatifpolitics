@@ -8,7 +8,7 @@ export function HowItWorksContent() {
       </h1>
       <div className="card prose-casual p-5 sm:p-8">
         <p className="text-lg">
-          Short version: pick a vote (any general election from 2005 to 2024, the 2016 Brexit referendum or the 2014 Scottish independence referendum), we take the real result in every seat or counting area, make an educated guess about{" "}
+          Short version: pick a vote (any general election from 1992 to 2024, the 2016 Brexit referendum or the 2014 Scottish independence referendum), we take the real result in every seat or counting area, make an educated guess about{" "}
           <i>who</i> cast those votes, then quietly remove some people and recount. No polling
           station staff were harmed.
         </p>
@@ -281,6 +281,16 @@ export function HowItWorksContent() {
             (except in Scotland), and we don&apos;t have Census figures or a hex map for them. So every
             2005 seat uses the national voter mix from Ipsos, and the results show the Commons
             chart instead of a map.
+          </li>
+          <li>
+            <b>1992, 1997 and 2001 are rougher still.</b> Their results come from the House of
+            Commons Library&apos;s 1918–2019 file, which only splits out Conservative, Labour, Lib
+            Dem and SNP/Plaid. Everyone else is one &ldquo;Others&rdquo; column, so Martin Bell in
+            Tatton, the Speaker, the Referendum Party, UKIP and the Greens all count as
+            &ldquo;Others&rdquo;, and Northern Ireland&apos;s parties appear as one block. MORI&apos;s
+            polls from those years don&apos;t say how big each group was, so we use the 2005 Ipsos
+            electorate profile and scale each group by its turnout that year. Like 2005, there&apos;s
+            no map and no local mix.
           </li>
           <li>
             <b>Ethnicity is the roughest slice.</b> Ipsos is the only post-election poll we could

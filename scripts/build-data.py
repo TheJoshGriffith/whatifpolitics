@@ -144,7 +144,10 @@ groupVoting = {
 SAMPLE_VOTERS = {
   "yougov-2024": 42119,          # weighted bases of the age columns sum to the full sample
   "ipsos-2024": round(17394 * 0.60),  # 17,394 adults x ~60% turnout
-  "ipsos-2010": 6538,            # sum of Ipsos's published voter counts by age
+  "ipsos-2010": 6538,
+  "ipsos-1992": round(22726 * 0.78),  # campaign sample x the poll's 78% turnout
+  "ipsos-1997": round(13544 * 0.71),
+  "ipsos-2001": round(18657 * 0.59),            # sum of Ipsos's published voter counts by age
   "ipsos-2015": round(9149 * 0.66),   # x the 'All' row turnout
   "ipsos-2017": round(7505 * 0.63),
   "ipsos-2019": round(27951 * 0.61),

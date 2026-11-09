@@ -236,6 +236,11 @@ const BASE: Record<string, number> = {
 
 /** What changed in particular elections. */
 const ERA: Record<string, Record<string, number>> = {
+  // Ashdown's Lib Dems kept their distance from both big parties.
+  ge1992: { "con-ld": 0.3, "lab-ld": 0.45 },
+  // Labour and the Lib Dems had worked together on constitutional reform (the Cook-Maclennan talks).
+  ge1997: { "con-ld": 0.15, "lab-ld": 0.75 },
+  ge2001: { "con-ld": 0.15, "lab-ld": 0.6 },
   ge2010: { "con-ld": 0.65, "lab-ld": 0.45, "lab-snp": 0.3, "con-dup": 0.6 },
   // Miliband ruled out any deal with the SNP; Lib Dems bruised after five years with the Tories.
   ge2015: { "lab-snp": 0.1, "con-ld": 0.4, "lab-ld": 0.45, "con-ukip": 0.2 },
@@ -250,7 +255,8 @@ const ERA: Record<string, Record<string, number>> = {
 /** Parties who don't take their seats, or don't vote. */
 const NON_VOTING = new Set(["sf", "spk"]);
 /** Too small and too varied to be a coalition partner as a bloc. */
-const NOT_A_PARTNER = new Set(["other", "ind", "bnp"]);
+// "ni" is every Northern Ireland party lumped together (1992-2001, where our results file does that).
+const NOT_A_PARTNER = new Set(["other", "ind", "bnp", "ni"]);
 
 /** User tweaks to the willingness matrix, keyed "a-b" (either order). */
 export type WillingnessOverrides = Record<string, number>;

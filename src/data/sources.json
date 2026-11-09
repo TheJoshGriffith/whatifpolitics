@@ -157,6 +157,38 @@
    "note": "17,959 adults across MORI's campaign polls, 10,986 of them certain to vote. Con/Lab/LD/Other shares, turnout and each group's share of voters by sex, age, social grade and housing. No ethnicity breakdown."
   },
   {
+   "id": "hocl-1918-2019",
+   "name": "UK Election Statistics: 1918–2019, constituency results",
+   "publisher": "House of Commons Library",
+   "url": "https://commonslibrary.parliament.uk/research-briefings/cbp-8647/",
+   "year": 2020,
+   "note": "Votes for Conservative, Labour, Liberal Democrat, SNP/Plaid Cymru and all others in every seat, 1918–2019. We use 1992, 1997 and 2001, from the copy in github.com/kaleyburg/MSc_ASDS_Dissertation_Burg. Northern Ireland's parties are grouped together in this file."
+  },
+  {
+   "id": "ipsos-1992",
+   "name": "How Britain voted in 1992",
+   "publisher": "Ipsos (then MORI)",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-1992",
+   "year": 1992,
+   "note": "22,726 adults across MORI's campaign polls. Con/Lab/LD/Other shares by sex, age, social grade and housing, with turnout for most groups. No group sizes, so we estimate them from Ipsos's 2005 electorate profile and each group's 1992 turnout."
+  },
+  {
+   "id": "ipsos-1997",
+   "name": "How Britain voted in 1997",
+   "publisher": "Ipsos (then MORI)",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-1997",
+   "year": 1997,
+   "note": "13,544 adults across MORI's campaign polls. Con/Lab/LD/Other shares by sex, age, social grade and housing, with turnout for most groups. No group sizes, so we estimate them from Ipsos's 2005 electorate profile and each group's 1997 turnout."
+  },
+  {
+   "id": "ipsos-2001",
+   "name": "How Britain voted in 2001",
+   "publisher": "Ipsos (then MORI)",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-2001",
+   "year": 2001,
+   "note": "18,657 adults across MORI's campaign polls. Con/Lab/LD/Other shares by sex, age, social grade and housing, with turnout for most groups. No group sizes, so we estimate them from Ipsos's 2005 electorate profile and each group's 2001 turnout."
+  },
+  {
    "id": "census-2021-wpc",
    "name": "2024 General Election Census constituency summaries",
    "publisher": "Ralph Scott (from ONS / Nomis and Scotland's Census, Census 2021)",

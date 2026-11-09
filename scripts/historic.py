@@ -337,6 +337,7 @@ def build(G):
 
   G["_hist_dims"] = DIM
   ge2005(G)
+  ge_1992_2001(G)
 
 
 def ge2005(G):
@@ -428,6 +429,8 @@ def ge2005(G):
       {"id":"mC1","label":"C1 men","emoji":"🖇️"},{"id":"fC1","label":"C1 women","emoji":"📎"},{"id":"mC2","label":"C2 men","emoji":"🔧"},
       {"id":"fC2","label":"C2 women","emoji":"🪛"},{"id":"mDE","label":"DE men","emoji":"🧤"},{"id":"fDE","label":"DE women","emoji":"🧺"}]},
     D["tenure"]]
+  G["_dims2005"] = dims
+  G["_tab2005"] = tab
   RESPECT = ("respect", "Respect", "Resp", "#46801C")
   parties = [RESPECT] + BASE + [BNP, UKIP]
   add_event({"id":"ge2005", "label":"2005 general election", "short":"GE 2005", "year":2005, "kind":"general",
@@ -440,6 +443,135 @@ def ge2005(G):
      "note":"Every candidate's votes in all 646 seats, via the archived copy in github.com/CampaignLab/constituency-counts. Party totals match the official figures (Labour 9,552,436; Conservatives 8,784,915; Lib Dems 5,985,454)."},
     {"id":"ipsos-2005","name":"How Britain voted in 2005","publisher":"Ipsos MORI","url":"https://www.ipsos.com/en-uk/node/171536","year":2005,
      "note":"17,959 adults across MORI's campaign polls, 10,986 of them certain to vote. Con/Lab/LD/Other shares, turnout and each group's share of voters by sex, age, social grade and housing. No ethnicity breakdown."},
+  ]
+
+
+def ge_1992_2001(G):
+  """1992, 1997 and 2001 general elections.
+
+  Results: House of Commons Library "UK Election Statistics: 1918-2019" constituency file, as mirrored in
+  github.com/kaleyburg/MSc_ASDS_Dissertation_Burg (extract in scripts/ge1992_2001_results.csv). It gives
+  Con, Lab, Lib Dem, SNP/Plaid (one column, which we split by country) and everyone else as one "other"
+  column, so Northern Ireland's parties appear as one block ("ni") and GB independents, the Speaker, the
+  Referendum Party, UKIP and the Greens are all "other".
+  Polls: MORI "How Britain Voted" aggregates (scripts/polls/polls_1992_2001.md): party shares and, where
+  printed, turnout. No share-of-voters column, so each group's size is the 2005 Ipsos electorate profile
+  times that year's group turnout (or the nearest printed turnout: the age band for age x sex, the grade
+  for grade x sex, the national figure for 1992 housing). No map, no Census mix.
+  """
+  import csv
+  add_event, party_list, sources = G["add_event"], G["party_list"], G["sources"]
+  REGION = {"Eastern": "East of England", "Yorkshire & The Humber": "Yorkshire and The Humber",
+            "Yorkshire and the Humber": "Yorkshire and The Humber"}
+  rows = {}
+  with open(os.path.join(HERE, "ge1992_2001_results.csv")) as f:
+    for r in csv.DictReader(f):
+      rows.setdefault(r["election"], []).append(r)
+  v = lambda x: 0 if x in ("NA", "") else int(float(x))
+  NI = ("ni", "Northern Ireland parties", "NI", "#8E7CC3")
+  OTHER_GB = ("other", "Others", "Oth", "#9CA3AF")
+  parties = [("lab","Labour","Lab","#E4003B"), ("con","Conservatives","Con","#0087DC"), ("ld","Liberal Democrats","LD","#FAA61A"),
+             ("snp","Scottish National Party","SNP","#FDF38E"), ("pc","Plaid Cymru","PC","#005B54"), OTHER_GB, NI]
+  e05 = G["_tab2005"]
+  def elect05(section, label):
+    return num(e05[section][label]["Elect. %"])
+  # 2005 electorate profile, our stand-in for group sizes (see docstring).
+  POP = {
+    "age": {g: ("Age", g) for g in ("18-24","25-34","35-44","45-54","55-64","65+")},
+    "sex": {"female": ("Gender", "Women"), "male": ("Gender", "Men")},
+    "agesex": {f"{s}{a}": (f"{'Men' if s == 'm' else 'Women'} by Age", lab)
+               for s in "mf" for a, lab in (("18","18-24"),("25","25-34"),("35","35-54"),("55","55+"))},
+    "class": {g: ("Social Class", g) for g in ("AB","C1","C2","DE")},
+    "classsex": {f"{s}{c}": (f"{'Men' if s == 'm' else 'Women'} by Class", c) for s in "mf" for c in ("AB","C1","C2","DE")},
+    "tenure": {"outright": ("Housing Tenure", "Owned"), "mortgage": ("Housing Tenure", "Mortgaged"),
+               "social": ("Housing Tenure", "Social renter"), "private": ("Housing Tenure", "Private renter")},
+  }
+  # Poll row label per group, per year (housing labels changed between years).
+  def label(dim, gid, year):
+    if dim == "age": return gid
+    if dim == "sex": return {"female":"Women","male":"Men"}[gid]
+    if dim == "agesex": return f"{'Men' if gid[0] == 'm' else 'Women'} " + {"18":"18-24","25":"25-34","35":"35-54","55":"55+"}[gid[1:]]
+    if dim == "class": return gid
+    if dim == "classsex": return f"{'Men' if gid[0] == 'm' else 'Women'} {gid[1:]}"
+    if dim == "tenure":
+      return {"outright":"Owner","mortgage":"Mortgage","private":"Private rent",
+              "social":{"1992":"Council tenant","1997":"Council/HA tenant","2001":"Council/HA"}[year]}[gid]
+  def fallback(dim, gid, t):
+    """Nearest printed turnout when a group's own isn't printed."""
+    if dim == "agesex":
+      a = {"18":["18-24"],"25":["25-34"],"35":["35-44","45-54"],"55":["55-64","65+"]}[gid[1:]]
+    elif dim == "classsex": a = [gid[1:]]
+    else: a = ["Total"]
+    vals = [num(t[x]["Turnout %"]) for x in a]
+    return sum(vals) / len(vals)
+
+  INFO = {
+    "1992": dict(id="ge1992", date="1992-04-09", seats=651, sample=22726,
+      won={"con":336,"lab":271,"ld":20,"ni":17,"snp":3,"pc":4},
+      blurb="John Major's Conservatives win a fourth term in a row with 336 seats, a majority of 21, on 41.9% of the vote. Most polls had pointed to a hung parliament."),
+    "1997": dict(id="ge1997", date="1997-05-01", seats=659, sample=13544,
+      won={"lab":418,"con":165,"ld":46,"ni":18,"snp":6,"pc":4,"other":2},
+      blurb="Tony Blair's New Labour win 418 seats and a majority of 179 on 43.2% of the vote, ending 18 years of Conservative government."),
+    "2001": dict(id="ge2001", date="2001-06-07", seats=659, sample=18657,
+      won={"lab":412,"con":166,"ld":52,"ni":18,"snp":5,"pc":4,"other":2},
+      blurb="Labour win a second landslide with 412 seats on 40.7% of the vote. Turnout falls to 59%, the lowest since 1918."),
+  }
+  heading = {"1992": "1. Ipsos: How Britain Voted in 1992", "1997": "2. Ipsos: How Britain Voted in 1997",
+             "2001": "3. Ipsos: How Britain Voted in 2001"}
+  polls = {h: {r[0]: dict(zip(hdr, r)) for r in rs} for h, hdr, rs in tables("polls_1992_2001.md")}
+  from collections import Counter
+  for year, info in INFO.items():
+    seats, used = [], set()
+    for r in rows[year]:
+      region = REGION.get(r["country.region"], r["country.region"])
+      nat = v(r["natSW_votes"])
+      votes = {"con": v(r["con_votes"]), "lab": v(r["lab_votes"]), "ld": v(r["lib_votes"])}
+      if region == "Northern Ireland":
+        votes = {"ni": v(r["oth_votes"]) + sum(votes.values()) + nat}
+      else:
+        votes["other"] = v(r["oth_votes"])
+        if nat: votes["snp" if region == "Scotland" else "pc"] = nat
+      votes = {p: n for p, n in votes.items() if n > 0}
+      name = r["constituency_name"].strip()
+      sid = f"ge{year[2:]}-" + re.sub(r"[^a-z]+", "-", name.lower()).strip("-")
+      assert sid not in used, sid
+      used.add(sid)
+      seats.append({"id": sid, "name": name, "region": region, "electorate": v(r["electorate"]), "votes": votes})
+    seats.sort(key=lambda s: s["name"])
+    assert len(seats) == info["seats"], (year, len(seats))
+    won = Counter(max(s["votes"], key=s["votes"].get) for s in seats)
+    assert won == info["won"], (year, won)
+
+    t = polls[heading[year]]
+    for lab, row in t.items():
+      # Printed shares are rounded, so a row can sum to 98-102 (1997 "Men DE" sums to 98).
+      assert abs(sum(num(row[c]) for c in ("Con %","Lab %","LD %","Oth %")) - 100) <= 2, (year, lab)
+    cols = {"con":"Con %","lab":"Lab %","ld":"LD %","other":"Oth %","snp":"Oth %","pc":"Oth %","ni":"Oth %"}
+    src = {"source": f"ipsos-{year}", "turnoutSource": f"ipsos-{year}"}
+    gv = {}
+    for dim, groups in POP.items():
+      out = {}
+      for gid, (sec, lab05) in groups.items():
+        row = t[label(dim, gid, year)]
+        printed = row["Turnout %"] != "n/a"
+        tot = sum(num(row[c]) for c in ("Con %","Lab %","LD %","Oth %"))
+        turn = num(row["Turnout %"]) if printed else fallback(dim, gid, t)
+        out[gid] = {"voterWeight": elect05(sec, lab05) * turn,
+                    "turnout": num(row["Turnout %"]) / 100 if printed else None,
+                    "shares": {p: num(row[c]) / tot for p, c in cols.items()}}
+      gv[dim] = {**src, "groups": out}
+    yy = int(year)
+    add_event({"id": info["id"], "label": f"{year} general election", "short": f"GE {year}", "year": yy, "kind": "general",
+      "date": info["date"], "blurb": info["blurb"], "resultsSource": "hocl-1918-2019", "parties": party_list(parties),
+      "constituencies": seats, "dimensions": G["_dims2005"], "groupVoting": finish(gv)})
+  sources += [
+    {"id":"hocl-1918-2019","name":"UK Election Statistics: 1918–2019, constituency results","publisher":"House of Commons Library",
+     "url":"https://commonslibrary.parliament.uk/research-briefings/cbp-8647/","year":2020,
+     "note":"Votes for Conservative, Labour, Liberal Democrat, SNP/Plaid Cymru and all others in every seat, 1918–2019. We use 1992, 1997 and 2001, from the copy in github.com/kaleyburg/MSc_ASDS_Dissertation_Burg. Northern Ireland's parties are grouped together in this file."},
+  ] + [
+    {"id":f"ipsos-{y}","name":f"How Britain voted in {y}","publisher":"Ipsos (then MORI)","url":f"https://www.ipsos.com/en-uk/how-britain-voted-{y}","year":int(y),
+     "note":f"{INFO[y]['sample']:,} adults across MORI's campaign polls. Con/Lab/LD/Other shares by sex, age, social grade and housing, with turnout for most groups. No group sizes, so we estimate them from Ipsos's 2005 electorate profile and each group's {y} turnout."}
+    for y in INFO
   ]
 
 
