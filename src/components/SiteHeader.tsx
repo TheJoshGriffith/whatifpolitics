@@ -3,6 +3,7 @@ import { SiteLink as Link } from "@/components/SiteLink";
 const nav = [
   { href: "/", label: "Play" },
   { href: "/records/", label: "Records" },
+  { href: "/polling/", label: "Polling" },
   { href: "/how-it-works/", label: "How it works" },
   { href: "/sources/", label: "Sources" },
 ];

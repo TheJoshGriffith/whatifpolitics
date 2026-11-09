@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
-const HASHES: Record<string, string> = { "/": "#play", "/how-it-works/": "#how-it-works", "/sources/": "#sources", "/records/": "#records" };
+const HASHES: Record<string, string> = { "/": "#play", "/how-it-works/": "#how-it-works", "/sources/": "#sources", "/records/": "#records", "/polling/": "#polling" };
 
 /**
  * Internal link. Normally a Next <Link>. In the single-page preview build

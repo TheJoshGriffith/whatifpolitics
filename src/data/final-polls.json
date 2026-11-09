@@ -1,0 +1,1757 @@
+[
+ {
+  "eventId": "ge1979",
+  "label": "1979 general election",
+  "short": "GE 1979",
+  "date": "1979-05-03",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_1979_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "lab",
+   "ld"
+  ],
+  "result": {
+   "con": 44.87,
+   "lab": 37.78,
+   "ld": 14.13
+  },
+  "polls": [
+   {
+    "end": "1979-05-02",
+    "pollster": "Gallup",
+    "client": "The Daily Telegraph",
+    "sample": null,
+    "shares": {
+     "lab": 38.5,
+     "con": 49.0,
+     "ld": 9.0
+    }
+   },
+   {
+    "end": "1979-05-02",
+    "pollster": "Gallup",
+    "client": "The Daily Telegraph",
+    "sample": null,
+    "shares": {
+     "lab": 41.0,
+     "con": 43.0,
+     "ld": 13.5
+    }
+   },
+   {
+    "end": "1979-05-02",
+    "pollster": "NOP",
+    "client": "Daily Mail",
+    "sample": null,
+    "shares": {
+     "lab": 39.0,
+     "con": 46.0,
+     "ld": 12.5
+    }
+   },
+   {
+    "end": "1979-05-02",
+    "pollster": "MORI",
+    "client": "Evening Standard",
+    "sample": null,
+    "shares": {
+     "lab": 37.0,
+     "con": 45.0,
+     "ld": 15.0
+    }
+   },
+   {
+    "end": "1979-05-01",
+    "pollster": "Marplan",
+    "client": "The Sun",
+    "sample": null,
+    "shares": {
+     "lab": 38.5,
+     "con": 45.0,
+     "ld": 9.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge1983",
+  "label": "1983 general election",
+  "short": "GE 1983",
+  "date": "1983-06-09",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_1983_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "lab",
+   "ld"
+  ],
+  "result": {
+   "con": 43.51,
+   "lab": 28.28,
+   "ld": 26.02
+  },
+  "polls": [
+   {
+    "end": "1983-06-08",
+    "pollster": "Harris",
+    "client": "The Observer",
+    "sample": null,
+    "shares": {
+     "con": 47.0,
+     "lab": 26.0,
+     "ld": 25.0
+    }
+   },
+   {
+    "end": "1983-06-08",
+    "pollster": "Gallup",
+    "client": "The Daily Telegraph",
+    "sample": null,
+    "shares": {
+     "con": 47.0,
+     "lab": 25.0,
+     "ld": 26.0
+    }
+   },
+   {
+    "end": "1983-06-08",
+    "pollster": "Marplan",
+    "client": "The Guardian",
+    "sample": null,
+    "shares": {
+     "con": 45.5,
+     "lab": 26.5,
+     "ld": 26.0
+    }
+   },
+   {
+    "end": "1983-06-08",
+    "pollster": "NOP",
+    "client": "Northcliffe",
+    "sample": null,
+    "shares": {
+     "con": 46.0,
+     "lab": 26.0,
+     "ld": 26.0
+    }
+   },
+   {
+    "end": "1983-06-08",
+    "pollster": "NOP",
+    "client": "Daily Mail",
+    "sample": null,
+    "shares": {
+     "con": 44.0,
+     "lab": 28.0,
+     "ld": 26.0
+    }
+   },
+   {
+    "end": "1983-06-08",
+    "pollster": "MORI",
+    "client": "Evening Standard",
+    "sample": null,
+    "shares": {
+     "con": 47.0,
+     "lab": 25.0,
+     "ld": 26.0
+    }
+   },
+   {
+    "end": "1983-06-07",
+    "pollster": "Audience Selection",
+    "client": "The Sun",
+    "sample": null,
+    "shares": {
+     "con": 46.0,
+     "lab": 28.0,
+     "ld": 24.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge1987",
+  "label": "1987 general election",
+  "short": "GE 1987",
+  "date": "1987-06-11",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_1987_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "lab",
+   "ld"
+  ],
+  "result": {
+   "con": 43.27,
+   "lab": 31.54,
+   "ld": 23.09
+  },
+  "polls": [
+   {
+    "end": "1987-06-10",
+    "pollster": "Marplan",
+    "client": "The Guardian",
+    "sample": null,
+    "shares": {
+     "con": 42.0,
+     "lab": 35.0,
+     "ld": 21.0
+    }
+   },
+   {
+    "end": "1987-06-10",
+    "pollster": "MORI",
+    "client": "The Times",
+    "sample": null,
+    "shares": {
+     "con": 44.0,
+     "lab": 32.0,
+     "ld": 22.0
+    }
+   },
+   {
+    "end": "1987-06-09",
+    "pollster": "Audience Selection",
+    "client": null,
+    "sample": null,
+    "shares": {
+     "con": 43.0,
+     "lab": 34.0,
+     "ld": 21.0
+    }
+   },
+   {
+    "end": "1987-06-09",
+    "pollster": "Gallup",
+    "client": "The Daily Telegraph",
+    "sample": null,
+    "shares": {
+     "con": 41.0,
+     "lab": 34.0,
+     "ld": 23.5
+    }
+   },
+   {
+    "end": "1987-06-09",
+    "pollster": "Harris",
+    "client": "TV-AM",
+    "sample": null,
+    "shares": {
+     "con": 42.0,
+     "lab": 35.0,
+     "ld": 21.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge1992",
+  "label": "1992 general election",
+  "short": "GE 1992",
+  "date": "1992-04-09",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_1992_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "lab",
+   "ld"
+  ],
+  "result": {
+   "con": 42.8,
+   "lab": 35.21,
+   "ld": 18.36
+  },
+  "polls": [
+   {
+    "end": "1992-04-08",
+    "pollster": "NOP",
+    "client": "The Independent",
+    "sample": null,
+    "shares": {
+     "con": 39.0,
+     "lab": 42.0,
+     "ld": 17.0
+    }
+   },
+   {
+    "end": "1992-04-08",
+    "pollster": "Gallup",
+    "client": "The Daily Telegraph",
+    "sample": null,
+    "shares": {
+     "con": 38.5,
+     "lab": 38.0,
+     "ld": 20.0
+    }
+   },
+   {
+    "end": "1992-04-08",
+    "pollster": "MORI",
+    "client": "The Times",
+    "sample": null,
+    "shares": {
+     "con": 38.0,
+     "lab": 39.0,
+     "ld": 20.0
+    }
+   },
+   {
+    "end": "1992-04-07",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": null,
+    "shares": {
+     "con": 38.0,
+     "lab": 38.0,
+     "ld": 20.0
+    }
+   },
+   {
+    "end": "1992-04-07",
+    "pollster": "Harris",
+    "client": "ITN",
+    "sample": null,
+    "shares": {
+     "con": 38.0,
+     "lab": 40.0,
+     "ld": 18.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge1997",
+  "label": "1997 general election",
+  "short": "GE 1997",
+  "date": "1997-05-01",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_1997_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "lab",
+   "ld"
+  ],
+  "result": {
+   "con": 31.45,
+   "lab": 44.33,
+   "ld": 17.19
+  },
+  "polls": [
+   {
+    "end": "1997-04-30",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": null,
+    "shares": {
+     "con": 33.0,
+     "lab": 43.0,
+     "ld": 18.0
+    }
+   },
+   {
+    "end": "1997-04-30",
+    "pollster": "Gallup",
+    "client": "The Daily Telegraph",
+    "sample": null,
+    "shares": {
+     "con": 33.0,
+     "lab": 46.0,
+     "ld": 16.0
+    }
+   },
+   {
+    "end": "1997-04-30",
+    "pollster": "MORI",
+    "client": "Evening Standard",
+    "sample": null,
+    "shares": {
+     "con": 29.0,
+     "lab": 47.0,
+     "ld": 19.0
+    }
+   },
+   {
+    "end": "1997-04-29",
+    "pollster": "Harris",
+    "client": "The Independent",
+    "sample": null,
+    "shares": {
+     "con": 31.0,
+     "lab": 48.0,
+     "ld": 15.0
+    }
+   },
+   {
+    "end": "1997-04-29",
+    "pollster": "NOP",
+    "client": "Reuters",
+    "sample": null,
+    "shares": {
+     "con": 28.0,
+     "lab": 50.0,
+     "ld": 14.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge2001",
+  "label": "2001 general election",
+  "short": "GE 2001",
+  "date": "2001-06-07",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2001_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "lab",
+   "ld"
+  ],
+  "result": {
+   "con": 32.69,
+   "lab": 41.96,
+   "ld": 18.84
+  },
+  "polls": [
+   {
+    "end": "2001-06-06",
+    "pollster": "Gallup",
+    "client": "The Daily Telegraph",
+    "sample": 2399,
+    "shares": {
+     "lab": 47.0,
+     "con": 30.0,
+     "ld": 18.0
+    }
+   },
+   {
+    "end": "2001-06-06",
+    "pollster": "MORI",
+    "client": "The Times",
+    "sample": 1906,
+    "shares": {
+     "lab": 45.0,
+     "con": 30.0,
+     "ld": 18.0
+    }
+   },
+   {
+    "end": "2001-06-04",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": 1009,
+    "shares": {
+     "lab": 43.0,
+     "con": 32.0,
+     "ld": 19.0
+    }
+   },
+   {
+    "end": "2001-06-03",
+    "pollster": "Rasmussen",
+    "client": "The Independent",
+    "sample": null,
+    "shares": {
+     "lab": 44.0,
+     "con": 33.0,
+     "ld": 16.0
+    }
+   },
+   {
+    "end": "2001-06-01",
+    "pollster": "NOP",
+    "client": "The Sunday Times",
+    "sample": 1105,
+    "shares": {
+     "lab": 47.0,
+     "con": 30.0,
+     "ld": 16.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge2005",
+  "label": "2005 general election",
+  "short": "GE 2005",
+  "date": "2005-05-05",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2005_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "lab",
+   "ld"
+  ],
+  "result": {
+   "con": 33.23,
+   "lab": 36.14,
+   "ld": 22.65
+  },
+  "polls": [
+   {
+    "end": "2005-05-04",
+    "pollster": "Ipsos MORI",
+    "client": "Evening Standard",
+    "sample": 1164,
+    "shares": {
+     "lab": 38.0,
+     "con": 33.0,
+     "ld": 23.0
+    }
+   },
+   {
+    "end": "2005-05-04",
+    "pollster": "YouGov",
+    "client": "The Daily Telegraph",
+    "sample": null,
+    "shares": {
+     "lab": 37.0,
+     "con": 32.0,
+     "ld": 24.0
+    }
+   },
+   {
+    "end": "2005-05-04",
+    "pollster": "Harris",
+    "client": null,
+    "sample": null,
+    "shares": {
+     "lab": 39.0,
+     "con": 33.0,
+     "ld": 22.0
+    }
+   },
+   {
+    "end": "2005-05-03",
+    "pollster": "Populus",
+    "client": "The Times",
+    "sample": 1174,
+    "shares": {
+     "lab": 38.0,
+     "con": 32.0,
+     "ld": 21.0
+    }
+   },
+   {
+    "end": "2005-05-03",
+    "pollster": "NOP",
+    "client": "The Independent",
+    "sample": null,
+    "shares": {
+     "lab": 36.0,
+     "con": 33.0,
+     "ld": 23.0
+    }
+   },
+   {
+    "end": "2005-05-03",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": 1178,
+    "shares": {
+     "lab": 38.0,
+     "con": 32.0,
+     "ld": 22.0
+    }
+   },
+   {
+    "end": "2005-04-30",
+    "pollster": "BPIX",
+    "client": "Mail on Sunday",
+    "sample": null,
+    "shares": {
+     "lab": 38.0,
+     "con": 31.0,
+     "ld": 22.0
+    }
+   },
+   {
+    "end": "2005-04-28",
+    "pollster": "ComRes",
+    "client": "Independent on Sunday",
+    "sample": null,
+    "shares": {
+     "lab": 39.0,
+     "con": 31.0,
+     "ld": 23.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge2010",
+  "label": "2010 general election",
+  "short": "GE 2010",
+  "date": "2010-05-06",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2010_United_Kingdom_general_election",
+  "parties": [
+   "bnp",
+   "con",
+   "green",
+   "lab",
+   "ld",
+   "snp",
+   "ukip"
+  ],
+  "result": {
+   "bnp": 1.95,
+   "con": 36.89,
+   "green": 0.97,
+   "lab": 29.66,
+   "ld": 23.56,
+   "snp": 1.69,
+   "ukip": 3.17
+  },
+  "polls": [
+   {
+    "end": "2010-05-05",
+    "pollster": "Ipsos MORI",
+    "client": "Evening Standard",
+    "sample": 1216,
+    "shares": {
+     "lab": 29.0,
+     "con": 36.0,
+     "ld": 27.0,
+     "ukip": 3.0,
+     "snp": 2.0,
+     "green": 1.0,
+     "bnp": 1.0
+    }
+   },
+   {
+    "end": "2010-05-05",
+    "pollster": "YouGov",
+    "client": "The Sun",
+    "sample": 6483,
+    "shares": {
+     "lab": 28.0,
+     "con": 35.0,
+     "ld": 28.0,
+     "ukip": 3.0,
+     "snp": 1.0,
+     "green": 1.0,
+     "bnp": 2.0
+    }
+   },
+   {
+    "end": "2010-05-05",
+    "pollster": "Harris Interactive",
+    "client": "Daily Mail",
+    "sample": 4014,
+    "shares": {
+     "lab": 29.0,
+     "con": 35.0,
+     "ld": 27.0
+    }
+   },
+   {
+    "end": "2010-05-05",
+    "pollster": "Populus",
+    "client": "The Times",
+    "sample": 2505,
+    "shares": {
+     "lab": 28.0,
+     "con": 37.0,
+     "ld": 27.0,
+     "ukip": 2.0,
+     "snp": 2.0,
+     "green": 1.0,
+     "bnp": 2.0
+    }
+   },
+   {
+    "end": "2010-05-05",
+    "pollster": "Angus Reid",
+    "client": "PoliticalBetting.com",
+    "sample": 2283,
+    "shares": {
+     "lab": 24.0,
+     "con": 36.0,
+     "ld": 29.0,
+     "ukip": 4.0,
+     "snp": 2.0,
+     "green": 1.0,
+     "bnp": 2.0
+    }
+   },
+   {
+    "end": "2010-05-05",
+    "pollster": "Opinium",
+    "client": "Daily Express",
+    "sample": 1383,
+    "shares": {
+     "lab": 27.0,
+     "con": 35.0,
+     "ld": 26.0
+    }
+   },
+   {
+    "end": "2010-05-05",
+    "pollster": "ComRes",
+    "client": "ITV News/The Independent",
+    "sample": 1025,
+    "shares": {
+     "lab": 28.0,
+     "con": 37.0,
+     "ld": 28.0,
+     "ukip": 3.0,
+     "snp": 1.0,
+     "green": 1.0,
+     "bnp": 1.0
+    }
+   },
+   {
+    "end": "2010-05-04",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": 1527,
+    "shares": {
+     "lab": 28.0,
+     "con": 36.0,
+     "ld": 26.0
+    }
+   },
+   {
+    "end": "2010-05-04",
+    "pollster": "TNS-BMRB",
+    "client": null,
+    "sample": 1864,
+    "shares": {
+     "lab": 27.0,
+     "con": 33.0,
+     "ld": 29.0,
+     "ukip": 3.0,
+     "snp": 2.0,
+     "green": 2.0,
+     "bnp": 2.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "indyref2014",
+  "label": "2014 Scottish independence referendum",
+  "short": "Indyref 2014",
+  "date": "2014-09-18",
+  "kind": "referendum",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2014_Scottish_independence_referendum",
+  "parties": [
+   "no",
+   "yes"
+  ],
+  "result": {
+   "no": 55.3,
+   "yes": 44.7
+  },
+  "polls": [
+   {
+    "end": "2014-09-17",
+    "pollster": "Ipsos MORI",
+    "client": "Evening Standard",
+    "sample": 991,
+    "shares": {
+     "yes": 45.0,
+     "no": 50.0,
+     "und": 5.0
+    }
+   },
+   {
+    "end": "2014-09-17",
+    "pollster": "Survation",
+    "client": "Daily Record",
+    "sample": 1160,
+    "shares": {
+     "yes": 43.0,
+     "no": 48.0,
+     "und": 9.0
+    }
+   },
+   {
+    "end": "2014-09-17",
+    "pollster": "YouGov",
+    "client": "The Times/The Sun",
+    "sample": 3237,
+    "shares": {
+     "yes": 45.0,
+     "no": 49.0,
+     "und": 6.0
+    }
+   },
+   {
+    "end": "2014-09-17",
+    "pollster": "Panelbase",
+    "client": null,
+    "sample": 1004,
+    "shares": {
+     "yes": 45.0,
+     "no": 50.0,
+     "und": 5.0
+    }
+   },
+   {
+    "end": "2014-09-16",
+    "pollster": "ICM",
+    "client": "The Scotsman",
+    "sample": 1175,
+    "shares": {
+     "yes": 41.0,
+     "no": 45.0,
+     "und": 14.0
+    }
+   },
+   {
+    "end": "2014-09-15",
+    "pollster": "Opinium",
+    "client": "The Telegraph",
+    "sample": 1156,
+    "shares": {
+     "yes": 43.0,
+     "no": 47.0,
+     "und": 8.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge2015",
+  "label": "2015 general election",
+  "short": "GE 2015",
+  "date": "2015-05-07",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2015_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "green",
+   "lab",
+   "ld",
+   "ukip"
+  ],
+  "result": {
+   "con": 37.66,
+   "green": 3.84,
+   "lab": 31.18,
+   "ld": 8.06,
+   "ukip": 12.88
+  },
+  "polls": [
+   {
+    "end": "2015-05-07",
+    "pollster": "Populus",
+    "client": null,
+    "sample": 3917,
+    "shares": {
+     "con": 34.0,
+     "lab": 34.0,
+     "ld": 9.0,
+     "ukip": 13.0,
+     "green": 5.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "Survation",
+    "client": null,
+    "sample": 1045,
+    "shares": {
+     "con": 37.0,
+     "lab": 31.0,
+     "ld": 10.0,
+     "ukip": 11.0,
+     "green": 5.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "SurveyMonkey",
+    "client": null,
+    "sample": 18131,
+    "shares": {
+     "con": 34.0,
+     "lab": 28.0,
+     "ld": 7.0,
+     "ukip": 13.0,
+     "green": 8.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "Lord Ashcroft",
+    "client": null,
+    "sample": 3028,
+    "shares": {
+     "con": 33.0,
+     "lab": 33.0,
+     "ld": 10.0,
+     "ukip": 11.0,
+     "green": 6.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "Ipsos MORI",
+    "client": "Evening Standard",
+    "sample": 1186,
+    "shares": {
+     "con": 36.0,
+     "lab": 35.0,
+     "ld": 8.0,
+     "ukip": 11.0,
+     "green": 5.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "YouGov",
+    "client": "The Sun",
+    "sample": 10307,
+    "shares": {
+     "con": 34.0,
+     "lab": 34.0,
+     "ld": 10.0,
+     "ukip": 12.0,
+     "green": 4.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "ComRes",
+    "client": "Daily Mail, ITV News",
+    "sample": 1007,
+    "shares": {
+     "con": 35.0,
+     "lab": 34.0,
+     "ld": 9.0,
+     "ukip": 12.0,
+     "green": 4.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": 2023,
+    "shares": {
+     "con": 34.0,
+     "lab": 35.0,
+     "ld": 9.0,
+     "ukip": 11.0,
+     "green": 4.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": 1560,
+    "shares": {
+     "con": 35.0,
+     "lab": 35.0,
+     "ld": 9.0,
+     "ukip": 11.0,
+     "green": 3.0
+    }
+   },
+   {
+    "end": "2015-05-06",
+    "pollster": "Panelbase",
+    "client": null,
+    "sample": 3019,
+    "shares": {
+     "con": 31.0,
+     "lab": 33.0,
+     "ld": 8.0,
+     "ukip": 16.0,
+     "green": 5.0
+    }
+   },
+   {
+    "end": "2015-05-05",
+    "pollster": "Opinium",
+    "client": null,
+    "sample": 2960,
+    "shares": {
+     "con": 35.0,
+     "lab": 34.0,
+     "ld": 8.0,
+     "ukip": 12.0,
+     "green": 6.0
+    }
+   },
+   {
+    "end": "2015-05-05",
+    "pollster": "BMG",
+    "client": "May2015.com, New Statesman",
+    "sample": 1009,
+    "shares": {
+     "con": 34.0,
+     "lab": 34.0,
+     "ld": 10.0,
+     "ukip": 12.0,
+     "green": 4.0
+    }
+   },
+   {
+    "end": "2015-05-04",
+    "pollster": "TNS",
+    "client": null,
+    "sample": 1185,
+    "shares": {
+     "con": 33.0,
+     "lab": 32.0,
+     "ld": 8.0,
+     "ukip": 14.0,
+     "green": 6.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "eu2016",
+  "label": "2016 EU referendum",
+  "short": "Brexit 2016",
+  "date": "2016-06-23",
+  "kind": "referendum",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_United_Kingdom_European_Union_membership_referendum",
+  "parties": [
+   "leave",
+   "remain"
+  ],
+  "result": {
+   "leave": 51.89,
+   "remain": 48.11
+  },
+  "polls": [
+   {
+    "end": "2016-06-22",
+    "pollster": "Populus",
+    "client": null,
+    "sample": 4700,
+    "shares": {
+     "remain": 55.0,
+     "leave": 45.0
+    }
+   },
+   {
+    "end": "2016-06-22",
+    "pollster": "YouGov",
+    "client": null,
+    "sample": 3766,
+    "shares": {
+     "remain": 51.0,
+     "leave": 49.0
+    }
+   },
+   {
+    "end": "2016-06-22",
+    "pollster": "Ipsos MORI",
+    "client": null,
+    "sample": 1592,
+    "shares": {
+     "remain": 49.0,
+     "leave": 46.0,
+     "und": 1.0
+    }
+   },
+   {
+    "end": "2016-06-22",
+    "pollster": "Opinium",
+    "client": null,
+    "sample": 3011,
+    "shares": {
+     "remain": 44.0,
+     "leave": 45.0,
+     "und": 9.0
+    }
+   },
+   {
+    "end": "2016-06-22",
+    "pollster": "ComRes",
+    "client": null,
+    "sample": 1032,
+    "shares": {
+     "remain": 54.0,
+     "leave": 46.0
+    }
+   },
+   {
+    "end": "2016-06-22",
+    "pollster": "TNS",
+    "client": null,
+    "sample": 2320,
+    "shares": {
+     "remain": 41.0,
+     "leave": 43.0,
+     "und": 16.0
+    }
+   },
+   {
+    "end": "2016-06-20",
+    "pollster": "Survation",
+    "client": "IG Group",
+    "sample": 1003,
+    "shares": {
+     "remain": 45.0,
+     "leave": 44.0,
+     "und": 11.0
+    }
+   },
+   {
+    "end": "2016-06-19",
+    "pollster": "ORB",
+    "client": "The Telegraph",
+    "sample": 800,
+    "shares": {
+     "remain": 53.0,
+     "leave": 46.0,
+     "und": 2.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge2017",
+  "label": "2017 general election",
+  "short": "GE 2017",
+  "date": "2017-06-08",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2017_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "green",
+   "lab",
+   "ld",
+   "snp",
+   "ukip"
+  ],
+  "result": {
+   "con": 43.43,
+   "green": 1.65,
+   "lab": 41.02,
+   "ld": 7.56,
+   "snp": 3.11,
+   "ukip": 1.89
+  },
+  "polls": [
+   {
+    "end": "2017-06-07",
+    "pollster": "Ipsos MORI",
+    "client": "Evening Standard",
+    "sample": 1291,
+    "shares": {
+     "con": 44.0,
+     "lab": 36.0,
+     "ukip": 4.0,
+     "ld": 7.0,
+     "snp": 5.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "BMG",
+    "client": "The Herald",
+    "sample": 1199,
+    "shares": {
+     "con": 46.0,
+     "lab": 33.0,
+     "ukip": 5.0,
+     "ld": 8.0,
+     "snp": 4.0,
+     "green": 3.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "Survation",
+    "client": null,
+    "sample": 2798,
+    "shares": {
+     "con": 41.0,
+     "lab": 40.0,
+     "ukip": 2.0,
+     "ld": 8.0,
+     "snp": 4.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "ICM",
+    "client": "The Guardian",
+    "sample": 1532,
+    "shares": {
+     "con": 46.0,
+     "lab": 34.0,
+     "ukip": 5.0,
+     "ld": 7.0,
+     "snp": 5.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "YouGov",
+    "client": "The Times",
+    "sample": 2130,
+    "shares": {
+     "con": 42.0,
+     "lab": 35.0,
+     "ukip": 5.0,
+     "ld": 10.0,
+     "snp": 5.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "ComRes",
+    "client": "Independent",
+    "sample": 2051,
+    "shares": {
+     "con": 44.0,
+     "lab": 34.0,
+     "ukip": 5.0,
+     "ld": 9.0,
+     "snp": 4.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "Qriously",
+    "client": "Wired",
+    "sample": 2213,
+    "shares": {
+     "con": 39.0,
+     "lab": 41.0,
+     "ukip": 4.0,
+     "ld": 6.0,
+     "snp": 3.0,
+     "green": 7.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "Panelbase",
+    "client": null,
+    "sample": 3018,
+    "shares": {
+     "con": 44.0,
+     "lab": 36.0,
+     "ukip": 5.0,
+     "ld": 7.0,
+     "snp": 4.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-07",
+    "pollster": "Kantar Public",
+    "client": null,
+    "sample": 2159,
+    "shares": {
+     "con": 43.0,
+     "lab": 38.0,
+     "ukip": 4.0,
+     "ld": 7.0,
+     "snp": 4.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-06",
+    "pollster": "Opinium",
+    "client": null,
+    "sample": 3002,
+    "shares": {
+     "con": 43.0,
+     "lab": 36.0,
+     "ukip": 5.0,
+     "ld": 8.0,
+     "snp": 5.0,
+     "green": 2.0
+    }
+   },
+   {
+    "end": "2017-06-01",
+    "pollster": "Norstat",
+    "client": null,
+    "sample": 1013,
+    "shares": {
+     "con": 39.0,
+     "lab": 35.0,
+     "ukip": 6.0,
+     "ld": 8.0,
+     "green": 3.0
+    }
+   },
+   {
+    "end": "2017-06-01",
+    "pollster": "ORB",
+    "client": "The Telegraph",
+    "sample": 1656,
+    "shares": {
+     "con": 45.0,
+     "lab": 36.0,
+     "ukip": 4.0,
+     "ld": 8.0,
+     "snp": 7.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge2019",
+  "label": "2019 general election",
+  "short": "GE 2019",
+  "date": "2019-12-12",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2019_United_Kingdom_general_election",
+  "parties": [
+   "brexit",
+   "con",
+   "green",
+   "lab",
+   "ld",
+   "pc",
+   "snp"
+  ],
+  "result": {
+   "brexit": 2.06,
+   "con": 44.73,
+   "green": 2.77,
+   "lab": 32.9,
+   "ld": 11.84,
+   "pc": 0.49,
+   "snp": 3.98
+  },
+  "polls": [
+   {
+    "end": "2019-12-11",
+    "pollster": "Survation",
+    "client": null,
+    "sample": 2395,
+    "shares": {
+     "con": 45.0,
+     "lab": 34.0,
+     "ld": 9.0,
+     "snp": 4.0,
+     "green": 3.0,
+     "pc": 1.0,
+     "brexit": 3.0
+    }
+   },
+   {
+    "end": "2019-12-11",
+    "pollster": "Panelbase",
+    "client": null,
+    "sample": 3174,
+    "shares": {
+     "con": 43.0,
+     "lab": 34.0,
+     "ld": 11.0,
+     "snp": 4.0,
+     "green": 3.0,
+     "pc": 0.0,
+     "brexit": 4.0
+    }
+   },
+   {
+    "end": "2019-12-11",
+    "pollster": "Opinium",
+    "client": null,
+    "sample": 3005,
+    "shares": {
+     "con": 45.0,
+     "lab": 33.0,
+     "ld": 12.0,
+     "snp": 4.0,
+     "green": 2.0,
+     "pc": 0.0,
+     "brexit": 2.0
+    }
+   },
+   {
+    "end": "2019-12-11",
+    "pollster": "Ipsos MORI",
+    "client": "Evening Standard",
+    "sample": 2213,
+    "shares": {
+     "con": 44.0,
+     "lab": 33.0,
+     "ld": 12.0,
+     "snp": 4.0,
+     "green": 3.0,
+     "pc": 1.0,
+     "brexit": 2.0
+    }
+   },
+   {
+    "end": "2019-12-11",
+    "pollster": "Deltapoll",
+    "client": null,
+    "sample": 1818,
+    "shares": {
+     "con": 45.0,
+     "lab": 35.0,
+     "ld": 10.0,
+     "snp": 4.0,
+     "green": 3.0,
+     "pc": 0.0,
+     "brexit": 4.0
+    }
+   },
+   {
+    "end": "2019-12-11",
+    "pollster": "Kantar",
+    "client": null,
+    "sample": 2815,
+    "shares": {
+     "con": 44.0,
+     "lab": 32.0,
+     "ld": 13.0,
+     "snp": 4.0,
+     "green": 3.0,
+     "pc": 0.0,
+     "brexit": 3.0
+    }
+   },
+   {
+    "end": "2019-12-11",
+    "pollster": "BMG",
+    "client": "The Independent",
+    "sample": 1660,
+    "shares": {
+     "con": 41.0,
+     "lab": 32.0,
+     "ld": 14.0,
+     "green": 3.0,
+     "brexit": 4.0
+    }
+   },
+   {
+    "end": "2019-12-10",
+    "pollster": "SavantaComRes",
+    "client": "The Daily Telegraph",
+    "sample": 2051,
+    "shares": {
+     "con": 41.0,
+     "lab": 36.0,
+     "ld": 12.0,
+     "snp": 4.0,
+     "green": 2.0,
+     "brexit": 3.0
+    }
+   },
+   {
+    "end": "2019-12-10",
+    "pollster": "Number Cruncher Politics",
+    "client": "Bloomberg",
+    "sample": 1009,
+    "shares": {
+     "con": 43.0,
+     "lab": 33.0,
+     "ld": 12.0,
+     "snp": 4.0,
+     "green": 3.0,
+     "pc": 1.0,
+     "brexit": 3.0
+    }
+   },
+   {
+    "end": "2019-12-09",
+    "pollster": "ICM",
+    "client": "Reuters",
+    "sample": 2011,
+    "shares": {
+     "con": 42.0,
+     "lab": 36.0,
+     "ld": 12.0,
+     "snp": 3.0,
+     "green": 2.0,
+     "pc": 0.0,
+     "brexit": 3.0
+    }
+   },
+   {
+    "end": "2019-12-08",
+    "pollster": "Qriously",
+    "client": null,
+    "sample": 2222,
+    "shares": {
+     "con": 43.0,
+     "lab": 30.0,
+     "ld": 12.0,
+     "snp": 2.0,
+     "green": 4.0,
+     "brexit": 3.0
+    }
+   }
+  ]
+ },
+ {
+  "eventId": "ge2024",
+  "label": "2024 general election",
+  "short": "GE 2024",
+  "date": "2024-07-04",
+  "kind": "general",
+  "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_2024_United_Kingdom_general_election",
+  "parties": [
+   "con",
+   "green",
+   "lab",
+   "ld",
+   "pc",
+   "reform",
+   "snp"
+  ],
+  "result": {
+   "con": 24.36,
+   "green": 6.91,
+   "lab": 34.64,
+   "ld": 12.56,
+   "pc": 0.7,
+   "reform": 14.69,
+   "snp": 2.59
+  },
+  "polls": [
+   {
+    "end": "2024-07-03",
+    "pollster": "Number Cruncher Politics",
+    "client": null,
+    "sample": 2497,
+    "shares": {
+     "con": 23.0,
+     "lab": 41.0,
+     "ld": 11.0,
+     "snp": 2.0,
+     "green": 7.0,
+     "reform": 13.0,
+     "pc": 1.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "JL Partners",
+    "client": "The Rest Is Politics",
+    "sample": 2005,
+    "shares": {
+     "con": 23.0,
+     "lab": 38.0,
+     "ld": 13.0,
+     "snp": 3.0,
+     "green": 5.0,
+     "reform": 17.0,
+     "pc": 0.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "Savanta",
+    "client": null,
+    "sample": 2101,
+    "shares": {
+     "con": 20.0,
+     "lab": 39.0,
+     "ld": 10.0,
+     "snp": 2.0,
+     "green": 5.0,
+     "reform": 17.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "We Think",
+    "client": null,
+    "sample": 1210,
+    "shares": {
+     "con": 23.0,
+     "lab": 41.0,
+     "ld": 11.0,
+     "snp": 2.0,
+     "green": 7.0,
+     "reform": 15.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "Survation",
+    "client": "Good Morning Britain",
+    "sample": 1679,
+    "shares": {
+     "con": 20.0,
+     "lab": 38.0,
+     "ld": 12.0,
+     "snp": 3.0,
+     "green": 7.0,
+     "reform": 17.0,
+     "pc": 1.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "Norstat",
+    "client": null,
+    "sample": 3134,
+    "shares": {
+     "con": 24.0,
+     "lab": 37.0,
+     "ld": 11.0,
+     "snp": 4.0,
+     "green": 6.0,
+     "reform": 16.0,
+     "pc": 1.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "Opinium",
+    "client": null,
+    "sample": 2219,
+    "shares": {
+     "con": 21.0,
+     "lab": 41.0,
+     "ld": 11.0,
+     "snp": 2.0,
+     "green": 7.0,
+     "reform": 17.0,
+     "pc": 0.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "Ipsos",
+    "client": null,
+    "sample": 2076,
+    "shares": {
+     "con": 19.0,
+     "lab": 37.0,
+     "ld": 11.0,
+     "snp": 5.0,
+     "green": 9.0,
+     "reform": 15.0,
+     "pc": 1.0
+    }
+   },
+   {
+    "end": "2024-07-03",
+    "pollster": "Deltapoll",
+    "client": null,
+    "sample": 1737,
+    "shares": {
+     "con": 22.0,
+     "lab": 39.0,
+     "ld": 10.0,
+     "snp": 2.0,
+     "green": 7.0,
+     "reform": 17.0,
+     "pc": 1.0
+    }
+   },
+   {
+    "end": "2024-07-02",
+    "pollster": "PeoplePolling",
+    "client": "GB News",
+    "sample": 1260,
+    "shares": {
+     "con": 16.0,
+     "lab": 36.0,
+     "ld": 10.0,
+     "snp": 4.0,
+     "green": 9.0,
+     "reform": 20.0
+    }
+   },
+   {
+    "end": "2024-07-02",
+    "pollster": "Whitestone Insight",
+    "client": "Daily Express/Daily Mirror",
+    "sample": 2008,
+    "shares": {
+     "con": 21.0,
+     "lab": 38.0,
+     "ld": 10.0,
+     "snp": 3.0,
+     "green": 7.0,
+     "reform": 18.0,
+     "pc": 1.0
+    }
+   },
+   {
+    "end": "2024-07-02",
+    "pollster": "BMG",
+    "client": "The i",
+    "sample": 1854,
+    "shares": {
+     "con": 22.0,
+     "lab": 39.0,
+     "ld": 11.0,
+     "snp": 3.0,
+     "green": 7.0,
+     "reform": 16.0,
+     "pc": 0.0
+    }
+   },
+   {
+    "end": "2024-07-02",
+    "pollster": "Techne",
+    "client": null,
+    "sample": 5503,
+    "shares": {
+     "con": 21.0,
+     "lab": 40.0,
+     "ld": 11.0,
+     "snp": 3.0,
+     "green": 6.0,
+     "reform": 16.0
+    }
+   },
+   {
+    "end": "2024-07-02",
+    "pollster": "Redfield & Wilton",
+    "client": null,
+    "sample": 20000,
+    "shares": {
+     "con": 22.0,
+     "lab": 41.0,
+     "ld": 10.0,
+     "snp": 3.0,
+     "green": 6.0,
+     "reform": 16.0,
+     "pc": 0.0
+    }
+   },
+   {
+    "end": "2024-07-01",
+    "pollster": "Verian",
+    "client": null,
+    "sample": 2135,
+    "shares": {
+     "con": 21.0,
+     "lab": 36.0,
+     "ld": 13.0,
+     "snp": 3.0,
+     "green": 7.0,
+     "reform": 16.0,
+     "pc": 1.0
+    }
+   },
+   {
+    "end": "2024-07-01",
+    "pollster": "Lord Ashcroft",
+    "client": null,
+    "sample": 5183,
+    "shares": {
+     "con": 19.0,
+     "lab": 38.0,
+     "ld": 11.0,
+     "snp": 3.0,
+     "green": 8.0,
+     "reform": 18.0
+    }
+   }
+  ]
+ }
+]

@@ -1,3 +1,4 @@
+import { PollingContent } from "@/components/PollingContent";
 import { RecordsContent } from "@/components/RecordsContent";
 import { WhatIfApp } from "@/components/WhatIfApp";
 import { SiteLink as Link } from "@/components/SiteLink";
@@ -47,6 +48,7 @@ export default function Home() {
           "how-it-works": <HowItWorksContent />,
           sources: <SourcesContent />,
           records: <RecordsContent />,
+          polling: <PollingContent />,
         }}
       />
     );

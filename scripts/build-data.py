@@ -321,6 +321,10 @@ spec = importlib.util.spec_from_file_location("nowcast", os.path.join(HERE, "now
 nowcast = importlib.util.module_from_spec(spec); spec.loader.exec_module(nowcast)
 nowcast.build(globals())
 
+spec = importlib.util.spec_from_file_location("final_polls", os.path.join(HERE, "final_polls.py"))
+final_polls = importlib.util.module_from_spec(spec); spec.loader.exec_module(final_polls)
+final_polls.build(globals())
+
 # The polling projection comes first; then real votes, newest first.
 order = sorted(EVENTS, key=lambda e: (0 if e.get("projection") else 1, -e["year"]))
 with open(os.path.join(OUT, "events", "index.ts"), "w") as f:
