@@ -11,5 +11,8 @@ import ge2005 from "./ge2005.json";
 import ge2001 from "./ge2001.json";
 import ge1997 from "./ge1997.json";
 import ge1992 from "./ge1992.json";
+import ge1987 from "./ge1987.json";
+import ge1983 from "./ge1983.json";
+import ge1979 from "./ge1979.json";
 
-export const events = [ge2024, ge2019, ge2017, eu2016, ge2015, indyref2014, ge2010, ge2005, ge2001, ge1997, ge1992] as unknown as ElectionEvent[];
+export const events = [ge2024, ge2019, ge2017, eu2016, ge2015, indyref2014, ge2010, ge2005, ge2001, ge1997, ge1992, ge1987, ge1983, ge1979] as unknown as ElectionEvent[];

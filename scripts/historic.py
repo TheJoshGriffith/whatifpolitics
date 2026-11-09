@@ -338,6 +338,7 @@ def build(G):
   G["_hist_dims"] = DIM
   ge2005(G)
   ge_1992_2001(G)
+  ge_1979_1987(G)
 
 
 def ge2005(G):
@@ -450,7 +451,7 @@ def ge_1992_2001(G):
   """1992, 1997 and 2001 general elections.
 
   Results: House of Commons Library "UK Election Statistics: 1918-2019" constituency file, as mirrored in
-  github.com/kaleyburg/MSc_ASDS_Dissertation_Burg (extract in scripts/ge1992_2001_results.csv). It gives
+  github.com/kaleyburg/MSc_ASDS_Dissertation_Burg (extract in scripts/ge1979_2001_results.csv). It gives
   Con, Lab, Lib Dem, SNP/Plaid (one column, which we split by country) and everyone else as one "other"
   column, so Northern Ireland's parties appear as one block ("ni") and GB independents, the Speaker, the
   Referendum Party, UKIP and the Greens are all "other".
@@ -464,7 +465,7 @@ def ge_1992_2001(G):
   REGION = {"Eastern": "East of England", "Yorkshire & The Humber": "Yorkshire and The Humber",
             "Yorkshire and the Humber": "Yorkshire and The Humber"}
   rows = {}
-  with open(os.path.join(HERE, "ge1992_2001_results.csv")) as f:
+  with open(os.path.join(HERE, "ge1979_2001_results.csv")) as f:
     for r in csv.DictReader(f):
       rows.setdefault(r["election"], []).append(r)
   v = lambda x: 0 if x in ("NA", "") else int(float(x))
@@ -573,6 +574,105 @@ def ge_1992_2001(G):
      "note":f"{INFO[y]['sample']:,} adults across MORI's campaign polls. Con/Lab/LD/Other shares by sex, age, social grade and housing, with turnout for most groups. No group sizes, so we estimate them from Ipsos's 2005 electorate profile and each group's {y} turnout."}
     for y in INFO
   ]
+
+
+def ge_1979_1987(G):
+  """1979, 1983 and 1987 general elections, the thinnest data on the site.
+
+  Results: the same Commons Library 1918-2019 file as 1992-2001 (scripts/ge1979_2001_results.csv), with
+  the same lumping (Northern Ireland as one block; independents and small parties as "other"). The Speaker
+  is counted under his old party in this file.
+  Polls: only Ipsos's cross-election overview survives (scripts/polls/polls_1979_1987.md): Con, Lab and
+  Liberal/Alliance shares by sex, age and class (ABC1/C2/DE), weighted to the result. Other = 100 minus
+  those three. No turnout or group sizes, so group sizes come from Ipsos's 2005 profile of voters, and
+  no sample sizes, so the error bars use a cautious default.
+  """
+  import csv
+  add_event, party_list, sources = G["add_event"], G["party_list"], G["sources"]
+  REGION = {"Eastern": "East of England", "Yorkshire & The Humber": "Yorkshire and The Humber",
+            "Yorkshire and the Humber": "Yorkshire and The Humber"}
+  v = lambda x: 0 if x in ("NA", "") else int(float(x))
+  rows = {}
+  with open(os.path.join(HERE, "ge1979_2001_results.csv")) as f:
+    for r in csv.DictReader(f):
+      rows.setdefault(r["election"], []).append(r)
+  over = {}
+  for _h, _hdr, rs in tables("polls_1979_1987.md"):
+    for grp, party, *vals in rs:
+      for y, x in zip(("1979", "1983", "1987"), vals):
+        if x: over.setdefault(y, {}).setdefault(grp, {})[party] = num(x)
+  v05 = lambda sec, lab: num(G["_tab2005"][sec][lab]["Voters %"])
+  POP = {  # 2005 Ipsos share of voters, summed where these years used wider bands
+    "18-24": v05("Age","18-24"), "25-34": v05("Age","25-34"), "35-44": v05("Age","35-44"), "45-54": v05("Age","45-54"),
+    "55-64": v05("Age","55-64"), "65+": v05("Age","65+"),
+    "35-54": v05("Age","35-44") + v05("Age","45-54"), "55+": v05("Age","55-64") + v05("Age","65+"),
+    "Men": v05("Gender","Men"), "Women": v05("Gender","Women"),
+    "ABC1": v05("Social Class","AB") + v05("Social Class","C1"), "C2": v05("Social Class","C2"), "DE": v05("Social Class","DE"),
+  }
+  AGE_EMOJI = {"18-24":"🎓","25-34":"🍼","35-44":"🧸","45-54":"🚗","55-64":"⛳","65+":"🫖","35-54":"🏡","55+":"👴"}
+  INFO = {
+    "1979": dict(id="ge1979", date="1979-05-03", seats=635, lib=("ld","Liberals","Lib"),
+      won={"con":339,"lab":269,"ld":11,"ni":12,"snp":2,"pc":2}, ages=["18-24","25-34","35-54","55+"],
+      blurb="Margaret Thatcher's Conservatives win 339 seats and a majority of 43, after the 'Winter of Discontent'. She becomes the first woman Prime Minister."),
+    "1983": dict(id="ge1983", date="1983-06-09", seats=650, lib=("ld","SDP–Liberal Alliance","All"),
+      won={"con":397,"lab":209,"ld":23,"ni":17,"snp":2,"pc":2}, ages=["18-24","25-34","35-54","55+"],
+      blurb="The Conservatives win a landslide of 397 seats. The new SDP–Liberal Alliance gets 25.4% of the vote, close behind Labour's 27.6%, but only 23 seats."),
+    "1987": dict(id="ge1987", date="1987-06-11", seats=650, lib=("ld","SDP–Liberal Alliance","All"),
+      won={"con":376,"lab":229,"ld":22,"ni":17,"snp":3,"pc":3}, ages=["18-24","25-34","35-44","45-54","55-64","65+"],
+      blurb="Thatcher wins a third term with 376 seats and a majority of 102. Labour, under Neil Kinnock, gain 20 seats."),
+  }
+  from collections import Counter
+  for year, info in INFO.items():
+    seats, used = [], set()
+    for r in rows[year]:
+      region = REGION.get(r["country.region"], r["country.region"])
+      nat = v(r["natSW_votes"])
+      votes = {"con": v(r["con_votes"]), "lab": v(r["lab_votes"]), "ld": v(r["lib_votes"])}
+      if region == "Northern Ireland":
+        votes = {"ni": v(r["oth_votes"]) + sum(votes.values()) + nat}
+      else:
+        votes["other"] = v(r["oth_votes"])
+        if nat: votes["snp" if region == "Scotland" else "pc"] = nat
+      votes = {p: n for p, n in votes.items() if n > 0}
+      name = r["constituency_name"].strip()
+      sid = f"ge{year[2:]}-" + re.sub(r"[^a-z]+", "-", name.lower()).strip("-")
+      assert sid not in used, sid
+      used.add(sid)
+      seats.append({"id": sid, "name": name, "region": region, "electorate": v(r["electorate"]), "votes": votes})
+    seats.sort(key=lambda s: s["name"])
+    assert len(seats) == info["seats"], (year, len(seats))
+    won = Counter(max(s["votes"], key=s["votes"].get) for s in seats)
+    assert won == info["won"], (year, won)
+    t = over[year]
+    def grp(label):
+      row = t[label]
+      oth = 100 - row["Con"] - row["Lab"] - row["Lib"]
+      assert 0 <= oth <= 10, (year, label, oth)
+      sh = {"con": row["Con"], "lab": row["Lab"], "ld": row["Lib"], "other": oth, "snp": oth, "pc": oth, "ni": oth}
+      return {"voterWeight": POP[label], "turnout": None, "shares": {p: x / 100 for p, x in sh.items()}}
+    src = {"source": "ipsos-1974-2010"}
+    gv = {
+      "age": {**src, "groups": {a: grp(a) for a in info["ages"]}},
+      "sex": {**src, "groups": {"female": grp("Women"), "male": grp("Men")}},
+      "class": {**src, "groups": {"ABC1": grp("ABC1"), "C2": grp("C2"), "DE": grp("DE")}},
+    }
+    dims = [
+      {"id":"age","label":"Age","groups":[{"id":a,"label":a.replace("-","–"),"emoji":AGE_EMOJI[a]} for a in info["ages"]]},
+      {"id":"sex","label":"Sex","groups":[{"id":"female","label":"Women","emoji":"👩"},{"id":"male","label":"Men","emoji":"👨"}]},
+      {"id":"class","label":"Social grade","groups":[{"id":"ABC1","label":"ABC1 (middle class)","emoji":"💼"},
+        {"id":"C2","label":"C2 (skilled manual)","emoji":"🔧"},{"id":"DE","label":"DE (semi/unskilled, not working)","emoji":"🧤"}]},
+    ]
+    lib_id, lib_name, lib_short = info["lib"]
+    parties = [("lab","Labour","Lab","#E4003B"), ("con","Conservatives","Con","#0087DC"), (lib_id, lib_name, lib_short, "#FAA61A"),
+               ("snp","Scottish National Party","SNP","#FDF38E"), ("pc","Plaid Cymru","PC","#005B54"),
+               ("other","Others","Oth","#9CA3AF"), ("ni","Northern Ireland parties","NI","#8E7CC3")]
+    add_event({"id": info["id"], "label": f"{year} general election", "short": f"GE {year}", "year": int(year), "kind": "general",
+      "date": info["date"], "blurb": info["blurb"], "resultsSource": "hocl-1918-2019", "parties": party_list(parties),
+      "constituencies": seats, "dimensions": dims, "groupVoting": finish(gv)})
+  sources.append(
+    {"id":"ipsos-1974-2010","name":"How Britain voted since October 1974","publisher":"Ipsos (then MORI)",
+     "url":"https://www.ipsos.com/en-uk/how-britain-voted-october-1974","year":2010,
+     "note":"Con, Lab and Liberal/Alliance shares by sex, age and class at every election from 1974 to 2010, from MORI's campaign polls weighted to the result. We use it for 1979, 1983 and 1987. No turnout, group sizes or sample sizes, so group sizes come from Ipsos's 2005 voter profile."})
 
 
 def referendums(G):

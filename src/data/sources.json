@@ -189,6 +189,14 @@
    "note": "18,657 adults across MORI's campaign polls. Con/Lab/LD/Other shares by sex, age, social grade and housing, with turnout for most groups. No group sizes, so we estimate them from Ipsos's 2005 electorate profile and each group's 2001 turnout."
   },
   {
+   "id": "ipsos-1974-2010",
+   "name": "How Britain voted since October 1974",
+   "publisher": "Ipsos (then MORI)",
+   "url": "https://www.ipsos.com/en-uk/how-britain-voted-october-1974",
+   "year": 2010,
+   "note": "Con, Lab and Liberal/Alliance shares by sex, age and class at every election from 1974 to 2010, from MORI's campaign polls weighted to the result. We use it for 1979, 1983 and 1987. No turnout, group sizes or sample sizes, so group sizes come from Ipsos's 2005 voter profile."
+  },
+  {
    "id": "census-2021-wpc",
    "name": "2024 General Election Census constituency summaries",
    "publisher": "Ralph Scott (from ONS / Nomis and Scotland's Census, Census 2021)",

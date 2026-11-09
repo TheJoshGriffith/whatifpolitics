@@ -8,7 +8,7 @@ export function HowItWorksContent() {
       </h1>
       <div className="card prose-casual p-5 sm:p-8">
         <p className="text-lg">
-          Short version: pick a vote (any general election from 1992 to 2024, the 2016 Brexit referendum or the 2014 Scottish independence referendum), we take the real result in every seat or counting area, make an educated guess about{" "}
+          Short version: pick a vote (any general election from 1979 to 2024, the 2016 Brexit referendum or the 2014 Scottish independence referendum), we take the real result in every seat or counting area, make an educated guess about{" "}
           <i>who</i> cast those votes, then quietly remove some people and recount. No polling
           station staff were harmed.
         </p>
@@ -291,6 +291,13 @@ export function HowItWorksContent() {
             polls from those years don&apos;t say how big each group was, so we use the 2005 Ipsos
             electorate profile and scale each group by its turnout that year. Like 2005, there&apos;s
             no map and no local mix.
+          </li>
+          <li>
+            <b>1979, 1983 and 1987 are the roughest of all.</b> Ipsos&apos;s own pages for those
+            elections are gone, so all we have is its summary table: Conservative, Labour and
+            Liberal (or SDP–Liberal Alliance) shares by sex, age and class, with no turnout and no
+            sample sizes. Group sizes come from Ipsos&apos;s 2005 profile of voters, and the error
+            bars assume 500 people per group. Treat these as a bit of fun.
           </li>
           <li>
             <b>Ethnicity is the roughest slice.</b> Ipsos is the only post-election poll we could

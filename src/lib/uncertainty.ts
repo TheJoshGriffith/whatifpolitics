@@ -12,7 +12,7 @@ import type { GroupVoting, PartyId, Scenario } from "./types";
 
 /** Below this many people a group's figures are shaky. */
 export const SMALL_SAMPLE = 100;
-/** Used when a poll gives no sample size at all (we always have one at the moment). */
+/** Used when a poll gives no sample size at all (1979-1987, where only an overview table survives). */
 const FALLBACK_N = 500;
 /** ~30 ms a run for a 650-seat election (it re-rakes every seat), so 60 runs is about 2 s of
  *  background work, done a couple of runs at a time. */
