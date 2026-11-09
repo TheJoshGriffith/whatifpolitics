@@ -532,6 +532,9 @@ def ge_1992_2001(G):
       else:
         votes["other"] = v(r["oth_votes"])
         if nat: votes["snp" if region == "Scotland" else "pc"] = nat
+      # A few 1997 rows' party columns fall short of the seat's total; the rest went to others.
+      gap = v(r["total_votes"]) - sum(votes.values())
+      if gap > 0: votes["ni" if region == "Northern Ireland" else "other"] += gap
       votes = {p: n for p, n in votes.items() if n > 0}
       name = r["constituency_name"].strip()
       sid = f"ge{year[2:]}-" + re.sub(r"[^a-z]+", "-", name.lower()).strip("-")
@@ -633,6 +636,9 @@ def ge_1979_1987(G):
       else:
         votes["other"] = v(r["oth_votes"])
         if nat: votes["snp" if region == "Scotland" else "pc"] = nat
+      # A few 1997 rows' party columns fall short of the seat's total; the rest went to others.
+      gap = v(r["total_votes"]) - sum(votes.values())
+      if gap > 0: votes["ni" if region == "Northern Ireland" else "other"] += gap
       votes = {p: n for p, n in votes.items() if n > 0}
       name = r["constituency_name"].strip()
       sid = f"ge{year[2:]}-" + re.sub(r"[^a-z]+", "-", name.lower()).strip("-")

@@ -1,3 +1,4 @@
+import { RecordsContent } from "@/components/RecordsContent";
 import { WhatIfApp } from "@/components/WhatIfApp";
 import { SiteLink as Link } from "@/components/SiteLink";
 import { HashViews } from "@/components/HashViews";
@@ -45,6 +46,7 @@ export default function Home() {
           play: <Play />,
           "how-it-works": <HowItWorksContent />,
           sources: <SourcesContent />,
+          records: <RecordsContent />,
         }}
       />
     );
