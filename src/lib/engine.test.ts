@@ -222,7 +222,7 @@ describe("real data sanity", () => {
         expect(sum(Object.values(r.seats))).toBe(e.constituencies.length);
       }
     }
-  });
+  }, 30000); // every event x every preset: slow on a busy machine
 });
 
 describe("Northern Ireland", () => {

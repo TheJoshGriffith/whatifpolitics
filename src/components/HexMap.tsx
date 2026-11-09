@@ -69,6 +69,7 @@ export function HexMap({
   highlight = null,
   onPick,
   regional,
+  baselineLabel = "The real result",
 }: {
   map: EventMap;
   seatResults: SeatResult[];
@@ -82,6 +83,8 @@ export function HexMap({
   onPick?: (seatId: string) => void;
   /** Regional-list seats, when that voting system is chosen. */
   regional?: { seatParty: Record<string, PartyId>; regions: RegionAllocation[] };
+  /** What the unchanged map shows, e.g. "The real result". */
+  baselineLabel?: string;
 }) {
   const [onlyChanges, setOnlyChanges] = useState(false);
   const [picked, setPicked] = useState<string | null>(null);
@@ -156,7 +159,7 @@ export function HexMap({
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <span className="font-bold text-muted">
-          {isBaseline ? `The real result, ${areaWord} by ${areaWord}` : `${changed} ${areaWord}${changed === 1 ? "" : "s"} change hands`}
+          {isBaseline ? `${baselineLabel}, ${areaWord} by ${areaWord}` : `${changed} ${areaWord}${changed === 1 ? "" : "s"} change hands`}
         </span>
         {!isBaseline && mode === "winner" && (
           <label className="flex cursor-pointer items-center gap-2 font-bold">

@@ -223,6 +223,18 @@ export interface ElectionEvent {
   groupVoting: GroupVoting;
   /** Hex map: [hexId, name, q, r, memberIds?]. Members default to [hexId]. */
   map?: EventMap;
+  /** Set when this isn't a real vote but a projection from opinion polls. */
+  projection?: ProjectionInfo;
+}
+
+export interface ProjectionInfo {
+  polls: number;
+  /** ISO dates of the first and last poll averaged. */
+  from: string;
+  to: string;
+  pollsters: string[];
+  /** Average GB share per party ("_other" = everyone else). */
+  shares: Record<string, number>;
 }
 
 export type MapHex = [string, string, number, number] | [string, string, number, number, string[]];

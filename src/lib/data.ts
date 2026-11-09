@@ -12,7 +12,8 @@ const sourcesFile = sourcesJson as unknown as SourcesFile;
 export { events };
 export const sources = sourcesFile.sources;
 export const isPlaceholder = false;
-export const defaultEvent = events[0];
+/** The most recent real vote (the polling projection, listed first, is not the default). */
+export const defaultEvent = events.find((e) => !e.projection) ?? events[0];
 
 export function getEvent(id: string): ElectionEvent {
   return events.find((e) => e.id === id) ?? defaultEvent;

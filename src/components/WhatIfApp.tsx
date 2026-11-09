@@ -263,7 +263,9 @@ export function WhatIfApp() {
   };
   const describe = () => {
     if (!scenario)
-      return `Nobody's been left out yet, so this is just the real ${event.label}.`;
+      return event.projection
+        ? "Nobody's been left out yet, so this is just what the polls say."
+        : `Nobody's been left out yet, so this is just the real ${event.label}.`;
     const second = scenario.and
       ? dimensions.find((d) => d.id === scenario.and!.dimension)
       : undefined;
@@ -374,7 +376,8 @@ export function WhatIfApp() {
             }}
             className={`chip px-3 py-1.5 text-sm font-bold ${isReal ? "bg-ink text-paper" : "bg-card hover:bg-sun"}`}
           >
-            <span aria-hidden>📜</span> What really happened
+            <span aria-hidden>{event.projection ? "📊" : "📜"}</span>{" "}
+            {event.projection ? "What the polls say" : "What really happened"}
           </button>
           {eventPresets.map((p) => {
             const on = p.id === presetId;
@@ -601,7 +604,9 @@ export function WhatIfApp() {
         >
           <span className="min-w-0 flex-1 text-sm font-extrabold leading-snug">
             {!scenario
-              ? `The real ${event.label}.`
+              ? event.projection
+                ? "What the polls say."
+                : `The real ${event.label}.`
               : event.kind === "referendum"
                 ? referendumHeadline(result, model.baseline, event)
                 : govHeadline}

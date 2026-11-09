@@ -286,6 +286,14 @@
    "note": "Self-reported turnout by age, e.g. 75% of 16–17s."
   },
   {
+   "id": "voting-intention",
+   "name": "Opinion polling for the next United Kingdom general election",
+   "publisher": "Wikipedia, compiling the British Polling Council members' published polls",
+   "url": "https://en.wikipedia.org/wiki/Opinion_polling_for_the_next_United_Kingdom_general_election",
+   "year": 2026,
+   "note": "Westminster voting intention. We average the 11 polls in the 14 days to 2026-10-14 (Find Out Now, Freshwater Strategy, More in Common, Opinium, Survation, Trajectory Partnership, YouGov), from Wikipedia's table (transcribed 9 November 2026; earlier polls via the scraped copy in github.com/alanjones2/alanjones2.github.io). MRP polls are left out."
+  },
+  {
    "id": "nilt-2010",
    "name": "Northern Ireland Life and Times Survey 2010: political party support (POLPART2)",
    "publisher": "ARK (Queen's University Belfast and Ulster University)",

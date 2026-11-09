@@ -250,6 +250,8 @@ const ERA: Record<string, Record<string, number>> = {
   ge2019: { "con-ld": 0.05, "lab-ld": 0.15, "lab-snp": 0.4, "con-brexit": 0.5, "con-dup": 0.5 },
   // Labour ruled out deals with the SNP; Badenoch-era Tories and Reform circling each other.
   ge2024: { "lab-snp": 0.15, "con-ld": 0.15, "lab-ld": 0.45, "con-reform": 0.3 },
+  // The polling projection: same stances as 2024, as nothing else has been stated since.
+  pollsnow: { "lab-snp": 0.15, "con-ld": 0.15, "lab-ld": 0.45, "con-reform": 0.3 },
 };
 
 /** Parties who don't take their seats, or don't vote. */

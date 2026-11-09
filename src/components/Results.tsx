@@ -105,7 +105,9 @@ export function Results({
           className="mt-1 font-display text-2xl font-black leading-tight sm:text-3xl"
         >
           {isBaseline && system === "fptp"
-            ? `What actually happened in ${event.year}: ${headline}`
+            ? event.projection
+              ? `If the polls came true: ${headline}`
+              : `What actually happened in ${event.year}: ${headline}`
             : headline}
         </h2>
         {howSure}
@@ -196,6 +198,7 @@ export function Results({
                 highlight={selectedSeat}
                 onPick={selectSeat}
                 regional={regional}
+                baselineLabel={event.projection ? "What the polls say" : undefined}
               />
             </>
           ) : (
@@ -252,7 +255,8 @@ export function Results({
           result={shown}
           baseline={baseline}
           parties={parties}
-          year={event.year}
+          year={event.projection ? "the polls" : `actual ${event.year}`}
+          yearShort={event.projection ? "Polls" : `${event.year}`}
         />
         {system === "fptp" ? (
           <Flips result={result} byId={byId} />
@@ -480,11 +484,14 @@ function SeatTable({
   baseline,
   parties,
   year,
+  yearShort,
 }: {
   result: ScenarioResult;
   baseline: ScenarioResult;
   parties: Party[];
-  year: number;
+  /** "actual 2019" or "the polls" */
+  year: string;
+  yearShort: string;
 }) {
   const rows = [...parties]
     .filter(
@@ -502,14 +509,14 @@ function SeatTable({
   return (
     <div className="card overflow-hidden p-0">
       <h3 className="px-4 pt-4 font-display text-lg font-extrabold sm:px-5">
-        Scoreboard vs actual {year}
+        Scoreboard vs {year}
       </h3>
       <table className="mt-2 w-full text-sm">
         <thead>
           <tr className="text-left text-xs uppercase tracking-wider text-muted">
             <th className="py-2 pl-4 font-extrabold sm:pl-5">Party</th>
             <th className="py-2 text-right font-extrabold">Seats</th>
-            <th className="py-2 text-right font-extrabold">{year}</th>
+            <th className="py-2 text-right font-extrabold">{yearShort}</th>
             <th className="py-2 text-center font-extrabold">±</th>
             <th className="py-2 pr-4 text-right font-extrabold sm:pr-5">
               Votes

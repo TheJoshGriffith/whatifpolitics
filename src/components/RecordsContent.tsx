@@ -12,7 +12,7 @@ const pct = (x: number, dp = 1) => `${(x * 100).toFixed(dp)}%`;
 const int = (x: number) => Math.round(x).toLocaleString("en-GB");
 
 export function RecordsContent() {
-  const general = events.filter((e) => e.kind === "general").sort((a, b) => a.year - b.year);
+  const general = events.filter((e) => e.kind === "general" && !e.projection).sort((a, b) => a.year - b.year);
   const sums = general.map(summarise);
   const majorities = sums.filter((s) => s.majority > 0);
   const by = <T,>(xs: T[], f: (x: T) => number) => [...xs].sort((a, b) => f(a) - f(b));

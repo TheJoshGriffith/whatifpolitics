@@ -246,6 +246,24 @@ export function HowItWorksContent() {
           that rests on a handful of seats is well inside the margin of error.
         </p>
 
+        <h2>9. &ldquo;Polls now&rdquo;</h2>
+        <p>
+          This one isn&apos;t a real election. We take the opinion polls from the last two weeks of
+          Wikipedia&apos;s list of Westminster voting intention polls and average them, leaving out MRP
+          polls (which run for weeks and model seats themselves). Then we move every Great Britain seat&apos;s
+          2024 result by the same ratio as each party&apos;s national share has changed. If a party&apos;s
+          share has gone from 20% to 30%, its vote goes up by half in every seat (a &ldquo;proportional
+          swing&rdquo;). Independents keep their local votes, and any extra &ldquo;others&rdquo; in the polls
+          (new parties with no 2024 results to go on) are spread evenly. Northern Ireland keeps its 2024
+          result, because GB polls don&apos;t cover it. Each group&apos;s party shares get the same ratios,
+          so all the slices, dials and tipping points still work.
+        </p>
+        <p>
+          It&apos;s the simplest kind of seat projection. It ignores tactical voting, local campaigns and
+          parties that gain in some places more than others, which the big MRP models try to capture. And
+          polls are a snapshot, not a forecast.
+        </p>
+
         <h2>The big fat caveats 🧂</h2>
         <ul>
           <li>

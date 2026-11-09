@@ -17,7 +17,7 @@ describe("record book", () => {
     expect(s.voteShares.lab).toBeCloseTo(0.432, 3);
   });
   it("finds the closest seats and leaves lumped buckets out", () => {
-    const general = events.filter((e) => e.kind === "general");
+    const general = events.filter((e) => e.kind === "general" && !e.projection);
     const seats = seatRecords(general);
     const closest = [...seats].sort((a, b) => a.majorityVotes - b.majorityVotes)[0];
     expect(closest.majorityVotes).toBe(2);
